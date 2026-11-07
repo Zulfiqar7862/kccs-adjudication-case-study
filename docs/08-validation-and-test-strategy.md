@@ -35,7 +35,15 @@ Final local and fresh-clone results are recorded below after execution. The evid
 | Public staged payload | Gitleaks found no leaks; tracked-file/PII review performed |
 | Docker | Not installed on this box; build/run not executed |
 
-Detailed execution logs and coverage JSON remain under ignored `.local-evidence/`. Hosted CI and fresh-clone verification are checked after publication; local evidence alone is not a claim of hosted success.
+Detailed execution logs and coverage JSON remain under ignored `.local-evidence/`. A fresh clone of the published repository completed the README sequence: `make setup`; `make test` without a workbook (45 passed, 4 skipped, 95.30%); copy an authorised local workbook; `make test` (49 passed, 99.19%); `make run`; `make e2e`; and `make lint`. Private inputs/outputs did not dirty the public working tree.
+
+The initial public commit also passed all hosted workflows:
+
+- [CI — Python 3.11 and 3.13](https://github.com/Zulfiqar7862/kccs-adjudication-case-study/actions/runs/42398123899)
+- [Security — dependency audit, Bandit and full-history Gitleaks](https://github.com/Zulfiqar7862/kccs-adjudication-case-study/actions/runs/42398123930)
+- [Synthetic prototype replay](https://github.com/Zulfiqar7862/kccs-adjudication-case-study/actions/runs/42398123934)
+
+These run links pin concrete evidence rather than claiming an untested environment. The final documentation-only update is rechecked by the same workflows.
 
 ## Long-term controls
 

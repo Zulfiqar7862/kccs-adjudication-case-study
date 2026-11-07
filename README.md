@@ -58,7 +58,7 @@ To run without private data:
 
 These are selected-pack counts, **not** population rates or clinical accuracy. The clock replays supplied flags and hours; it does not qualify jurisdictional calendars or independently decide reportability. Exact source equality is not canonical presentation approval.
 
-Local Ruff, Bandit, runtime dependency audit and Gitleaks checks are described in [validation](docs/08-validation-and-test-strategy.md). Hosted workflows also check lint, public tests/coverage, synthetic replay and security. Docker is not installed on the build box: image/compose configuration is provided but was not executed there.
+Local Ruff, Bandit, runtime dependency audit and Gitleaks checks are described in [validation](docs/08-validation-and-test-strategy.md). The initial public commit passed all three hosted workflows: CI (Python 3.11/3.13), Security and Prototype fixtures. A fresh clone independently passed the quickstart above; pinned run links are in the validation document. Docker is not installed on the build box: image/compose configuration is provided but was not executed there.
 
 ## Commands
 
