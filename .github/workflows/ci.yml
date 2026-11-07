@@ -1,0 +1,22 @@
+name: CI
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  lint-and-unit:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - run: make setup
+      - run: make lint
+      - name: Entire suite without private workbook and coverage gate
+        run: make test
+      - name: Unit-only coverage gate
+        run: make test-unit

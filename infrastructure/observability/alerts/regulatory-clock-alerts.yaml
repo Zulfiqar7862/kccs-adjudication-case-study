@@ -1,0 +1,24 @@
+groups:
+  - name: adjudication-regulatory-clock
+    rules:
+      - alert: RegulatoryTimerHeartbeatMissing
+        expr: (time() - adjudication_timer_last_success_timestamp_seconds > 120) or absent(adjudication_timer_last_success_timestamp_seconds)
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Independent timer sweep is not healthy; execute the manual obligation runbook
+      - alert: RegulatoryDeadlineAtRisk
+        expr: adjudication_deadline_slack_seconds < 14400 and adjudication_open_obligations > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: An unresolved duty has less than four hours remaining
+      - alert: RegulatoryNotificationOverdue
+        expr: adjudication_overdue_obligations > 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: A notification is overdue; a filing attempt is not a confirmed receipt

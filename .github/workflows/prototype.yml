@@ -1,0 +1,25 @@
+name: Prototype fixtures
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  synthetic-replay:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: pip install .
+      - name: Replay public synthetic fixtures twice
+        run: |
+          python -m adjudication.cli --fixtures prototype/tests/fixtures --out /tmp/first
+          python -m adjudication.cli --fixtures prototype/tests/fixtures --out /tmp/second
+          diff -r /tmp/first /tmp/second
+          python - <<'PYTHON'
+          import json
+          from pathlib import Path
+          expected = json.loads(Path('prototype/tests/fixtures/expected_outputs/sample_adjudication_report.json').read_text())
+          actual = json.loads(Path('/tmp/first/adjudication_report.json').read_text())['summary']
+          assert all(actual[key] == value for key, value in expected.items())
+          PYTHON

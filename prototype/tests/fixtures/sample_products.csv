@@ -1,0 +1,4 @@
+tenant_code,brand_as_labelled,generic_inn,internal_sku,gtin,legacy_code,stability_study_ref
+SYN-A,Example Pen PFS,Synthetic Molecule,SYN-SKU-1,00000000000001,SYN-OLD-1,SYN-STUDY-1
+SYN-B,Example Tablet,Another Molecule,SYN-SKU-1,00000000000002,SYN-OLD-B,SYN-STUDY-B
+SYN-A,Example Syringe,Example Other,SYN-SKU-2,00000000000003,SYN-OLD-2,
