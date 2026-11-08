@@ -65,7 +65,7 @@ Field notes: `assessment_sha256`, `readiness`, and the manifest's code/policy/mo
 3. Diff the two assessments field by field (hash, sources, conflicts, missing inputs). Common causes: a source row changed in place (a mutated source version), an unpinned dependency (time, locale, ordering), a mapping edited in place.
 4. Check `source_versions` used in each run; a changed source version without a new version ID is a source-integrity defect.
 5. Roll back (section 4) to the last manifest whose golden replay was clean.
-6. Run the full replay on the fix and show QA the decision differences (Dr Rao's condition applies to the fix as well).
+6. Run the full replay on the fix and show QA the decision differences (the quality sponsor's condition applies to the fix as well).
 7. Identify live assessments produced during the drift window; re-assess them as new revisions (never mutate); notify the case owners.
 
 ### 3c. Obligation approaching its window with no filing
@@ -91,7 +91,7 @@ Field notes: `assessment_sha256`, `readiness`, and the manifest's code/policy/mo
 2. Switch the affected tenants (or all tenants) to **R0, the no-LLM route**, with the per-tenant kill switch. Nothing in the decision path depends on a model; reviewers lose only the narrative.
 3. Verify the log shows `model_version: none` for new assessments and that conflict/missing counts are unchanged.
 4. For a sunset notice (Provider B has 30-day notice): inventory tenants and prompts using it, and pick a replacement with the same residency (never B for EU tenants).
-5. Replace the model only as a new manifest version; run the full replay and show QA the diffs before enabling (Dr Rao's condition).
+5. Replace the model only as a new manifest version; run the full replay and show QA the diffs before enabling (the quality sponsor's condition).
 6. Re-enable per tenant, starting with one.
 7. Record cost impact (doc 14 table).
 
@@ -137,7 +137,7 @@ Field notes: `assessment_sha256`, `readiness`, and the manifest's code/policy/mo
 - Assessments are never mutated. Anything produced under a bad version is superseded by a new revision, with the earlier revision retained and linked.
 - Schema migrations are expand/contract so that rollback does not need a data restore.
 
-**Post-incident replay requirement:** after any fix, run the full replay over the known-outcome case set and show QA where decisions differ from the previous manifest and why, before re-enabling. This is Dr Rao's condition, applied to the fix as to any change.
+**Post-incident replay requirement:** after any fix, run the full replay over the known-outcome case set and show QA where decisions differ from the previous manifest and why, before re-enabling. This is the quality sponsor's condition, applied to the fix as to any change.
 
 ## 5. What the prototype already provides
 
