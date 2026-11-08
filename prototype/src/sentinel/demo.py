@@ -6,9 +6,9 @@ import threading
 from pathlib import Path
 from http.client import HTTPConnection
 
-from .http import make_server
-from .sample import create_workbook
-from .service import Engine, verify_export
+from sentinel.api.http import make_server
+from sentinel.fixtures.sample import create_workbook
+from sentinel.workflow.service import Engine, verify_export
 
 
 def run_demo():

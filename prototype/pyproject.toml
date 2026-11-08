@@ -11,7 +11,7 @@ license = "MIT"
 dependencies = ["defusedxml==0.7.1"]
 
 [project.scripts]
-sentinel = "sentinel.__main__:main"
+sentinel = "sentinel.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

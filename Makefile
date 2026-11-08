@@ -3,9 +3,9 @@ PYTHON ?= python3
 VENV_PYTHON = .venv/bin/python
 setup:
 	$(PYTHON) -m venv .venv
-	$(VENV_PYTHON) -m pip install -e .
+	$(VENV_PYTHON) -m pip install -e ./prototype
 test:
-	$(VENV_PYTHON) -m unittest discover -s tests -v
+	$(VENV_PYTHON) -m unittest discover -s prototype/tests -v
 check:
 	$(VENV_PYTHON) scripts/check.py
 demo:
@@ -13,10 +13,10 @@ demo:
 sample:
 	$(VENV_PYTHON) -m sentinel sample
 import:
-	$(VENV_PYTHON) -m sentinel import artifacts/sample.xlsx
+	$(VENV_PYTHON) -m sentinel import prototype/output/sample.xlsx
 credentials:
 	$(VENV_PYTHON) -m sentinel credentials --tenant DEMO-ALPHA --tenant DEMO-BETA
 serve:
 	$(VENV_PYTHON) -m sentinel serve
 lint:
-	$(VENV_PYTHON) -m compileall -q src tests scripts
+	$(VENV_PYTHON) -m compileall -q prototype/src prototype/tests scripts

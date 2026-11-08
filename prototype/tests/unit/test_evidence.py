@@ -3,9 +3,9 @@ import unittest
 from datetime import timedelta
 from pathlib import Path
 
-from sentinel.evidence import analyze, parse_time, sops_as_at
-from sentinel.sample import create_workbook
-from sentinel.service import Engine
+from sentinel.evidence.analysis import analyze, parse_time, sops_as_at
+from sentinel.fixtures.sample import create_workbook
+from sentinel.workflow.service import Engine
 
 
 class EvidenceTests(unittest.TestCase):

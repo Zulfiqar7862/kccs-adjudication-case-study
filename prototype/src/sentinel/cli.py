@@ -10,8 +10,9 @@ from xml.etree.ElementTree import ParseError
 from defusedxml.common import DefusedXmlException
 from collections import Counter
 from pathlib import Path
+from .config import output_directory
 
-from .service import DomainError, Engine, verify_export
+from sentinel.workflow.service import DomainError, Engine, verify_export
 
 
 def output(value, path=None):
@@ -26,21 +27,25 @@ def output(value, path=None):
 
 def main():
     parser = argparse.ArgumentParser(description='Local evidence-first adjudication workflow')
-    parser.add_argument('--db', default='artifacts/sentinel.db', help='Local SQLite path (default: artifacts/sentinel.db)')
+    try:
+        directory = output_directory()
+    except ValueError as exc:
+        parser.error(str(exc))
+    parser.add_argument('--db', default=str(directory / 'sentinel.db'), help='Local SQLite path (default: prototype/output/sentinel.db)')
     commands = parser.add_subparsers(dest='command', required=True)
     sample = commands.add_parser('sample', help='Generate a wholly fictional workbook')
-    sample.add_argument('--output', default='artifacts/sample.xlsx')
+    sample.add_argument('--output', default=str(directory / 'sample.xlsx'))
     commands.add_parser('demo', help='Exercise the full HTTP lifecycle on fictional data in a temporary database')
     imp = commands.add_parser('import', help='Import one authorized workbook snapshot atomically')
     imp.add_argument('workbook')
     report = commands.add_parser('report', help='Summarize imported evidence blockers and notification clocks')
     report.add_argument('--output', help='Full report includes source-derived private data; keep it local')
     serve = commands.add_parser('serve', help='Start the authenticated loopback JSON API')
-    serve.add_argument('--credentials', default='artifacts/local-credentials.json')
+    serve.add_argument('--credentials', default=str(directory / 'local-credentials.json'))
     serve.add_argument('--port', type=int, default=8080)
     credentials = commands.add_parser('credentials', help='Generate private local-only bearer identities')
     credentials.add_argument('--tenant', action='append', required=True)
-    credentials.add_argument('--output', default='artifacts/local-credentials.json')
+    credentials.add_argument('--output', default=str(directory / 'local-credentials.json'))
     export = commands.add_parser('export', help='Export a private tenant case audit bundle')
     export.add_argument('--tenant', required=True)
     export.add_argument('--case', required=True)
@@ -53,7 +58,7 @@ def main():
     args = parser.parse_args()
     try:
         if args.command == 'sample':
-            from .sample import create_workbook
+            from sentinel.fixtures.sample import create_workbook
             create_workbook(args.output)
             output({'source': 'fictional', 'workbook': args.output})
             return
@@ -88,7 +93,7 @@ def main():
         if args.command == 'import':
             output(engine.ingest(args.workbook))
         elif args.command == 'serve':
-            from .http import make_server
+            from sentinel.api.http import make_server
             identities = json.loads(Path(args.credentials).read_text(encoding='utf-8'))
             server = make_server(engine, identities, port=args.port)
             print(f'Local API http://127.0.0.1:{server.server_port} (Ctrl-C to stop)', flush=True)

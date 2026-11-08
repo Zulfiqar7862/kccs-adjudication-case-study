@@ -2,11 +2,12 @@
 import argparse
 import json
 from pathlib import Path
+from sentinel.config import output_directory
 from urllib.request import Request, urlopen
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--tenant', default='DEMO-ALPHA')
-parser.add_argument('--credentials', default='artifacts/local-credentials.json')
+parser.add_argument('--credentials', default=str(output_directory() / 'local-credentials.json'))
 args = parser.parse_args()
 credentials = json.loads(Path(args.credentials).read_text(encoding='utf-8'))
 token = next(key for key, identity in credentials.items()

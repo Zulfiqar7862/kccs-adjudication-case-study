@@ -9,9 +9,9 @@ from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-from sentinel.http import MAX_BODY, make_server
-from sentinel.sample import create_workbook
-from sentinel.service import Engine
+from sentinel.api.http import MAX_BODY, make_server
+from sentinel.fixtures.sample import create_workbook
+from sentinel.workflow.service import Engine
 
 
 class HttpTests(unittest.TestCase):
@@ -73,7 +73,7 @@ class HttpTests(unittest.TestCase):
 
     def test_snapshot_sop_audit_and_idempotent_command_routes(self):
         observed = self.engine.tables()["_observed_at"]
-        from sentinel.evidence import parse_time
+        from sentinel.evidence.analysis import parse_time
         from datetime import timedelta
         known_at = (parse_time(observed) - timedelta(seconds=1)).isoformat()
         status, _, rows = self.request(

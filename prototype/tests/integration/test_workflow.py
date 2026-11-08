@@ -6,8 +6,8 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from sentinel.sample import create_workbook
-from sentinel.service import DomainError, Engine, verify_export
+from sentinel.fixtures.sample import create_workbook
+from sentinel.workflow.service import DomainError, Engine, verify_export
 
 
 def principal(tenant, actor, role):

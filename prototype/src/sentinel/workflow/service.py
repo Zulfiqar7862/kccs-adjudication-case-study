@@ -6,7 +6,9 @@ import sqlite3
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 
-from . import __version__, evidence, workbook
+from sentinel import __version__
+from sentinel.evidence import analysis as evidence
+from sentinel.ingestion import workbook
 
 DISPOSITIONS = {'RELEASE', 'RELEASE_WITH_NOTE', 'QUARANTINE', 'REWORK', 'RETURN', 'DESTROY'}
 KINDS = {'SOP', 'STABILITY', 'TELEMETRY', 'IDENTITY', 'BATCH', 'CONTRACT', 'OTHER'}

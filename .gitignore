@@ -10,6 +10,7 @@ dist/
 .hoplite/
 .env
 .env.*
+!.env.example
 *.db
 *.db-shm
 *.db-wal
@@ -19,4 +20,7 @@ dist/
 *.pdf
 artifacts/
 .local-evidence/
-data/
+data/*
+!data/README.md
+prototype/output/*
+!prototype/output/.gitkeep

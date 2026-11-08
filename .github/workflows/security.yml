@@ -13,8 +13,8 @@ jobs:
         with:
           python-version: '3.13'
       - run: python -m pip install --upgrade pip
-      - run: python -m pip install bandit pip-audit .
-      - run: bandit -r src -ll
+      - run: python -m pip install bandit pip-audit ./prototype
+      - run: bandit -r prototype/src -ll
       - run: pip-audit --desc
       - name: Full-history credential scan
         env:

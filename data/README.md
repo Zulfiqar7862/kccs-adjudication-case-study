@@ -3,7 +3,7 @@
 No source workbook, source PDF or source-derived report is included in this public repository.
 
 For a generated fictional workbook, run `python -m sentinel sample`. It writes
-`artifacts/sample.xlsx`, which is ignored by Git. For authorized private data, keep the
+`prototype/output/sample.xlsx`, which is ignored by Git. For authorized private data, keep the
 workbook outside the repository (recommended), or place it here. All `.xlsx` and `.pdf`
 files are ignored. Never force-add them.
 

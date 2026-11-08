@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: Install the package as a user would
-        run: python -m pip install .
+        run: python -m pip install ./prototype
       - name: Dependency consistency
         run: python -m pip check
       - name: Tests and actual HTTP lifecycle on fictional data
@@ -30,4 +30,20 @@ jobs:
         with:
           python-version: '3.13'
       - run: python -m pip install 'ruff>=0.15,<1'
-      - run: ruff check src tests scripts
+      - run: ruff check --config prototype/pyproject.toml prototype/src prototype/tests scripts
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and run the isolated fictional demo
+        run: docker compose run --build --rm prototype
+  powershell:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run the Windows launcher
+        shell: pwsh
+        run: ./prototype/run.ps1 demo

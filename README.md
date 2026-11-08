@@ -1,151 +1,137 @@
-# Sentinel adjudication
+# Sentinel adjudication case study
 
-A structured, runnable **local evidence and adjudication workflow** with a JSON API, durable SQLite cases, human review/approval gates, independent notification clocks, and verifiable audit exports.
+A runnable, evidence-first adjudication prototype and anonymized case-study submission. The critical component is a durable evidence/review/clock kernel—not a dashboard. It preserves human authority, keeps regulatory clocks independent of case disposition, and records reviewable evidence and audit history.
 
-**Public code and anonymized case-study documentation.** The included demo data is fictional. No confidential brief, source workbook, source-derived reports or real customer identifiers are included. The application never autonomously releases or destroys product, never calls a model, and never files with a regulator.
+**Privacy:** public code, fictional fixtures and anonymized analysis only. The supplied workbook and brief, identifying records, generated private reports, databases and credentials are not committed. No ZIP is required.
 
-## 1. Clone and run
+## Evaluation copy
 
-Requires **Python 3.11 or newer** and Git. No Docker, database service, model account, or API key is needed. Installation adds one small runtime dependency, `defusedxml`, for safe XML parsing; setuptools is the build backend.
+| Requested section | Read |
+|---|---|
+| Where we land | [Executive summary](docs/00-executive-summary.md), [recommendation and source mapping](docs/01-where-we-land.md), [open questions](docs/09-risks-assumptions-and-open-questions.md), [rollout](docs/10-future-roadmap.md) |
+| The design | [Architecture](docs/02-system-architecture.md), [data model](docs/03-data-model.md), [lifecycle](docs/04-case-lifecycle.md), [degradation](docs/05-degradation-and-regulatory-clock.md), [versioning/deployment](docs/06-versioning-and-deployment.md), [diagrams](diagrams/README.md) |
+| Working prototype | [Prototype guide](prototype/README.md), [validation](docs/08-validation-and-test-strategy.md), [API](docs/API.md) |
+| Working log | [Decisions and lessons](docs/07-working-log.md), [AI-assisted review corrections](docs/11-ai-review-corrections.md) |
+
+Source references let evaluators with the original pack trace decisions without publishing identifying records. Proposed production architecture is explicitly separate from implemented local behavior.
+
+## Project structure
+
+```text
+README.md                 Setup and evaluation index
+.env.example              Optional, non-secret shell settings
+requirements.txt          Editable prototype install from repository root
+Dockerfile                Non-root local demo image
+docker-compose.yml        Isolated, read-only fictional demo
+Makefile                  Development shortcuts
+.github/workflows/        Cross-platform tests and security checks
+data/                     Local private input guidance; workbook ignored
+docs/                     Numbered case-study sections and API/security guides
+diagrams/                 Mermaid architecture and lifecycle diagrams
+scripts/                  Portable check command and example API client
+prototype/
+  README.md
+  pyproject.toml          Installable package and lint configuration
+  requirements.txt        Pinned runtime dependency
+  run.ps1                 Windows setup/CLI launcher
+  src/sentinel/
+    cli.py                Pipeline entry point and commands
+    config.py             Local output configuration
+    ingestion/            XLSX parser and source hashing
+    evidence/             Tenant-scoped candidates, temporal lookup, blockers
+    workflow/             Durable cases, approvals, clocks and audit history
+    api/                  Authenticated loopback JSON API
+    fixtures/             Fictional workbook generator
+    demo.py               Running-HTTP lifecycle demonstration
+  tests/
+    unit/
+    integration/
+  output/                 Ignored reports, databases and credentials
+```
+
+The layout follows the supplied reference without copying empty layers. Identity and temporal analysis stay with evidence; transactions, audit and reminders stay together in the workflow service because their invariants must commit atomically. No fake AI component or unused domain scaffolding is included.
+
+## Clone and run locally
+
+Requires Git and **Python 3.11+**. From the repository root:
 
 ```sh
 git clone https://github.com/Zulfiqar7862/kccs-adjudication-case-study.git
 cd kccs-adjudication-case-study
+# Until PR #1 is merged, select the submitted branch:
+git switch hoplite/naukratis-184532b3
 python3 -m venv .venv
-```
-
-Activate the environment:
-
-```sh
-# macOS / Linux
 source .venv/bin/activate
-
-# Windows PowerShell (run this instead)
-.venv\Scripts\Activate.ps1
-```
-
-On Windows, use `py -3` instead of `python3` to create the environment. If activation is restricted, invoke `.venv\Scripts\python.exe` directly in the commands below.
-
-```sh
-python -m pip install -e .
+python -m pip install -r requirements.txt
 python scripts/check.py
 python -m sentinel demo
 ```
 
-`check.py` compiles the source, runs the automated suite and runs the real HTTP end-to-end demo. It exits nonzero on failure. Private-workbook tests explicitly skip unless you opt in; public functionality does not require a private file. `demo` creates a temporary fictional workbook/database, starts a loopback server, exercises the lifecycle and stops it. It prints `"result": "PASS"` after verifying:
+On Windows, use `py -3 -m venv .venv` and `.venv\Scripts\Activate.ps1`, or run:
 
-1. A premature disposition is rejected.
-2. Six kinds of fictional source evidence are recorded.
-3. A reviewer explicitly resolves all blockers.
-4. Two independent approvers must agree before the dual-policy case is disposed.
-5. Reopening preserves the earlier signed revision and starts a fresh review.
-6. Audit hashes verify; failed internal reminders retry without fabricating regulatory receipts.
+```powershell
+./prototype/run.ps1 demo
+```
 
-The demo checks workflow mechanics—not clinical validity. Missing real evidence always remains a blocker until an authorized human records and attests its resolution.
+The launcher creates the environment if needed, installs the package and forwards arguments to the CLI. It does not change execution policy. All commands use the repository root as the working directory. The package can also be installed directly with `python -m pip install -e ./prototype`.
 
-## 2. Start the API for local development
+`check.py` compiles the source, runs the tests and executes the real HTTP demo. The demo uses temporary fictional data and verifies evidence blockers, independent dual approval, reopening, preserved audit history and reminder retry. It checks workflow mechanics, not clinical correctness.
+
+## Start the local API
 
 ```sh
 python -m sentinel sample
-python -m sentinel import artifacts/sample.xlsx
+python -m sentinel import prototype/output/sample.xlsx
 python -m sentinel credentials --tenant DEMO-ALPHA --tenant DEMO-BETA
 python -m sentinel serve
 ```
 
-Open `http://127.0.0.1:8080/health` or, from another activated terminal, run:
+Open `http://127.0.0.1:8080/health`. From another activated terminal:
 
 ```sh
 python scripts/api_example.py --tenant DEMO-ALPHA
 ```
 
-The API is JSON-only; there is no dashboard. The server deliberately binds only to loopback. Ctrl-C stops it. Data persists in `artifacts/sentinel.db`; restarting does not clear cases. The credential command creates random, private local tokens and refuses to overwrite an existing file. Do not commit or share that file. Static identities are a **development stub**, not production SSO or qualified electronic signatures.
+This is a JSON API, not a dashboard. The server binds only to loopback; Ctrl-C stops it. Data persists in `prototype/output/sentinel.db`. Generated credentials are local development stubs and refuse accidental overwrite. Never commit them or expose this server publicly.
 
-To choose another database, put the option before the command:
+## Execute against the supplied workbook
 
-```sh
-python -m sentinel --db artifacts/another.db import artifacts/sample.xlsx
-python -m sentinel --db artifacts/another.db serve --port 8081
-```
-
-An exact workbook replay is idempotent. A different second workbook is rejected: use a new database for a different snapshot. Multi-snapshot reconciliation is deliberately outside this version rather than silently overwriting history.
-
-## 3. Work with your authorized private workbook
-
-Keep it outside this public repository, or in the ignored `data/` directory. The expected sheet/column contract is in [the API and data guide](docs/API.md). The importer reads XLSX directly with standard-library ZIP handling and hardened XML parsing, including shared strings, inline strings, sparse cells and workbook relationships.
+Keep the authorized workbook outside the checkout or in ignored `data/`. Never force-add it.
 
 ```sh
-python -m sentinel --db artifacts/private.db import /absolute/path/to/your-workbook.xlsx
-python -m sentinel --db artifacts/private.db report --output artifacts/private-report.json
+python -m sentinel --db prototype/output/private.db import /absolute/path/to/your-workbook.xlsx
+python -m sentinel --db prototype/output/private.db report --output prototype/output/private-report.json
+SENTINEL_WORKBOOK=/absolute/path/to/your-workbook.xlsx python -m unittest discover -s prototype/tests -v
 ```
 
-Opt into private integration tests:
-
-```sh
-# macOS / Linux
-SENTINEL_WORKBOOK=/absolute/path/to/your-workbook.xlsx python -m unittest discover -s tests -v
-```
+PowerShell equivalent for the integration test:
 
 ```powershell
-# Windows PowerShell
 $env:SENTINEL_WORKBOOK = 'C:\private\your-workbook.xlsx'
-python -m unittest discover -s tests -v
+python -m unittest discover -s prototype/tests -v
 Remove-Item Env:SENTINEL_WORKBOOK
 ```
 
-An unset variable produces explicit skips. A configured missing/invalid file fails, rather than silently skipping. The private checks replay the supplied events and test tenant separation, fail-closed evidence and audit integrity; historical dispositions are **not** clinical ground truth. The full report and export may contain private source-derived data: keep them local. Public CI does not receive this environment variable or workbook.
+The private test imports the supplied events, checks tenant boundaries, fail-closed evidence, audit integrity, historical visibility and exact replay. A configured invalid path fails; only an unset variable skips. Public CI uses fictional fixtures and never receives the private workbook. Historical dispositions are not clinical ground truth.
 
-## 4. Project structure
+Exact-file replay creates no duplicate cases. A different snapshot requires a new database rather than silently overwriting history. Reports and exports can contain private data and must remain local.
 
-```text
-src/sentinel/
-  workbook.py       XLSX reader and source hashes
-  evidence.py       Tenant-scoped candidates, temporal lookup and blockers
-  service.py        Transactional cases, approvals, clocks, outbox and audit
-  http.py           Authenticated loopback JSON API
-  sample.py         Deterministic, wholly fictional workbook generator
-  demo.py           Running-HTTP lifecycle walkthrough
-  __main__.py       CLI / installed `sentinel` command
-scripts/
-  check.py          Portable local and CI acceptance command
-  api_example.py    Example authenticated API client
-tests/             Unit, workflow, HTTP, CLI and opt-in private checks
-docs/              API, architecture, development, testing and security guides
-data/              Instructions only; private inputs are ignored
-.github/workflows/  Cross-platform checks and security scanning
+## Configuration and Docker
+
+`.env.example` documents optional variables; Python does **not** automatically load `.env` files. `SENTINEL_OUTPUT` changes the default database, generated sample and credential directory. Explicit CLI paths override those defaults. Existing local files in `artifacts/` are not moved or deleted; select an existing compatible database with `--db` and credentials with `serve --credentials`, or use a fresh output directory. `SENTINEL_WORKBOOK` is only an opt-in integration-test input, not an automatic import.
+
+Docker is optional; the normal Python workflow needs no daemon:
+
+```sh
+docker compose run --build --rm prototype
 ```
 
-This replaces the previous `prototype/` layout with one installable package and one test entry point. Docker, Terraform and Kubernetes scaffolding are not included: this local implementation does not need them, and unverified production scaffolding would imply capabilities it does not provide.
+The container runs the fictional demo as a non-root user with a read-only filesystem, temporary scratch storage, and no external network. Dependencies download during image build. It mounts no private data and publishes no API port. This is not a production deployment. The Docker build context excludes workbooks, credentials and generated outputs.
 
-## 5. Common commands
+## Scope and limitations
 
-| Command | Purpose |
-|---|---|
-| `python scripts/check.py` | Compile, test and run the HTTP demo |
-| `python -m unittest discover -s tests -v` | Run all tests; private integration is opt-in |
-| `python -m sentinel demo` | Isolated end-to-end fictional walkthrough |
-| `python -m sentinel sample` | Write ignored `artifacts/sample.xlsx` |
-| `python -m sentinel report` | Print aggregate state/blocker/clock summary |
-| `python -m sentinel report --output artifacts/report.json` | Write full local report, including case packets |
-| `python -m sentinel tick --tenant DEMO-BETA --fail` | Inject an internal reminder outage |
-| `python -m sentinel tick --tenant DEMO-BETA` | Retry pending internal reminders; no regulator calls |
-| `python -m sentinel export --tenant TENANT --case CASE --output artifacts/audit.json` | Export an authorized local case and all revisions |
-| `python -m sentinel verify artifacts/audit.json` | Verify manifest, audit chain and artifact hashes |
+Implemented: durable SQLite transactions, authenticated tenant-scoped HTTP operations, idempotency, version conflicts, evidence review, independent single/dual approvals, reopening, alert-derived obligations, explicit reminder retries, human-attested receipts, and audit export/verification.
 
-The CLI has trusted administrative access to its local database. Tenant access controls apply at the authenticated HTTP boundary. Consult [API](docs/API.md), [architecture](docs/ARCHITECTURE.md), [contributing](docs/CONTRIBUTING.md), [testing](docs/TESTING.md), and [security](docs/SECURITY.md).
+Not implemented: live source connectors, clinically validated rules, verified document interpretation, SSO/qualified signatures, regulator delivery, supervised scheduling, legal calendars, distributed availability or immutable seven-year retention. The application never autonomously releases or destroys product, calls a model, or files with a regulator. Text-based signatory selection is a prototype heuristic. Audit hashes detect alteration relative to a trusted copy, not malicious rewriting by a database administrator.
 
-## Case-study submission — four requested sections
-
-1. **Where we land:** [recommendation](docs/RECOMMENDATION.md), with requirements mapped to source sections/rows, exclusions, a phased pilot, assumptions and board-level counterarguments.
-2. **The design:** [implemented architecture](docs/ARCHITECTURE.md), [production HLD/LLD](docs/PRODUCTION_DESIGN.md), and [API/data contract](docs/API.md). Diagrams cover component and state boundaries; the production design covers bitemporal data, failure handling and deployment qualification.
-3. **Working prototype:** this package implements the durable evidence/lifecycle/clock core. Public CI uses fictional fixtures; the explicit private-workbook integration path above executes against the authorized supplied workbook. Missing source systems remain documented stubs, not fabricated successful integrations.
-4. **Working log:** [development decisions, mistakes and discarded approaches](docs/WORKING_LOG.md).
-
-The written submission is anonymized. Source section/sheet/row references let an evaluator with the original pack trace decisions; original source files, customer-identifying details and case-level outputs are not published. Public and private verification claims are kept separate in [testing](docs/TESTING.md).
-
-## Supported boundary
-
-**Implemented:** real HTTP requests, durable transactions, exact import replay, tenant-scoped reads/mutations, optimistic concurrency, idempotency, evidence review, independent single/dual approvals, reopening, independent alert-based deadlines, explicit reminder retries, human-attested filing receipts, local audit export/verification, synthetic and authorized-workbook execution.
-
-**Not implemented:** live source-system connectors, validated clinical rules, authoritative document interpretation, named-signatory licensing/SSO, qualified signatures, regulator delivery, continuously supervised deadline scheduling, legal holiday calendars, distributed availability or seven-year immutable retention. No “production-ready” or “everything integrated” claim is made. Those require external systems, approvals and evidence that are not in this repository.
-
-Audit hashes detect accidental alteration relative to a trusted copy; they do not stop an administrator from rewriting data and recomputing hashes. An internal reminder is never treated as a regulator receipt. Case disposition and notification clocks remain independent, including during outages and reopening.
+See [security](docs/SECURITY.md), [contributing](docs/CONTRIBUTING.md) and [validation](docs/08-validation-and-test-strategy.md).

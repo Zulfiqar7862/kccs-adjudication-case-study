@@ -6,8 +6,8 @@ import unittest
 from pathlib import Path
 from zipfile import ZipFile
 
-from sentinel import workbook
-from sentinel.sample import SAMPLE_EVENT_COUNT, SAMPLE_TENANTS, create_workbook
+from sentinel.ingestion import workbook
+from sentinel.fixtures.sample import SAMPLE_EVENT_COUNT, SAMPLE_TENANTS, create_workbook
 
 
 class SampleWorkbookTests(unittest.TestCase):

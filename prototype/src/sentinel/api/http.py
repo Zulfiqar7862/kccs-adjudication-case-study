@@ -5,8 +5,8 @@ from socketserver import TCPServer
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlsplit
 
-from .evidence import sops_as_at
-from .service import DomainError
+from sentinel.evidence.analysis import sops_as_at
+from sentinel.workflow.service import DomainError
 
 MAX_BODY = 256 * 1024
 

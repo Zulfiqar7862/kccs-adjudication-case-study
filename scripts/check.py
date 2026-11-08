@@ -5,8 +5,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 for arguments in [
-    ['-m', 'compileall', '-q', 'src', 'tests', 'scripts'],
-    ['-m', 'unittest', 'discover', '-s', 'tests', '-v'],
+    ['-m', 'compileall', '-q', 'prototype/src', 'prototype/tests', 'scripts'],
+    ['-m', 'unittest', 'discover', '-s', 'prototype/tests', '-v'],
     ['-m', 'sentinel', 'demo'],
 ]:
     result = subprocess.run([sys.executable, *arguments], cwd=ROOT, check=False)

@@ -4,8 +4,8 @@ import unittest
 from datetime import timedelta
 from pathlib import Path
 
-from sentinel.evidence import parse_time, sops_as_at
-from sentinel.service import Engine, verify_export
+from sentinel.evidence.analysis import parse_time, sops_as_at
+from sentinel.workflow.service import Engine, verify_export
 
 
 class ConfiguredWorkbookTests(unittest.TestCase):

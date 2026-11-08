@@ -1,0 +1,11 @@
+services:
+  prototype:
+    build: .
+    command: ["demo"]
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128m,mode=1777

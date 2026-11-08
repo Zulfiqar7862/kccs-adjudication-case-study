@@ -18,24 +18,24 @@ class CliTests(unittest.TestCase):
     def test_sample_import_report_export_and_private_credentials(self):
         with tempfile.TemporaryDirectory() as directory:
             self.run_cli(directory, 'sample')
-            first = json.loads(self.run_cli(directory, 'import', 'artifacts/sample.xlsx').stdout)
+            first = json.loads(self.run_cli(directory, 'import', 'prototype/output/sample.xlsx').stdout)
             self.assertGreater(first['created'], 0)
-            replay = json.loads(self.run_cli(directory, 'import', 'artifacts/sample.xlsx').stdout)
+            replay = json.loads(self.run_cli(directory, 'import', 'prototype/output/sample.xlsx').stdout)
             self.assertTrue(replay['replayed'])
-            self.run_cli(directory, 'report', '--output', 'artifacts/report.json')
-            report = json.loads((Path(directory) / 'artifacts/report.json').read_text(encoding='utf-8'))
+            self.run_cli(directory, 'report', '--output', 'prototype/output/report.json')
+            report = json.loads((Path(directory) / 'prototype/output/report.json').read_text(encoding='utf-8'))
             self.assertEqual(report['states'], {'WAITING_EVIDENCE': first['created']})
             case = report['cases'][0]
             self.run_cli(directory, 'export', '--tenant', case['tenant'], '--case', case['id'],
-                         '--output', 'artifacts/audit.json')
-            self.assertTrue(json.loads(self.run_cli(directory, 'verify', 'artifacts/audit.json').stdout)['valid'])
-            path = Path(directory) / 'artifacts/audit.json'
+                         '--output', 'prototype/output/audit.json')
+            self.assertTrue(json.loads(self.run_cli(directory, 'verify', 'prototype/output/audit.json').stdout)['valid'])
+            path = Path(directory) / 'prototype/output/audit.json'
             audit = json.loads(path.read_text(encoding='utf-8'))
             audit['state'] = 'DISPOSED'
             path.write_text(json.dumps(audit), encoding='utf-8')
-            self.assertFalse(json.loads(self.run_cli(directory, 'verify', 'artifacts/audit.json', expected=1).stdout)['valid'])
+            self.assertFalse(json.loads(self.run_cli(directory, 'verify', 'prototype/output/audit.json', expected=1).stdout)['valid'])
             created = self.run_cli(directory, 'credentials', '--tenant', case['tenant'])
-            path = Path(directory) / 'artifacts/local-credentials.json'
+            path = Path(directory) / 'prototype/output/local-credentials.json'
             credentials = json.loads(path.read_text(encoding='utf-8'))
             self.assertEqual(len(credentials), 5)
             for token in credentials:
@@ -53,6 +53,18 @@ class CliTests(unittest.TestCase):
             path = Path(directory) / 'invalid.json'
             path.write_text('{}', encoding='utf-8')
             self.assertFalse(json.loads(self.run_cli(directory, 'verify', str(path), expected=1).stdout)['valid'])
+
+    def test_output_environment_and_explicit_path_override(self):
+        with tempfile.TemporaryDirectory() as directory:
+            env = dict(os.environ, SENTINEL_OUTPUT='custom-output')
+            result = subprocess.run([sys.executable, '-m', 'sentinel', 'sample'],
+                                    cwd=directory, env=env, capture_output=True, text=True, timeout=30)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertTrue((Path(directory) / 'custom-output/sample.xlsx').is_file())
+            result = subprocess.run([sys.executable, '-m', 'sentinel', 'sample', '--output', 'explicit.xlsx'],
+                                    cwd=directory, env=env, capture_output=True, text=True, timeout=30)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertTrue((Path(directory) / 'explicit.xlsx').is_file())
 
     def test_http_lifecycle_demo(self):
         with tempfile.TemporaryDirectory() as directory:
