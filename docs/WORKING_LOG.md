@@ -28,11 +28,17 @@ This log records engineering decisions and checks for the public-safe prototype.
 
 ## Verified locally on 2026-11-08
 
-- `python scripts/check.py`: 23 tests discovered; 22 passed and the unconfigured private-workbook check explicitly skipped. Compilation and the running-HTTP lifecycle demo passed.
-- With `SENTINEL_WORKBOOK` pointing to the authorized supplied workbook: all 23 tests passed. The private check imports all supplied events, rejects implicit dispositions, requires blockers, checks tenant isolation and temporal visibility, verifies audit exports, and confirms exact-file replay creates no new cases. No source-derived outputs are published.
+- `python scripts/check.py`: 24 tests discovered; 23 passed and the unconfigured private-workbook check explicitly skipped. Compilation and the running-HTTP lifecycle demo passed.
+- With `SENTINEL_WORKBOOK` pointing to the authorized supplied workbook: all 24 tests passed. The private check imports all supplied events, rejects implicit dispositions, requires blockers, checks tenant isolation and temporal visibility, verifies audit exports, and confirms exact-file replay creates no new cases. No source-derived outputs are published.
 - `ruff check src tests scripts` and `pip check` passed. Bandit found no medium/high-severity issues (two low-severity findings remain); `pip-audit` reported no known dependency vulnerabilities. The local project is not on PyPI and is reviewed as source, not covered by that dependency lookup.
 - Early test failures exposed fixture mistakes: substring policy selection, an unescaped `+` in an ISO query parameter, UTC expectations, and assertions using the wrong response shape. Corrected tests preserve role enforcement and the API contract rather than weakening production checks.
 - No live connector, clinical correctness, regulator delivery, production deployment, or seven-year retention proof is claimed. This is a JSON API/CLI, not a visual dashboard.
+
+## Hosted verification feedback
+
+The first hosted run passed Linux and Windows but exposed a macOS demo timeout. The first in-process HTTP server also took roughly 35 seconds to initialize; the standard HTTP server performs a reverse-DNS lookup during binding. The loopback-only adapter now binds the numeric loopback address without that unnecessary lookup, with a regression test that rejects any reverse-DNS call. The demo's timeout was not relaxed. Hosted macOS results are the acceptance check for this change.
+
+A separate scanner download received HTTP 504. Bounded HTTP retries now handle transient upstream failures without skipping the credential scan or weakening its result.
 
 ## AI assistance and review limits
 

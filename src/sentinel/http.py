@@ -1,6 +1,7 @@
 """Loopback HTTP adapter. Static bearer identities are a local-only authentication stub."""
 import json
 import socket
+from socketserver import TCPServer
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlsplit
 
@@ -8,6 +9,13 @@ from .evidence import sops_as_at
 from .service import DomainError
 
 MAX_BODY = 256 * 1024
+
+
+class LoopbackHTTPServer(ThreadingHTTPServer):
+    def server_bind(self):
+        TCPServer.server_bind(self)
+        # A loopback-only server needs no reverse DNS lookup during startup.
+        self.server_name, self.server_port = self.server_address[:2]
 
 
 def make_server(engine, credentials, host='127.0.0.1', port=0):
@@ -119,4 +127,4 @@ def make_server(engine, credentials, host='127.0.0.1', port=0):
             except Exception:
                 self.respond(500, {'error': 'Internal error; no successful operation should be assumed'})
 
-    return ThreadingHTTPServer((host, port), Handler)
+    return LoopbackHTTPServer(('127.0.0.1', port), Handler)

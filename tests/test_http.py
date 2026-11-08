@@ -3,6 +3,7 @@ import secrets
 import tempfile
 import threading
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.parse import urlencode
@@ -104,6 +105,16 @@ class HttpTests(unittest.TestCase):
         with error.exception as response:
             self.assertEqual(response.code, 413)
             self.assertIn("too large", json.load(response)["error"])
+
+    def test_loopback_startup_does_not_require_reverse_dns(self):
+        credentials = {self.token: {"tenant": self.tenant, "actor": "local", "role": "reviewer"}}
+        with patch("socket.getfqdn", side_effect=AssertionError("Unexpected DNS lookup")):
+            server = make_server(self.engine, credentials, host="localhost")
+            try:
+                self.assertEqual(server.server_address[0], "127.0.0.1")
+                self.assertGreater(server.server_port, 0)
+            finally:
+                server.server_close()
 
     def test_server_rejects_non_loopback_binding(self):
         with self.assertRaises(ValueError):
