@@ -1,90 +1,151 @@
-# KCCS adjudication case study
+# Sentinel adjudication
 
-**Zulfiqar Ali Ahmed — Senior AI/backend engineering take-home**
+A structured, runnable **local evidence and adjudication workflow** with a JSON API, durable SQLite cases, human review/approval gates, independent notification clocks, and verifiable audit exports.
 
-A deterministic, tenant-scoped **evidence-eligibility and bitemporal reference-resolution kernel**. It makes unsafe reference selection and missing evidence explicit instead of inventing a pharmaceutical disposition. The production HLD/LLD includes an independent regulatory clock, human signing, retained historical basis, regional isolation and qualified deployment.
+**Public code and anonymized case-study documentation.** The included demo data is fictional. No confidential brief, source workbook, source-derived reports or real customer identifiers are included. The application never autonomously releases or destroys product, never calls a model, and never files with a regulator.
 
-## Fresh-clone quickstart
+## 1. Clone and run
 
-Requires Python 3.11+ and GNU Make. On Debian/Ubuntu install `python3-venv` and `make` if absent. No model account, cloud credential or API key is needed.
+Requires **Python 3.11 or newer** and Git. No Docker, database service, model account, or API key is needed. Installation adds one small runtime dependency, `defusedxml`, for safe XML parsing; setuptools is the build backend.
 
-```bash
+```sh
 git clone https://github.com/Zulfiqar7862/kccs-adjudication-case-study.git
 cd kccs-adjudication-case-study
-make setup
-make test
-```
-
-The public clone contains **no private workbook**. Tests pass on hand-made synthetic fixtures; four private-workbook integration tests skip cleanly.
-
-Then copy your own authorised workbook into `data/`:
-
-```bash
-cp /path/to/KCCS_Sentinel_Reference_Data_Pack.xlsx data/
-make test
-make run
-make e2e
-```
-
-`make run` reads all workbook sheets without modifying them. It writes five **gitignored, local-only** files into `prototype/output/`: `adjudication_report.json`, `adjudication_summary.csv`, `case_audit_log.csv`, `evidence_gaps.csv`, and `run_manifest.json`. The manifest pins code/rules/no-model selection and input/output fingerprints. No regulator notification or email is sent.
-
-Manual virtual-environment equivalent:
-
-```bash
 python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements-dev.txt
-.venv/bin/python -m pip install --no-deps -e .
-.venv/bin/python -m pytest
 ```
 
-To run without private data:
+Activate the environment:
 
-```bash
-.venv/bin/python -m adjudication.cli \
-  --fixtures prototype/tests/fixtures --out prototype/output
+```sh
+# macOS / Linux
+source .venv/bin/activate
+
+# Windows PowerShell (run this instead)
+.venv\Scripts\Activate.ps1
 ```
 
-## Measured aggregate results
+On Windows, use `py -3` instead of `python3` to create the environment. If activation is restricted, invoke `.venv\Scripts\python.exe` directly in the commands below.
 
-| Check | Captured local result |
+```sh
+python -m pip install -e .
+python scripts/check.py
+python -m sentinel demo
+```
+
+`check.py` compiles the source, runs the automated suite and runs the real HTTP end-to-end demo. It exits nonzero on failure. Private-workbook tests explicitly skip unless you opt in; public functionality does not require a private file. `demo` creates a temporary fictional workbook/database, starts a loopback server, exercises the lifecycle and stops it. It prints `"result": "PASS"` after verifying:
+
+1. A premature disposition is rejected.
+2. Six kinds of fictional source evidence are recorded.
+3. A reviewer explicitly resolves all blockers.
+4. Two independent approvers must agree before the dual-policy case is disposed.
+5. Reopening preserves the earlier signed revision and starts a fresh review.
+6. Audit hashes verify; failed internal reminders retry without fabricating regulatory receipts.
+
+The demo checks workflow mechanics—not clinical validity. Missing real evidence always remains a blocker until an authorized human records and attests its resolution.
+
+## 2. Start the API for local development
+
+```sh
+python -m sentinel sample
+python -m sentinel import artifacts/sample.xlsx
+python -m sentinel credentials --tenant DEMO-ALPHA --tenant DEMO-BETA
+python -m sentinel serve
+```
+
+Open `http://127.0.0.1:8080/health` or, from another activated terminal, run:
+
+```sh
+python scripts/api_example.py --tenant DEMO-ALPHA
+```
+
+The API is JSON-only; there is no dashboard. The server deliberately binds only to loopback. Ctrl-C stops it. Data persists in `artifacts/sentinel.db`; restarting does not clear cases. The credential command creates random, private local tokens and refuses to overwrite an existing file. Do not commit or share that file. Static identities are a **development stub**, not production SSO or qualified electronic signatures.
+
+To choose another database, put the option before the command:
+
+```sh
+python -m sentinel --db artifacts/another.db import artifacts/sample.xlsx
+python -m sentinel --db artifacts/another.db serve --port 8081
+```
+
+An exact workbook replay is idempotent. A different second workbook is rejected: use a new database for a different snapshot. Multi-snapshot reconciliation is deliberately outside this version rather than silently overwriting history.
+
+## 3. Work with your authorized private workbook
+
+Keep it outside this public repository, or in the ignored `data/` directory. The expected sheet/column contract is in [the API and data guide](docs/API.md). The importer reads XLSX directly with standard-library ZIP handling and hardened XML parsing, including shared strings, inline strings, sparse cells and workbook relationships.
+
+```sh
+python -m sentinel --db artifacts/private.db import /absolute/path/to/your-workbook.xlsx
+python -m sentinel --db artifacts/private.db report --output artifacts/private-report.json
+```
+
+Opt into private integration tests:
+
+```sh
+# macOS / Linux
+SENTINEL_WORKBOOK=/absolute/path/to/your-workbook.xlsx python -m unittest discover -s tests -v
+```
+
+```powershell
+# Windows PowerShell
+$env:SENTINEL_WORKBOOK = 'C:\private\your-workbook.xlsx'
+python -m unittest discover -s tests -v
+Remove-Item Env:SENTINEL_WORKBOOK
+```
+
+An unset variable produces explicit skips. A configured missing/invalid file fails, rather than silently skipping. The private checks replay the supplied events and test tenant separation, fail-closed evidence and audit integrity; historical dispositions are **not** clinical ground truth. The full report and export may contain private source-derived data: keep them local. Public CI does not receive this environment variable or workbook.
+
+## 4. Project structure
+
+```text
+src/sentinel/
+  workbook.py       XLSX reader and source hashes
+  evidence.py       Tenant-scoped candidates, temporal lookup and blockers
+  service.py        Transactional cases, approvals, clocks, outbox and audit
+  http.py           Authenticated loopback JSON API
+  sample.py         Deterministic, wholly fictional workbook generator
+  demo.py           Running-HTTP lifecycle walkthrough
+  __main__.py       CLI / installed `sentinel` command
+scripts/
+  check.py          Portable local and CI acceptance command
+  api_example.py    Example authenticated API client
+tests/             Unit, workflow, HTTP, CLI and opt-in private checks
+docs/              API, architecture, development, testing and security guides
+data/              Instructions only; private inputs are ignored
+.github/workflows/  Cross-platform checks and security scanning
+```
+
+This replaces the previous `prototype/` layout with one installable package and one test entry point. Docker, Terraform and Kubernetes scaffolding are not included: this local implementation does not need them, and unverified production scaffolding would imply capabilities it does not provide.
+
+## 5. Common commands
+
+| Command | Purpose |
 |---|---|
-| Full suite with workbook | **49 passed**, **99.19%** combined statement/branch coverage |
-| Entire suite with workbook physically absent | **45 passed, 4 skipped**, **95.30%** combined coverage |
-| Workbook replay | **15 sheets, 420 events**, immutable input |
-| Product references | 297 exact-source matches; 72 unverified alias candidates; 51 missing |
-| Notification replay | 14 late; 14 within fixed historical window; 392 flagged not reportable in extract |
-| Evidence result | All 420 need more evidence; zero proposed auto-closures or signed dispositions |
-| Reproducibility | All five generated files byte-identical across clean reruns |
+| `python scripts/check.py` | Compile, test and run the HTTP demo |
+| `python -m unittest discover -s tests -v` | Run all tests; private integration is opt-in |
+| `python -m sentinel demo` | Isolated end-to-end fictional walkthrough |
+| `python -m sentinel sample` | Write ignored `artifacts/sample.xlsx` |
+| `python -m sentinel report` | Print aggregate state/blocker/clock summary |
+| `python -m sentinel report --output artifacts/report.json` | Write full local report, including case packets |
+| `python -m sentinel tick --tenant DEMO-BETA --fail` | Inject an internal reminder outage |
+| `python -m sentinel tick --tenant DEMO-BETA` | Retry pending internal reminders; no regulator calls |
+| `python -m sentinel export --tenant TENANT --case CASE --output artifacts/audit.json` | Export an authorized local case and all revisions |
+| `python -m sentinel verify artifacts/audit.json` | Verify manifest, audit chain and artifact hashes |
 
-These are selected-pack counts, **not** population rates or clinical accuracy. The clock replays supplied flags and hours; it does not qualify jurisdictional calendars or independently decide reportability. Exact source equality is not canonical presentation approval.
+The CLI has trusted administrative access to its local database. Tenant access controls apply at the authenticated HTTP boundary. Consult [API](docs/API.md), [architecture](docs/ARCHITECTURE.md), [contributing](docs/CONTRIBUTING.md), [testing](docs/TESTING.md), and [security](docs/SECURITY.md).
 
-Local Ruff, Bandit, runtime dependency audit and Gitleaks checks are described in [validation](docs/08-validation-and-test-strategy.md). The initial public commit passed all three hosted workflows: CI (Python 3.11/3.13), Security and Prototype fixtures. A fresh clone independently passed the quickstart above; pinned run links are in the validation document. Docker is not installed on the build box: image/compose configuration is provided but was not executed there.
+## Case-study submission — four requested sections
 
-## Commands
+1. **Where we land:** [recommendation](docs/RECOMMENDATION.md), with requirements mapped to source sections/rows, exclusions, a phased pilot, assumptions and board-level counterarguments.
+2. **The design:** [implemented architecture](docs/ARCHITECTURE.md), [production HLD/LLD](docs/PRODUCTION_DESIGN.md), and [API/data contract](docs/API.md). Diagrams cover component and state boundaries; the production design covers bitemporal data, failure handling and deployment qualification.
+3. **Working prototype:** this package implements the durable evidence/lifecycle/clock core. Public CI uses fictional fixtures; the explicit private-workbook integration path above executes against the authorized supplied workbook. Missing source systems remain documented stubs, not fabricated successful integrations.
+4. **Working log:** [development decisions, mistakes and discarded approaches](docs/WORKING_LOG.md).
 
-`make setup`, `make test`, `make test-unit`, `make test-integration`, `make run`, `make e2e`, `make lint`, `make docker-build`, `make docker-run`.
+The written submission is anonymized. Source section/sheet/row references let an evaluator with the original pack trace decisions; original source files, customer-identifying details and case-level outputs are not published. Public and private verification claims are kept separate in [testing](docs/TESTING.md).
 
-Docker build defaults to synthetic fixtures. Compose expects your local workbook, mounts it read-only, writes only local outputs and disables networking. Inspect your host's volume permissions before use. No source workbook is copied into the image.
+## Supported boundary
 
-## Design and working record
+**Implemented:** real HTTP requests, durable transactions, exact import replay, tenant-scoped reads/mutations, optimistic concurrency, idempotency, evidence review, independent single/dual approvals, reopening, independent alert-based deadlines, explicit reminder retries, human-attested filing receipts, local audit export/verification, synthetic and authorized-workbook execution.
 
-- [Executive summary](docs/00-executive-summary.md)
-- [Where we land: requirements, sources, exclusions and rollout](docs/01-where-we-land.md)
-- [System architecture / HLD](docs/02-system-architecture.md)
-- [Data model / temporal LLD](docs/03-data-model.md)
-- [Case lifecycle](docs/04-case-lifecycle.md)
-- [Degradation and regulatory clock](docs/05-degradation-and-regulatory-clock.md)
-- [Versioning and deployment](docs/06-versioning-and-deployment.md)
-- [Honest working log](docs/07-working-log.md)
-- [Validation and measured evidence](docs/08-validation-and-test-strategy.md)
-- [Risks, complete sheet inventory and open questions](docs/09-risks-assumptions-and-open-questions.md)
-- [Future roadmap](docs/10-future-roadmap.md)
-- [Five Mermaid diagrams](diagrams/architecture.md), [prototype boundaries](prototype/README.md), [infrastructure contract](infrastructure/README.md)
+**Not implemented:** live source-system connectors, validated clinical rules, authoritative document interpretation, named-signatory licensing/SSO, qualified signatures, regulator delivery, continuously supervised deadline scheduling, legal holiday calendars, distributed availability or seven-year immutable retention. No “production-ready” or “everything integrated” claim is made. Those require external systems, approvals and evidence that are not in this repository.
 
-## Confidentiality and scope
-
-Fresh git history contains authored code, paraphrased analysis and synthetic fixtures only. Do not commit the source brief, private workbook, private PDF, customer-derived output, contacts, compensation details or credentials. `.gitignore` excludes those local artefacts; this is not a substitute for reviewing staged changes. The MIT license covers authored work, not rights to the supplied private dataset.
-
-Only the local kernel, reference/audit stores and small in-memory workflow are implemented. Production adapters, durable scheduling, authority/e-signature validation, legal calendars, regulator filing, multiwriter exposure accounting and HA/DR remain qualified future work. An audit hash chain is not administrator-proof WORM, and a basis-hash guard is not a regulated signature.
-
-Optional private report: install `Markdown` and `weasyprint` plus OS Pango libraries, then run `python scripts/generate_diagrams.py --report /path/outside/repo/REPORT.pdf`. Add `--renderer /path/to/mmdc` (Mermaid CLI) and `--puppeteer-config /path/to/config.json` for rendered SVG/PNG figures. Generated diagram files stay in `.local-evidence/`; PDF should remain outside public history. No submission archive is created.
+Audit hashes detect accidental alteration relative to a trusted copy; they do not stop an administrator from rewriting data and recomputing hashes. An internal reminder is never treated as a regulator receipt. Case disposition and notification clocks remain independent, including during outages and reopening.

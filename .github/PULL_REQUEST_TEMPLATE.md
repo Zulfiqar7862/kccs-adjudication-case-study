@@ -1,12 +1,8 @@
-## Change and source
-Describe behaviour changed, requirement/source section, and deliberate exclusions.
+## Change
 
-## Evidence
-- [ ] Synthetic tests and lint pass without the private workbook.
-- [ ] No customer data, source attachments, generated dossiers, credentials or contacts are committed.
-- [ ] Rule/reference/model behaviour changes include a differential review plan.
-- [ ] Clock independence, tenant isolation and historical basis remain intact.
-- [ ] Production claims are distinguished from prototype evidence.
+## Verification
 
-## Risk and rollback
-State affected cohorts, schema compatibility and safe fallback.
+- [ ] Public suite and HTTP demo pass with no private workbook
+- [ ] Private integration result stated separately, when authorized
+- [ ] No source documents, workbooks, credentials or derived private outputs are staged
+- [ ] API/docs describe the implemented behavior and remaining stubs accurately

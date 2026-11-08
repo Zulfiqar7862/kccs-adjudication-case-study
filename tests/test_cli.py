@@ -1,0 +1,63 @@
+"""Exercise installed CLI commands in separate processes without private data."""
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import unittest
+
+
+class CliTests(unittest.TestCase):
+    def run_cli(self, directory, *args, expected=0):
+        result = subprocess.run([sys.executable, '-m', 'sentinel', *args], cwd=directory,
+                                capture_output=True, text=True, timeout=30)
+        self.assertEqual(result.returncode, expected, result.stderr + result.stdout)
+        return result
+
+    def test_sample_import_report_export_and_private_credentials(self):
+        with tempfile.TemporaryDirectory() as directory:
+            self.run_cli(directory, 'sample')
+            first = json.loads(self.run_cli(directory, 'import', 'artifacts/sample.xlsx').stdout)
+            self.assertGreater(first['created'], 0)
+            replay = json.loads(self.run_cli(directory, 'import', 'artifacts/sample.xlsx').stdout)
+            self.assertTrue(replay['replayed'])
+            self.run_cli(directory, 'report', '--output', 'artifacts/report.json')
+            report = json.loads((Path(directory) / 'artifacts/report.json').read_text(encoding='utf-8'))
+            self.assertEqual(report['states'], {'WAITING_EVIDENCE': first['created']})
+            case = report['cases'][0]
+            self.run_cli(directory, 'export', '--tenant', case['tenant'], '--case', case['id'],
+                         '--output', 'artifacts/audit.json')
+            self.assertTrue(json.loads(self.run_cli(directory, 'verify', 'artifacts/audit.json').stdout)['valid'])
+            path = Path(directory) / 'artifacts/audit.json'
+            audit = json.loads(path.read_text(encoding='utf-8'))
+            audit['state'] = 'DISPOSED'
+            path.write_text(json.dumps(audit), encoding='utf-8')
+            self.assertFalse(json.loads(self.run_cli(directory, 'verify', 'artifacts/audit.json', expected=1).stdout)['valid'])
+            created = self.run_cli(directory, 'credentials', '--tenant', case['tenant'])
+            path = Path(directory) / 'artifacts/local-credentials.json'
+            credentials = json.loads(path.read_text(encoding='utf-8'))
+            self.assertEqual(len(credentials), 5)
+            for token in credentials:
+                self.assertNotIn(token, created.stdout)
+                self.assertGreaterEqual(len(token), 32)
+            if os.name != 'nt':
+                self.assertEqual(path.stat().st_mode & 0o777, 0o600)
+            self.run_cli(directory, 'credentials', '--tenant', case['tenant'], expected=1)
+            self.assertEqual(json.loads(path.read_text(encoding='utf-8')), credentials)
+
+    def test_missing_input_and_malformed_export_fail_cleanly(self):
+        with tempfile.TemporaryDirectory() as directory:
+            result = self.run_cli(directory, 'import', 'missing.xlsx', expected=1)
+            self.assertNotIn('Traceback', result.stderr)
+            path = Path(directory) / 'invalid.json'
+            path.write_text('{}', encoding='utf-8')
+            self.assertFalse(json.loads(self.run_cli(directory, 'verify', str(path), expected=1).stdout)['valid'])
+
+    def test_http_lifecycle_demo(self):
+        with tempfile.TemporaryDirectory() as directory:
+            report = json.loads(self.run_cli(directory, 'demo').stdout)
+            self.assertEqual(report['result'], 'PASS')
+            self.assertTrue(report['prior_revision_preserved'])
+            self.assertTrue(report['regulators_not_notified'])
+            self.assertEqual(report['reminder_failure_and_retry'], 'PASS')
