@@ -36,6 +36,42 @@ With the supplied workbook (keep it outside the repository; it is never committe
 
 Other commands: `./run.sh serve` (local API on `127.0.0.1:8080`), `./run.sh demo`, `./run.sh help`. Every `./run.sh X` not listed is passed to `python -m sentinel X`; the full command reference is in [prototype/README.md](prototype/README.md).
 
+## Step by step
+
+Every step is one command. Full captured output and what happens inside at each step: [docs/17-step-by-step-working.md](docs/17-step-by-step-working.md).
+
+| # | Step | Command | What you should see |
+|---|---|---|---|
+| 1 | Get the code | `git clone https://github.com/Zulfiqar7862/kccs-adjudication-case-study.git && cd kccs-adjudication-case-study` | a folder with `run.sh`, `docs/`, `prototype/` |
+| 2 | Set up and prove it works (fictional data) | `./run.sh` (Windows `.\run.ps1`) | `Ran 54 tests … OK`, a demo ending `"audit_integrity": "PASS"`, then `All requested checks passed.` |
+| 3 | Run everything on the supplied workbook | `./run.sh pack /path/to/KCCS_Sentinel_Reference_Data_Pack.xlsx` | five numbered stages, then `Assessed 420 alerts. Decisions proposed by the software: 0` with the blocking problems and the example alerts chosen |
+| 4 | Read the data-quality report | open `artifacts/private/workbook-inspection.md` | sheet inventory, overlapping SOP revisions, product resolution counts, firmware builds |
+| 5 | Explain one alert in plain English | `./run.sh explain EXC-110336` | what was identified, procedure and study in force, telemetry trust, **conflicts**, missing items, what a person must do, regulator clock, `RESULT: BLOCKED …` |
+| 6 | Ask "what did we know in January?" | `./run.sh explain EXC-110336 --known-at 2026-01-01T00:00:00+00:00` | the April calibration bulletin is hidden; one conflict fewer; a different fingerprint |
+| 7 | Save a verifiable evidence package | `./run.sh --db prototype/output/pack-9fe3fad7d0f7.db assess --tenant T-VIRENT --event EXC-110336 --output artifacts/private/EXC-110336.json` | `{"written": …}` |
+| 8 | Prove it has not been altered | `./run.sh --db prototype/output/pack-9fe3fad7d0f7.db verify-assessment artifacts/private/EXC-110336.json` | `{"valid": true}` (edit the file and it becomes `false`) |
+| 9 | Try to read another customer's alert | `./run.sh --db prototype/output/pack-9fe3fad7d0f7.db assess --tenant T-AURA --event EXC-110336` | `Error: Event 'EXC-110336' is not available to tenant 'T-AURA'` — same message as for an alert that does not exist |
+| 10 | Apply a correction and get a *new* assessment | `./run.sh explain EXC-110336 --corrections artifacts/private/demo-correction.json --known-at 2026-09-21T00:00:00+00:00` | the presentation-mismatch conflict is gone; `Corrections applied: 1`; the package from step 7 still verifies |
+| 11 | See the coverage summary | open `artifacts/private/assessment-summary.json` | 420 `ABSTAIN`; 234 blocked by conflicts, 186 incomplete; 118 review candidates |
+| 12 | Walk a case through review, signature and reopen over HTTP | `./run.sh serve`, then in another shell `python scripts/api_example.py` | the local API on `127.0.0.1:8080`; routes in [docs/API.md](docs/API.md) |
+
+The database name in steps 7–9 is `pack-` plus the first 12 characters of the workbook's SHA-256; step 3 prints it and writes it to `prototype/output/last-pack.txt`. `./run.sh explain` reads that file, so steps 5, 6 and 10 need no `--db`.
+
+### What happens inside one assessment (step 5)
+
+1. **Authorise** — the alert must belong to the customer asking; otherwise "not available", identical to "does not exist".
+2. **Fix the two clocks** — *as-at* is the moment the temperature left range (which rules applied); *known-at* is the knowledge cutoff (what facts existed), defaulting to the workbook's extract date.
+3. **Overlay corrections** recorded on or before *known-at*; the stored tables are never changed.
+4. **Identify the product** by exact match inside the customer's own master only; two matches = ambiguous; none = unresolved, with any reviewer alias noted as *unverified*.
+5. **Identify the facilities** across the three source systems; contradictory timezones are a conflict.
+6. **Identify the carrier contract** in force at *as-at*; a name that matches two legal entities is a conflict; claims never gate the decision.
+7. **Select the procedure (SOP) revisions** in force at *as-at*; two revisions of one document in force at once = conflict; a revision ending on that day = reported, not dropped.
+8. **Check the stability study**: owned by this customer (ownership column, not folder), same presentation, readable, and actually states an excursion limit; otherwise not usable, with the reason.
+9. **Check the temperature readings**: gaps, interpolation, untagged building-system source (quarantine), and firmware under a calibration bulletin recorded by *known-at* — flagged with the bulletin's stated bound, never "corrected".
+10. **Create the regulator-clock view** from the alert time; no window on record = urgent policy review, never "not required".
+11. **Conclude**: always `ABSTAIN`; readiness is *blocked* if any conflict, *incomplete* if anything is missing, else *assembled*.
+12. **Pin and fingerprint**: code, rules and policy versions, workbook hash, corrections hash; SHA-256 over the whole result.
+
 ## What you get
 
 ```
