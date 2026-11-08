@@ -9,7 +9,7 @@ Candidate: Zulfiqar. Prototype and documents were produced with heavy AI assista
 | You want to… | Go to |
 |---|---|
 | Review the submission in the evaluator's four sections | [Reading guide](docs/README.md) and [submission checklist](SUBMISSION_CHECKLIST.md) |
-| Run the prototype in ten minutes | [Clone and run](#clone-and-run) below, then [prototype walkthrough](prototype/WALKTHROUGH.md) |
+| Run the prototype in ten minutes | [Clone and run](#clone-and-run) below, then the [step-by-step working guide](docs/17-step-by-step-working.md) (every command with its real output, and what the kernel does with one alert) |
 | Prepare or follow the 20-minute review | [Review walkthrough, hard questions, change response, email draft](docs/16-review-walkthrough.md) |
 | See what the workbook actually contains | [Data findings and assumptions](docs/12-data-findings-and-assumptions.md) |
 

@@ -43,7 +43,7 @@ python scripts/select_demo_cases.py --db prototype/output/private.db --output-di
 4. **verify-assessment.**
    `python -m sentinel --db prototype/output/private.db verify-assessment artifacts/private/x.json`
    Then edit one character in a copy and run it again to show it fails. State the limit: a hash shows alteration against a trusted copy, not that the content is correct.
-5. **EXC-112135 (T-KAVERI) with the correction.** Product master cites a vial study (STB-7388) for a syringe product. Run `assess` without and then with `--corrections artifacts/private/demo-correction.json` (overlay recorded 2026-09-20; it is a demonstration fixture, not a QA action). Point at: a *new* assessment with a new hash, while the original package still verifies. This is the shape of the April calibration problem (Section 4b).
+5. **EXC-110336 (T-VIRENT) with the correction.** Its product master row (`02` row 16) cites a vial study (STB-4417) for a syringe product; EXC-112135 (T-KAVERI, STB-7388) is the same defect on another tenant. Run `assess` without and then with `--corrections artifacts/private/demo-correction.json` (overlay recorded 2026-09-20; it is a demonstration fixture, not a QA action). Point at: a *new* assessment with a new hash, while the original package still verifies. This is the shape of the April calibration problem (Section 4b).
 6. **Cross-tenant access.**
    `python -m sentinel --db prototype/output/private.db assess --tenant T-VIRENT --event EXC-110287`
    (EXC-110287 belongs to T-KAVERI.) Expect a not-found error, indistinguishable from a nonexistent event. The HTTP API gives the same 404 for foreign cases ([docs/API.md](API.md)); unit tests are `test_cross_tenant_access_is_indistinguishable_from_missing` and `test_same_identifier_under_two_tenants_resolves_only_within_tenant`.
@@ -140,7 +140,7 @@ What I would ask in the room: effective date semantics (alert time vs detection 
 6. **Regulatory follow-up.** Assessed separately per case: a changed outcome does not itself reopen or refile a notification. A reviewer decides whether a follow-up is required and the obligation system records the decision.
 7. **Control.** The replay report goes to QA before bulk revisions run; revision creation is batched and rate-limited so it cannot starve the obligation lane.
 
-**What the prototype shows today.** The shape, not the dependency index or the tasks. EXC-110336 with and without `--known-at 2026-01-01T00:00:00+00:00` shows the bulletin appearing or disappearing from the knowledge view, with a different hash. EXC-112135 with `--corrections artifacts/private/demo-correction.json` shows a correction recorded 2026-09-20 yielding a new assessment while the original package still verifies. Not built: the logger→case dependency index, impact-review tasks, outbox withdrawal of invoices, and the follow-up assessment. They are specified in [doc 13](13-detailed-design-lld.md).
+**What the prototype shows today.** The shape, not the dependency index or the tasks. EXC-110336 with and without `--known-at 2026-01-01T00:00:00+00:00` shows the bulletin appearing or disappearing from the knowledge view, with a different hash. EXC-110336 with `--corrections artifacts/private/demo-correction.json` shows a correction recorded 2026-09-20 yielding a new assessment while the original package still verifies. Not built: the logger→case dependency index, impact-review tasks, outbox withdrawal of invoices, and the follow-up assessment. They are specified in [doc 13](13-detailed-design-lld.md).
 
 ---
 

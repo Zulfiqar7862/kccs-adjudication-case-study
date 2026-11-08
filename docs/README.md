@@ -38,7 +38,7 @@ Each document contains its relevant inline diagrams. The [diagram index](../diag
 ## Step 3 — Working Prototype
 
 1. If you hold the supplied workbook, run the full suite against it first: `SENTINEL_WORKBOOK=/absolute/path/to/pack.xlsx python scripts/check.py`. This is the brief's "execution against the provided workbook"; the [verification record](08-validation-and-test-strategy.md#verification-record) lists the expected aggregates.
-2. Run the assessment kernel on real cases: `python scripts/select_demo_cases.py` and the `assess` / `assess-all` commands in the [README](../README.md#execute-against-the-supplied-workbook). Inspect `artifacts/private/demo-cases.json` for the knowledge-cutoff and correction replays.
+2. Follow the [step-by-step working guide](17-step-by-step-working.md): fifteen commands with captured output, then how the kernel processes one alert. Inspect `artifacts/private/demo-cases.json` for the knowledge-cutoff and correction replays.
 3. Follow the [hands-on walkthrough](../prototype/WALKTHROUGH.md) to install and run the fictional HTTP lifecycle demo.
 4. Read [validation and long-term reliability](08-validation-and-test-strategy.md) to separate current checks from proposed qualification gates, and the [operations runbook](15-operations-runbook.md).
 5. Without the pack, inspect `artifacts/public/` (generated from the [anonymized workbook](../data/README.md); structure preserved, outcomes not equivalent) and use the [prototype module map](../prototype/README.md) and [API contract](API.md) for a code review.
