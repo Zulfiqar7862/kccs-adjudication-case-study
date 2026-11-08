@@ -17,12 +17,13 @@ On Windows, `./prototype/run.ps1 demo` creates the environment, installs and run
 ## Boundaries
 
 - `ingestion/workbook.py`: hardened XLSX parsing, source row provenance and digest.
-- `evidence/analysis.py`: tenant/identity matching, temporal candidates and fail-closed blockers; not clinical decisions.
+- `evidence/analysis.py`: tenant/identity matching, temporal candidates and fail-closed blockers used at import; not clinical decisions.
+- `evidence/assessment.py`: the assessment kernel. Turns one imported alert into a tenant-scoped, temporally explicit evidence assessment with entity resolution that abstains on ambiguity, SOP/stability/telemetry checks, a knowledge cutoff (`known_at`), correction overlays with recorded time, an execution manifest and content hashes; packages and verifies it.
 - `workflow/service.py`: SQLite transaction boundary for case revisions, reviews, independent signatures, audit events, obligations and reminder outbox.
 - `api/http.py`: authenticated loopback requests, input limits and domain-error responses.
 - `cli.py`, `config.py`: local administrative commands and explicit output settings.
 - `fixtures/sample.py`, `demo.py`: deterministic fictional input and real HTTP demonstration.
-- `tests/unit/`: parsing/candidate/configuration checks; `tests/integration/`: persistence, concurrency, CLI, HTTP, lifecycle and opt-in private workbook.
+- `tests/unit/`: parsing/candidate/assessment/configuration checks; `tests/integration/`: persistence, concurrency, CLI, HTTP, lifecycle, public workbook assessment and opt-in private workbook.
 
 The service remains cohesive so changes to case state, audit history and idempotency commit together. Splitting those into independent storage services would weaken the critical invariant without helping this prototype.
 
@@ -39,8 +40,14 @@ All supplied records are exercised by the private integration test; public CI ru
 
 ```sh
 python -m sentinel --help
-python -m sentinel report
+python -m sentinel --db prototype/output/private.db report
+python -m sentinel --db prototype/output/private.db assess --tenant T-CODE --event EXC-ID --output artifacts/private/EXC-ID.json
+python -m sentinel --db prototype/output/private.db assess --tenant T-CODE --event EXC-ID --known-at 2026-01-01T00:00:00+00:00
+python -m sentinel --db prototype/output/private.db verify-assessment artifacts/private/EXC-ID.json
+python -m sentinel --db prototype/output/private.db assess-all --compare-history --output artifacts/private/assessment-summary.json
 python -m sentinel tick --help
 ```
+
+`--db` is a global option and goes before the subcommand. `assess` requires the principal's tenant; an event belonging to another tenant is reported as not found, the same answer as a missing event. `--corrections` accepts a JSON list of overlays (`recorded_at`, `sheet`, `row`, `field`, `value`); overlays recorded after `--known-at` are ignored, and the original assessment is never modified.
 
 Notification statuses are part of `report`; use `tick --tenant TENANT` for the internal reminder stub. Neither operation contacts a regulator. Use `export --tenant TENANT --case CASE --output PATH` and `verify PATH` for audit bundles. See the [API contract](../docs/API.md) and [root guide](../README.md) for the complete workflow and limitations.

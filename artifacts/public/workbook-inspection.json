@@ -1,0 +1,2569 @@
+{
+  "workbook_sha256": "1b7c0c937e5ea43e25c100d14670752736afc3a7ea6d191c1a303892396f620d",
+  "inspected_at": "2026-11-08T13:54:39+00:00",
+  "sheets": {
+    "00_README": {
+      "rows": 40,
+      "first_row": 2,
+      "last_row": 41,
+      "columns": {
+        "Sentinel Excursion Adjudication — Reference Data Pack": {
+          "kinds": {
+            "text": 40
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "ANONYMIZED EVALUATION COPY: source structure and row counts retained; identifiers replaced; narratives removed; dates and measurements synthetic. Not the original workbook, clinical evidence, or outcome-equivalent data.": 40
+          }
+        },
+        "_col_2": {
+          "kinds": {
+            "blank": 40
+          },
+          "distinct_non_blank": 0,
+          "leading_zero_identifiers": 0
+        }
+      }
+    },
+    "01_Excursion_Events": {
+      "rows": 420,
+      "first_row": 2,
+      "last_row": 421,
+      "columns": {
+        "event_id": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 420,
+          "leading_zero_identifiers": 0
+        },
+        "alert_ts_utc": {
+          "kinds": {
+            "timestamp_like": 420
+          },
+          "distinct_non_blank": 396,
+          "leading_zero_identifiers": 0
+        },
+        "tenant_code": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 8,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REF-00002": 33,
+            "REF-00010": 164,
+            "REF-00025": 26,
+            "REF-00062": 26,
+            "REF-00101": 44,
+            "REF-00109": 28,
+            "REF-00152": 83,
+            "REF-00186": 16
+          }
+        },
+        "shipment_ref": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 420,
+          "leading_zero_identifiers": 0
+        },
+        "leg_no": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 420
+          }
+        },
+        "source_system": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 420
+          }
+        },
+        "logger_id": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 419,
+          "leading_zero_identifiers": 0
+        },
+        "logger_vendor": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 420
+          }
+        },
+        "logger_fw": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 420
+          }
+        },
+        "product_ref_as_received": {
+          "kinds": {
+            "blank": 42,
+            "text": 378
+          },
+          "distinct_non_blank": 80,
+          "leading_zero_identifiers": 0
+        },
+        "origin_ref_as_received": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 86,
+          "leading_zero_identifiers": 0
+        },
+        "dest_ref_as_received": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 87,
+          "leading_zero_identifiers": 0
+        },
+        "lane_text": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0
+        },
+        "carrier_ref_as_received": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 61,
+          "leading_zero_identifiers": 0
+        },
+        "mode": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 420
+          }
+        },
+        "excursion_start_utc": {
+          "kinds": {
+            "timestamp_like": 420
+          },
+          "distinct_non_blank": 393,
+          "leading_zero_identifiers": 0
+        },
+        "excursion_end_utc": {
+          "kinds": {
+            "timestamp_like": 420
+          },
+          "distinct_non_blank": 400,
+          "leading_zero_identifiers": 0
+        },
+        "duration_min": {
+          "kinds": {
+            "number_like": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "60": 420
+          }
+        },
+        "min_temp_c": {
+          "kinds": {
+            "number_like": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "2": 420
+          }
+        },
+        "max_temp_c": {
+          "kinds": {
+            "number_like": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "9": 420
+          }
+        },
+        "mean_temp_c": {
+          "kinds": {
+            "number_like": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "5": 420
+          }
+        },
+        "spec_text_as_received": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0
+        },
+        "readings_in_window": {
+          "kinds": {
+            "number_like": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "60": 420
+          }
+        },
+        "gateway_gap_min": {
+          "kinds": {
+            "number_like": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "0": 420
+          }
+        },
+        "interpolated": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 2,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "N": 344,
+            "Y": 76
+          }
+        },
+        "dock_door_open_flag": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 420
+          }
+        },
+        "prior_excursions_lane_90d": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 420
+          }
+        },
+        "consignment_value_usd": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 420
+          }
+        },
+        "case_opened": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 420
+          }
+        },
+        "triage_outcome": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 420
+          }
+        },
+        "rules_engine_recommendation": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 420
+          }
+        },
+        "final_disposition": {
+          "kinds": {
+            "text": 143,
+            "blank": 220,
+            "explicit_unknown": 57
+          },
+          "distinct_non_blank": 4,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "RELEASE": 91,
+            "RELEASE_WITH_NOTE": 38,
+            "UNKNOWN": 57,
+            "DESTROY": 14
+          }
+        },
+        "reviewer_id": {
+          "kinds": {
+            "text": 200,
+            "blank": 220
+          },
+          "distinct_non_blank": 23,
+          "leading_zero_identifiers": 0
+        },
+        "review_minutes": {
+          "kinds": {
+            "text": 200,
+            "blank": 220
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 200
+          }
+        },
+        "systems_opened": {
+          "kinds": {
+            "text": 200,
+            "blank": 220
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 200
+          }
+        },
+        "reviewer_overrode": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 420
+          }
+        },
+        "days_to_disposition": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 420
+          }
+        },
+        "regulator_reportable": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 2,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "N": 392,
+            "Y": 28
+          }
+        },
+        "reg_window_hours": {
+          "kinds": {
+            "blank": 392,
+            "number_like": 28
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "72": 28
+          }
+        },
+        "hours_to_notification": {
+          "kinds": {
+            "blank": 392,
+            "text": 28
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 28
+          }
+        },
+        "reported_within_window": {
+          "kinds": {
+            "blank": 392,
+            "text": 28
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 28
+          }
+        },
+        "reopened_later": {
+          "kinds": {
+            "text": 420
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 420
+          }
+        },
+        "notes": {
+          "kinds": {
+            "blank": 274,
+            "text": 146
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0
+        }
+      }
+    },
+    "02_Product_Master": {
+      "rows": 59,
+      "first_row": 2,
+      "last_row": 60,
+      "columns": {
+        "erp_source": {
+          "kinds": {
+            "text": 59
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 59
+          }
+        },
+        "tenant_code": {
+          "kinds": {
+            "text": 59
+          },
+          "distinct_non_blank": 8,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REF-00002": 6,
+            "REF-00010": 9,
+            "REF-00109": 9,
+            "REF-00025": 7,
+            "REF-00186": 7,
+            "REF-00152": 7,
+            "REF-00062": 8,
+            "REF-00101": 6
+          }
+        },
+        "brand_as_labelled": {
+          "kinds": {
+            "text": 55,
+            "blank": 4
+          },
+          "distinct_non_blank": 14,
+          "leading_zero_identifiers": 0
+        },
+        "generic_inn": {
+          "kinds": {
+            "blank": 21,
+            "text": 38
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 38
+          }
+        },
+        "internal_sku": {
+          "kinds": {
+            "text": 50,
+            "blank": 9
+          },
+          "distinct_non_blank": 14,
+          "leading_zero_identifiers": 0
+        },
+        "gtin": {
+          "kinds": {
+            "blank": 23,
+            "text": 36
+          },
+          "distinct_non_blank": 14,
+          "leading_zero_identifiers": 0
+        },
+        "legacy_code": {
+          "kinds": {
+            "blank": 41,
+            "text": 18
+          },
+          "distinct_non_blank": 18,
+          "leading_zero_identifiers": 0
+        },
+        "storage_spec_text": {
+          "kinds": {
+            "text": 59
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0
+        },
+        "mkt_tolerance_text": {
+          "kinds": {
+            "text": 54,
+            "blank": 5
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0
+        },
+        "permitted_excursion_text": {
+          "kinds": {
+            "text": 53,
+            "blank": 6
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0
+        },
+        "stability_study_ref": {
+          "kinds": {
+            "text": 52,
+            "blank": 7
+          },
+          "distinct_non_blank": 52,
+          "leading_zero_identifiers": 0
+        },
+        "light_sensitive": {
+          "kinds": {
+            "text": 59
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 59
+          }
+        },
+        "last_updated": {
+          "kinds": {
+            "timestamp_like": 59
+          },
+          "distinct_non_blank": 56,
+          "leading_zero_identifiers": 0
+        }
+      }
+    },
+    "03_Facility_Registry": {
+      "rows": 70,
+      "first_row": 2,
+      "last_row": 71,
+      "columns": {
+        "source_system": {
+          "kinds": {
+            "text": 70
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 70
+          }
+        },
+        "record_id": {
+          "kinds": {
+            "text": 70
+          },
+          "distinct_non_blank": 70,
+          "leading_zero_identifiers": 0
+        },
+        "name_in_source": {
+          "kinds": {
+            "text": 70
+          },
+          "distinct_non_blank": 70,
+          "leading_zero_identifiers": 0
+        },
+        "code_in_source": {
+          "kinds": {
+            "text": 70
+          },
+          "distinct_non_blank": 42,
+          "leading_zero_identifiers": 0
+        },
+        "country": {
+          "kinds": {
+            "text": 70
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 70
+          }
+        },
+        "timezone_in_source": {
+          "kinds": {
+            "text": 70
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "UTC": 70
+          }
+        },
+        "cold_rooms": {
+          "kinds": {
+            "text": 70
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 70
+          }
+        },
+        "gmp_licence_ref": {
+          "kinds": {
+            "text": 44,
+            "blank": 26
+          },
+          "distinct_non_blank": 44,
+          "leading_zero_identifiers": 0
+        },
+        "bms_room_tags": {
+          "kinds": {
+            "blank": 21,
+            "text": 49
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 49
+          }
+        },
+        "record_created": {
+          "kinds": {
+            "timestamp_like": 70
+          },
+          "distinct_non_blank": 70,
+          "leading_zero_identifiers": 0
+        },
+        "active": {
+          "kinds": {
+            "text": 70
+          },
+          "distinct_non_blank": 2,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "Y": 69,
+            "N": 1
+          }
+        }
+      }
+    },
+    "04_Carrier_Contracts": {
+      "rows": 14,
+      "first_row": 2,
+      "last_row": 15,
+      "columns": {
+        "contract_id": {
+          "kinds": {
+            "text": 14
+          },
+          "distinct_non_blank": 14,
+          "leading_zero_identifiers": 0
+        },
+        "counterparty_legal_entity": {
+          "kinds": {
+            "text": 14
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 14
+          }
+        },
+        "names_seen_on_documents": {
+          "kinds": {
+            "text": 14
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 14
+          }
+        },
+        "parent_of": {
+          "kinds": {
+            "blank": 12,
+            "text": 2
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 2
+          }
+        },
+        "effective_from": {
+          "kinds": {
+            "timestamp_like": 14
+          },
+          "distinct_non_blank": 14,
+          "leading_zero_identifiers": 0
+        },
+        "effective_to": {
+          "kinds": {
+            "timestamp_like": 11,
+            "blank": 3
+          },
+          "distinct_non_blank": 7,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "2020-03-25T20:00:00+00:00": 2,
+            "2020-03-25T18:00:00+00:00": 3,
+            "2020-03-25T21:00:00+00:00": 2,
+            "2020-03-25T17:00:00+00:00": 1,
+            "2020-03-25T22:00:00+00:00": 1,
+            "2020-03-25T19:00:00+00:00": 1,
+            "2020-03-25T16:00:00+00:00": 1
+          }
+        },
+        "governing_law": {
+          "kinds": {
+            "text": 14
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 14
+          }
+        },
+        "cold_chain_clause": {
+          "kinds": {
+            "text": 14
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 14
+          }
+        },
+        "liability_summary": {
+          "kinds": {
+            "text": 14
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 14
+          }
+        },
+        "liability_cap": {
+          "kinds": {
+            "text": 14
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 14
+          }
+        },
+        "claim_window_days": {
+          "kinds": {
+            "number_like": 14
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "30": 14
+          }
+        },
+        "amendment_docs": {
+          "kinds": {
+            "blank": 2,
+            "text": 12
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 12
+          }
+        }
+      }
+    },
+    "05_SOP_Index": {
+      "rows": 203,
+      "first_row": 2,
+      "last_row": 204,
+      "columns": {
+        "doc_id": {
+          "kinds": {
+            "text": 203
+          },
+          "distinct_non_blank": 62,
+          "leading_zero_identifiers": 0
+        },
+        "tenant_code": {
+          "kinds": {
+            "text": 203
+          },
+          "distinct_non_blank": 8,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REF-00002": 26,
+            "REF-00010": 29,
+            "REF-00109": 26,
+            "REF-00025": 23,
+            "REF-00186": 28,
+            "REF-00152": 19,
+            "REF-00062": 25,
+            "REF-00101": 27
+          }
+        },
+        "title": {
+          "kinds": {
+            "text": 203
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 203
+          }
+        },
+        "revision": {
+          "kinds": {
+            "text": 203
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 203
+          }
+        },
+        "effective_from": {
+          "kinds": {
+            "timestamp_like": 203
+          },
+          "distinct_non_blank": 195,
+          "leading_zero_identifiers": 0
+        },
+        "effective_to": {
+          "kinds": {
+            "timestamp_like": 139,
+            "blank": 64
+          },
+          "distinct_non_blank": 132,
+          "leading_zero_identifiers": 0
+        },
+        "supersedes_text": {
+          "kinds": {
+            "blank": 62,
+            "text": 141
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0
+        },
+        "applies_to_facilities_text": {
+          "kinds": {
+            "text": 203
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0
+        },
+        "format": {
+          "kinds": {
+            "text": 203
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 203
+          }
+        },
+        "pages": {
+          "kinds": {
+            "text": 203
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 203
+          }
+        },
+        "language": {
+          "kinds": {
+            "text": 203
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 203
+          }
+        },
+        "acceptance_limits_location": {
+          "kinds": {
+            "text": 203
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 203
+          }
+        }
+      }
+    },
+    "06_Stability_Index": {
+      "rows": 107,
+      "first_row": 2,
+      "last_row": 108,
+      "columns": {
+        "study_ref": {
+          "kinds": {
+            "text": 107
+          },
+          "distinct_non_blank": 107,
+          "leading_zero_identifiers": 0
+        },
+        "product_text_as_written": {
+          "kinds": {
+            "text": 107
+          },
+          "distinct_non_blank": 66,
+          "leading_zero_identifiers": 0
+        },
+        "tenant_code": {
+          "kinds": {
+            "text": 107
+          },
+          "distinct_non_blank": 8,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REF-00002": 10,
+            "REF-00010": 18,
+            "REF-00109": 17,
+            "REF-00025": 11,
+            "REF-00186": 12,
+            "REF-00152": 11,
+            "REF-00062": 15,
+            "REF-00101": 13
+          }
+        },
+        "study_type": {
+          "kinds": {
+            "text": 107
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 107
+          }
+        },
+        "temps_tested_text": {
+          "kinds": {
+            "text": 107
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0
+        },
+        "duration_tested": {
+          "kinds": {
+            "text": 107
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 107
+          }
+        },
+        "outcome_text": {
+          "kinds": {
+            "text": 107
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0
+        },
+        "permitted_excursion_text": {
+          "kinds": {
+            "text": 66,
+            "blank": 41
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0
+        },
+        "file_path_text": {
+          "kinds": {
+            "text": 107
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0
+        },
+        "pages": {
+          "kinds": {
+            "text": 107
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 107
+          }
+        },
+        "indexed_by": {
+          "kinds": {
+            "blank": 24,
+            "text": 83
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 83
+          }
+        },
+        "readable": {
+          "kinds": {
+            "text": 107
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 107
+          }
+        }
+      }
+    },
+    "07_Alias_Observations": {
+      "rows": 207,
+      "first_row": 2,
+      "last_row": 208,
+      "columns": {
+        "entity_kind": {
+          "kinds": {
+            "text": 207
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 207
+          }
+        },
+        "string_a": {
+          "kinds": {
+            "text": 207
+          },
+          "distinct_non_blank": 42,
+          "leading_zero_identifiers": 0
+        },
+        "string_b": {
+          "kinds": {
+            "text": 207
+          },
+          "distinct_non_blank": 207,
+          "leading_zero_identifiers": 0
+        },
+        "same_real_world_thing": {
+          "kinds": {
+            "text": 207
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 207
+          }
+        },
+        "times_seen_a": {
+          "kinds": {
+            "text": 207
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 207
+          }
+        },
+        "times_seen_b": {
+          "kinds": {
+            "text": 207
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 207
+          }
+        },
+        "confirmed_by": {
+          "kinds": {
+            "text": 207
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 207
+          }
+        },
+        "confirmed_on": {
+          "kinds": {
+            "timestamp_like": 207
+          },
+          "distinct_non_blank": 168,
+          "leading_zero_identifiers": 0
+        },
+        "comment": {
+          "kinds": {
+            "blank": 135,
+            "text": 72
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0
+        }
+      }
+    },
+    "08_Reviewer_Queue_Log": {
+      "rows": 200,
+      "first_row": 2,
+      "last_row": 201,
+      "columns": {
+        "log_id": {
+          "kinds": {
+            "text": 200
+          },
+          "distinct_non_blank": 200,
+          "leading_zero_identifiers": 0
+        },
+        "case_ref": {
+          "kinds": {
+            "text": 200
+          },
+          "distinct_non_blank": 200,
+          "leading_zero_identifiers": 0
+        },
+        "reviewer_id": {
+          "kinds": {
+            "text": 200
+          },
+          "distinct_non_blank": 23,
+          "leading_zero_identifiers": 0
+        },
+        "reviewer_region": {
+          "kinds": {
+            "text": 200
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 200
+          }
+        },
+        "reviewer_utc_offset": {
+          "kinds": {
+            "text": 200
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 200
+          }
+        },
+        "local_start": {
+          "kinds": {
+            "timestamp_like": 200
+          },
+          "distinct_non_blank": 200,
+          "leading_zero_identifiers": 0
+        },
+        "local_end": {
+          "kinds": {
+            "timestamp_like": 200
+          },
+          "distinct_non_blank": 200,
+          "leading_zero_identifiers": 0
+        },
+        "active_minutes": {
+          "kinds": {
+            "text": 200
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 200
+          }
+        },
+        "systems_opened": {
+          "kinds": {
+            "text": 200
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 200
+          }
+        },
+        "systems_list": {
+          "kinds": {
+            "text": 200
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 200
+          }
+        },
+        "action": {
+          "kinds": {
+            "text": 200
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 200
+          }
+        },
+        "queue_wait_hours": {
+          "kinds": {
+            "number_like": 200
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "1": 200
+          }
+        },
+        "interrupted_count": {
+          "kinds": {
+            "text": 200
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 200
+          }
+        },
+        "shift": {
+          "kinds": {
+            "text": 200
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 200
+          }
+        }
+      }
+    },
+    "09_Override_Reasons": {
+      "rows": 24,
+      "first_row": 2,
+      "last_row": 25,
+      "columns": {
+        "case_ref": {
+          "kinds": {
+            "text": 24
+          },
+          "distinct_non_blank": 24,
+          "leading_zero_identifiers": 0
+        },
+        "reviewer_id": {
+          "kinds": {
+            "text": 24
+          },
+          "distinct_non_blank": 14,
+          "leading_zero_identifiers": 0
+        },
+        "engine_said": {
+          "kinds": {
+            "text": 24
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 24
+          }
+        },
+        "reviewer_decided": {
+          "kinds": {
+            "text": 24
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 24
+          }
+        },
+        "verbatim_reason": {
+          "kinds": {
+            "text": 24
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0
+        }
+      }
+    },
+    "10_Reviewer_Questions": {
+      "rows": 12,
+      "first_row": 2,
+      "last_row": 13,
+      "columns": {
+        "#": {
+          "kinds": {
+            "text": 12
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 12
+          }
+        },
+        "question_as_asked": {
+          "kinds": {
+            "text": 12
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0
+        },
+        "where_the_answer_lives_today": {
+          "kinds": {
+            "text": 12
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 12
+          }
+        },
+        "typical_minutes": {
+          "kinds": {
+            "text": 12
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 12
+          }
+        },
+        "how_often_needed": {
+          "kinds": {
+            "text": 12
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 12
+          }
+        }
+      }
+    },
+    "11_Systems_Inventory": {
+      "rows": 9,
+      "first_row": 2,
+      "last_row": 10,
+      "columns": {
+        "system_id": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 9,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REF-02100": 1,
+            "REF-02101": 1,
+            "REF-02102": 1,
+            "REF-02103": 1,
+            "REF-02104": 1,
+            "REF-02105": 1,
+            "REF-02106": 1,
+            "REF-02107": 1,
+            "REF-02108": 1
+          }
+        },
+        "system": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 9
+          }
+        },
+        "what_it_holds": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 9
+          }
+        },
+        "access_method": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 9
+          }
+        },
+        "freshness": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 9
+          }
+        },
+        "rate_limit": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 9
+          }
+        },
+        "ordering_and_backfill": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 9
+          }
+        },
+        "measured_availability": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 9
+          }
+        },
+        "known_problems": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 9
+          }
+        }
+      }
+    },
+    "12_Tenant_Constraints": {
+      "rows": 9,
+      "first_row": 2,
+      "last_row": 10,
+      "columns": {
+        "tenant_code": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 9,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REF-00002": 1,
+            "REF-00010": 1,
+            "REF-00109": 1,
+            "REF-00025": 1,
+            "REF-00186": 1,
+            "REF-00152": 1,
+            "REF-00062": 1,
+            "REF-00101": 1,
+            "REF-02109": 1
+          }
+        },
+        "tenant_name": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 9
+          }
+        },
+        "country": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 9
+          }
+        },
+        "region": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 9
+          }
+        },
+        "shipments_per_month": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 9
+          }
+        },
+        "data_residency_position": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 9
+          }
+        },
+        "third_party_model_apis": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 9
+          }
+        },
+        "who_signs_a_disposition": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "Synthetic site QA and corporate QA (dual)": 9
+          }
+        },
+        "output_language": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 9
+          }
+        },
+        "sop_ownership": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 9
+          }
+        },
+        "other": {
+          "kinds": {
+            "text": 9
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 9
+          }
+        }
+      }
+    },
+    "13_Volume_And_Cost": {
+      "rows": 31,
+      "first_row": 2,
+      "last_row": 32,
+      "columns": {
+        "Volume, cost and price inputs": {
+          "kinds": {
+            "text": 31
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 31
+          }
+        },
+        "_col_2": {
+          "kinds": {
+            "text": 30,
+            "blank": 1
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 30
+          }
+        },
+        "_col_3": {
+          "kinds": {
+            "blank": 24,
+            "text": 7
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 7
+          }
+        },
+        "_col_4": {
+          "kinds": {
+            "blank": 24,
+            "text": 7
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 7
+          }
+        },
+        "_col_5": {
+          "kinds": {
+            "blank": 24,
+            "text": 7
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 7
+          }
+        },
+        "_col_6": {
+          "kinds": {
+            "blank": 24,
+            "text": 7
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 7
+          }
+        },
+        "_col_7": {
+          "kinds": {
+            "blank": 24,
+            "text": 7
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 7
+          }
+        }
+      }
+    },
+    "14_Incident_Log": {
+      "rows": 6,
+      "first_row": 2,
+      "last_row": 7,
+      "columns": {
+        "ref": {
+          "kinds": {
+            "text": 6
+          },
+          "distinct_non_blank": 6,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REF-02110": 1,
+            "REF-02111": 1,
+            "REF-02112": 1,
+            "REF-02113": 1,
+            "REF-02114": 1,
+            "REF-02115": 1
+          }
+        },
+        "date": {
+          "kinds": {
+            "timestamp_like": 6
+          },
+          "distinct_non_blank": 6,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "2020-01-16T07:00:00+00:00": 1,
+            "2020-01-29T09:00:00+00:00": 1,
+            "2020-02-23T00:00:00+00:00": 1,
+            "2020-03-05T19:00:00+00:00": 1,
+            "2020-02-09T22:00:00+00:00": 1,
+            "2020-03-20T05:00:00+00:00": 1
+          }
+        },
+        "title": {
+          "kinds": {
+            "text": 6
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 6
+          }
+        },
+        "severity": {
+          "kinds": {
+            "text": 6
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 6
+          }
+        },
+        "what_happened": {
+          "kinds": {
+            "text": 6
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 6
+          }
+        },
+        "consequence": {
+          "kinds": {
+            "text": 6
+          },
+          "distinct_non_blank": 1,
+          "leading_zero_identifiers": 0,
+          "values": {
+            "REDACTED - evaluation copy": 6
+          }
+        }
+      }
+    }
+  },
+  "findings": {
+    "event_tenants": {
+      "REF-00002": 33,
+      "REF-00010": 164,
+      "REF-00025": 26,
+      "REF-00062": 26,
+      "REF-00101": 44,
+      "REF-00109": 28,
+      "REF-00152": 83,
+      "REF-00186": 16
+    },
+    "event_tenants_without_constraint_row": [],
+    "events_without_tenant": [],
+    "product_identifiers_shared_across_tenants": {
+      "internal_sku": [
+        {
+          "value": "ref-00028",
+          "tenants": [
+            "REF-00010",
+            "REF-00025",
+            "REF-00062",
+            "REF-00109"
+          ]
+        },
+        {
+          "value": "ref-00056",
+          "tenants": [
+            "REF-00010",
+            "REF-00025",
+            "REF-00062",
+            "REF-00109",
+            "REF-00186"
+          ]
+        },
+        {
+          "value": "ref-00104",
+          "tenants": [
+            "REF-00010",
+            "REF-00101",
+            "REF-00109",
+            "REF-00152"
+          ]
+        },
+        {
+          "value": "ref-00155",
+          "tenants": [
+            "REF-00109",
+            "REF-00152"
+          ]
+        },
+        {
+          "value": "ref-00219",
+          "tenants": [
+            "REF-00101",
+            "REF-00109",
+            "REF-00152",
+            "REF-00186"
+          ]
+        },
+        {
+          "value": "ref-00234",
+          "tenants": [
+            "REF-00002",
+            "REF-00062",
+            "REF-00101",
+            "REF-00109",
+            "REF-00186"
+          ]
+        },
+        {
+          "value": "ref-00246",
+          "tenants": [
+            "REF-00010",
+            "REF-00062"
+          ]
+        },
+        {
+          "value": "ref-00280",
+          "tenants": [
+            "REF-00062",
+            "REF-00152"
+          ]
+        },
+        {
+          "value": "ref-00387",
+          "tenants": [
+            "REF-00002",
+            "REF-00010",
+            "REF-00025",
+            "REF-00186"
+          ]
+        },
+        {
+          "value": "ref-00428",
+          "tenants": [
+            "REF-00002",
+            "REF-00010",
+            "REF-00025",
+            "REF-00062",
+            "REF-00186"
+          ]
+        },
+        {
+          "value": "ref-00506",
+          "tenants": [
+            "REF-00010",
+            "REF-00062"
+          ]
+        },
+        {
+          "value": "ref-00593",
+          "tenants": [
+            "REF-00002",
+            "REF-00010",
+            "REF-00025",
+            "REF-00109"
+          ]
+        },
+        {
+          "value": "ref-01419",
+          "tenants": [
+            "REF-00002",
+            "REF-00025",
+            "REF-00109",
+            "REF-00152"
+          ]
+        },
+        {
+          "value": "ref-01529",
+          "tenants": [
+            "REF-00002",
+            "REF-00062",
+            "REF-00186"
+          ]
+        }
+      ],
+      "gtin": [
+        {
+          "value": "ref-00036",
+          "tenants": [
+            "REF-00010",
+            "REF-00025",
+            "REF-00062"
+          ]
+        },
+        {
+          "value": "ref-00049",
+          "tenants": [
+            "REF-00010",
+            "REF-00062",
+            "REF-00186"
+          ]
+        },
+        {
+          "value": "ref-00077",
+          "tenants": [
+            "REF-00010",
+            "REF-00062"
+          ]
+        },
+        {
+          "value": "ref-00097",
+          "tenants": [
+            "REF-00010",
+            "REF-00101",
+            "REF-00109",
+            "REF-00152",
+            "REF-00186"
+          ]
+        },
+        {
+          "value": "ref-00173",
+          "tenants": [
+            "REF-00002",
+            "REF-00025",
+            "REF-00109"
+          ]
+        },
+        {
+          "value": "ref-00347",
+          "tenants": [
+            "REF-00010",
+            "REF-00025",
+            "REF-00101",
+            "REF-00109"
+          ]
+        },
+        {
+          "value": "ref-00483",
+          "tenants": [
+            "REF-00002",
+            "REF-00062",
+            "REF-00101",
+            "REF-00109",
+            "REF-00186"
+          ]
+        },
+        {
+          "value": "ref-00617",
+          "tenants": [
+            "REF-00101",
+            "REF-00152"
+          ]
+        },
+        {
+          "value": "ref-00730",
+          "tenants": [
+            "REF-00002",
+            "REF-00186"
+          ]
+        },
+        {
+          "value": "ref-01072",
+          "tenants": [
+            "REF-00109",
+            "REF-00152"
+          ]
+        },
+        {
+          "value": "ref-01126",
+          "tenants": [
+            "REF-00010",
+            "REF-00109"
+          ]
+        }
+      ],
+      "legacy_code": [],
+      "brand_as_labelled": [
+        {
+          "value": "ref-00013",
+          "tenants": [
+            "REF-00002",
+            "REF-00010",
+            "REF-00025",
+            "REF-00062",
+            "REF-00101",
+            "REF-00109",
+            "REF-00186"
+          ]
+        },
+        {
+          "value": "ref-00134",
+          "tenants": [
+            "REF-00002",
+            "REF-00010",
+            "REF-00025",
+            "REF-00101",
+            "REF-00109"
+          ]
+        },
+        {
+          "value": "ref-00180",
+          "tenants": [
+            "REF-00002",
+            "REF-00010",
+            "REF-00025",
+            "REF-00186"
+          ]
+        },
+        {
+          "value": "ref-00213",
+          "tenants": [
+            "REF-00025",
+            "REF-00062",
+            "REF-00152"
+          ]
+        },
+        {
+          "value": "ref-00225",
+          "tenants": [
+            "REF-00010",
+            "REF-00101",
+            "REF-00109",
+            "REF-00152",
+            "REF-00186"
+          ]
+        },
+        {
+          "value": "ref-00268",
+          "tenants": [
+            "REF-00002",
+            "REF-00062",
+            "REF-00101",
+            "REF-00109",
+            "REF-00186"
+          ]
+        },
+        {
+          "value": "ref-00284",
+          "tenants": [
+            "REF-00062",
+            "REF-00101",
+            "REF-00152"
+          ]
+        },
+        {
+          "value": "ref-00360",
+          "tenants": [
+            "REF-00010",
+            "REF-00062",
+            "REF-00109",
+            "REF-00152"
+          ]
+        },
+        {
+          "value": "ref-00371",
+          "tenants": [
+            "REF-00002",
+            "REF-00062",
+            "REF-00186"
+          ]
+        },
+        {
+          "value": "ref-00408",
+          "tenants": [
+            "REF-00010",
+            "REF-00062",
+            "REF-00109",
+            "REF-00186"
+          ]
+        },
+        {
+          "value": "ref-00461",
+          "tenants": [
+            "REF-00109",
+            "REF-00152"
+          ]
+        },
+        {
+          "value": "ref-00546",
+          "tenants": [
+            "REF-00010",
+            "REF-00062",
+            "REF-00186"
+          ]
+        },
+        {
+          "value": "ref-00642",
+          "tenants": [
+            "REF-00010",
+            "REF-00101",
+            "REF-00109",
+            "REF-00152"
+          ]
+        },
+        {
+          "value": "ref-01523",
+          "tenants": [
+            "REF-00002",
+            "REF-00025",
+            "REF-00109"
+          ]
+        }
+      ]
+    },
+    "product_resolution_exact_tenant_scoped": {
+      "missing_reference": 42,
+      "resolved": 237,
+      "unresolved": 141
+    },
+    "product_unresolved_examples": [
+      "REF-00039",
+      "REF-00061",
+      "REF-00069",
+      "REF-00088",
+      "REF-00108",
+      "REF-00119",
+      "REF-00126",
+      "REF-00138",
+      "REF-00226",
+      "REF-00237"
+    ],
+    "product_ambiguous_examples": [],
+    "alias_observations": {
+      "rows": 207,
+      "status_column": null,
+      "statuses": {}
+    },
+    "sop_overlaps": [
+      {
+        "tenant_code": "REF-00002",
+        "doc_id": "ref-01728",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          14,
+          15
+        ]
+      },
+      {
+        "tenant_code": "REF-00002",
+        "doc_id": "ref-01728",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          15,
+          16
+        ]
+      },
+      {
+        "tenant_code": "REF-00002",
+        "doc_id": "ref-01728",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          16,
+          17
+        ]
+      },
+      {
+        "tenant_code": "REF-00010",
+        "doc_id": "ref-01734",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          35,
+          36
+        ]
+      },
+      {
+        "tenant_code": "REF-00010",
+        "doc_id": "ref-01734",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          36,
+          37
+        ]
+      },
+      {
+        "tenant_code": "REF-00010",
+        "doc_id": "ref-01734",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          37,
+          38
+        ]
+      },
+      {
+        "tenant_code": "REF-00010",
+        "doc_id": "ref-01734",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          38,
+          39
+        ]
+      },
+      {
+        "tenant_code": "REF-00025",
+        "doc_id": "ref-01752",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          92,
+          93
+        ]
+      },
+      {
+        "tenant_code": "REF-00025",
+        "doc_id": "ref-01754",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          98,
+          99
+        ]
+      },
+      {
+        "tenant_code": "REF-00186",
+        "doc_id": "ref-01759",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          112,
+          113
+        ]
+      },
+      {
+        "tenant_code": "REF-00186",
+        "doc_id": "ref-01759",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          113,
+          114
+        ]
+      },
+      {
+        "tenant_code": "REF-00186",
+        "doc_id": "ref-01759",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          114,
+          115
+        ]
+      },
+      {
+        "tenant_code": "REF-00186",
+        "doc_id": "ref-01759",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          114,
+          116
+        ]
+      },
+      {
+        "tenant_code": "REF-00186",
+        "doc_id": "ref-01759",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          115,
+          116
+        ]
+      },
+      {
+        "tenant_code": "REF-00186",
+        "doc_id": "ref-01760",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          117,
+          118
+        ]
+      },
+      {
+        "tenant_code": "REF-00186",
+        "doc_id": "ref-01760",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          118,
+          119
+        ]
+      },
+      {
+        "tenant_code": "REF-00062",
+        "doc_id": "ref-01774",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          163,
+          164
+        ]
+      },
+      {
+        "tenant_code": "REF-00062",
+        "doc_id": "ref-01774",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          164,
+          165
+        ]
+      },
+      {
+        "tenant_code": "REF-00062",
+        "doc_id": "ref-01774",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          165,
+          166
+        ]
+      },
+      {
+        "tenant_code": "REF-00101",
+        "doc_id": "ref-01780",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          183,
+          184
+        ]
+      },
+      {
+        "tenant_code": "REF-00101",
+        "doc_id": "ref-01780",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          184,
+          185
+        ]
+      },
+      {
+        "tenant_code": "REF-00101",
+        "doc_id": "ref-01780",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          185,
+          186
+        ]
+      },
+      {
+        "tenant_code": "REF-00101",
+        "doc_id": "ref-01784",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          198,
+          199
+        ]
+      },
+      {
+        "tenant_code": "REF-00101",
+        "doc_id": "ref-01784",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          199,
+          200
+        ]
+      },
+      {
+        "tenant_code": "REF-00101",
+        "doc_id": "ref-01784",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          200,
+          201
+        ]
+      },
+      {
+        "tenant_code": "REF-00101",
+        "doc_id": "ref-01785",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          202,
+          203
+        ]
+      },
+      {
+        "tenant_code": "REF-00101",
+        "doc_id": "ref-01785",
+        "revisions": [
+          "REDACTED - evaluation copy",
+          "REDACTED - evaluation copy"
+        ],
+        "rows": [
+          203,
+          204
+        ]
+      }
+    ],
+    "sop_effective_from_date_only": 0,
+    "sop_open_ended": 64,
+    "sop_site_specific": 0,
+    "product_to_stability_coverage": {
+      "study_ref_found_same_tenant": 47,
+      "study_ref_absent_from_index": 5,
+      "product_without_study_ref": 7
+    },
+    "stability_path_does_not_mention_owner_tenant": {
+      "column": "file_path_text",
+      "count": 107,
+      "examples": [
+        {
+          "study_ref": "REF-01786",
+          "tenant_code": "REF-00002",
+          "row": 2
+        },
+        {
+          "study_ref": "REF-01522",
+          "tenant_code": "REF-00002",
+          "row": 3
+        },
+        {
+          "study_ref": "REF-01524",
+          "tenant_code": "REF-00002",
+          "row": 4
+        },
+        {
+          "study_ref": "REF-01789",
+          "tenant_code": "REF-00002",
+          "row": 5
+        },
+        {
+          "study_ref": "REF-01791",
+          "tenant_code": "REF-00002",
+          "row": 6
+        },
+        {
+          "study_ref": "REF-01792",
+          "tenant_code": "REF-00002",
+          "row": 7
+        },
+        {
+          "study_ref": "REF-01528",
+          "tenant_code": "REF-00002",
+          "row": 8
+        },
+        {
+          "study_ref": "REF-01530",
+          "tenant_code": "REF-00002",
+          "row": 9
+        },
+        {
+          "study_ref": "REF-01795",
+          "tenant_code": "REF-00002",
+          "row": 10
+        },
+        {
+          "study_ref": "REF-01532",
+          "tenant_code": "REF-00002",
+          "row": 11
+        }
+      ]
+    },
+    "stability_readability": {
+      "REDACTED - evaluation copy": 107
+    },
+    "logger_firmware_builds": {
+      "REDACTED - evaluation copy": 420
+    },
+    "events_gateway_gap_min": {
+      "number_like": 420
+    },
+    "events_interpolated": {
+      "text": 420
+    },
+    "events_readings_in_window": {
+      "number_like": 420
+    },
+    "event_timestamps": {
+      "alert_ts_utc": {
+        "parsed": 420,
+        "invalid": 0,
+        "explicit_timezone_marker": 420
+      },
+      "excursion_start_utc": {
+        "parsed": 420,
+        "invalid": 0,
+        "explicit_timezone_marker": 420
+      },
+      "excursion_end_utc": {
+        "parsed": 420,
+        "invalid": 0,
+        "explicit_timezone_marker": 420
+      }
+    },
+    "facility_timezones": {
+      "UTC": 70
+    },
+    "carrier_rows": 0,
+    "event_outcome_columns_excluded_from_assessment": [
+      "triage_outcome",
+      "rules_engine_recommendation",
+      "final_disposition",
+      "days_to_disposition",
+      "hours_to_notification",
+      "reopened_later"
+    ]
+  }
+}

@@ -1,0 +1,251 @@
+{
+  "known_at": null,
+  "total": 420,
+  "readiness": {
+    "INCOMPLETE_EVIDENCE": 342,
+    "BLOCKED_BY_CONFLICTS": 78
+  },
+  "disposition": {
+    "ABSTAIN": 420
+  },
+  "conflict_kinds": {
+    "SOP ref-01734": 35,
+    "SOP ref-01784": 15,
+    "SOP ref-01785": 13,
+    "SOP ref-01774": 6,
+    "SOP ref-01728": 5,
+    "SOP ref-01759": 4
+  },
+  "product_resolution": {
+    "MISSING_REFERENCE": 42,
+    "RESOLVED_EXACT_TENANT_SCOPED": 237,
+    "UNRESOLVED": 141
+  },
+  "events_with_conflicts": [
+    "REF-00009",
+    "REF-00046",
+    "REF-00114",
+    "REF-00191",
+    "REF-00196",
+    "REF-00304",
+    "REF-00319",
+    "REF-00326",
+    "REF-00337",
+    "REF-00361",
+    "REF-00368",
+    "REF-00378",
+    "REF-00422",
+    "REF-00441",
+    "REF-00462",
+    "REF-00470",
+    "REF-00480",
+    "REF-00488",
+    "REF-00503",
+    "REF-00518",
+    "REF-00521",
+    "REF-00548",
+    "REF-00568",
+    "REF-00586",
+    "REF-00618",
+    "REF-00643",
+    "REF-00655",
+    "REF-00661",
+    "REF-00677",
+    "REF-00684",
+    "REF-00738",
+    "REF-00742",
+    "REF-00748",
+    "REF-00777",
+    "REF-00818",
+    "REF-00831",
+    "REF-00834",
+    "REF-00837",
+    "REF-00843",
+    "REF-00865",
+    "REF-00869",
+    "REF-00878",
+    "REF-00881",
+    "REF-00890",
+    "REF-00903",
+    "REF-00924",
+    "REF-00942",
+    "REF-00965",
+    "REF-00974",
+    "REF-00977",
+    "REF-01005",
+    "REF-01011",
+    "REF-01026",
+    "REF-01035",
+    "REF-01066",
+    "REF-01079",
+    "REF-01082",
+    "REF-01091",
+    "REF-01103",
+    "REF-01106",
+    "REF-01136",
+    "REF-01151",
+    "REF-01160",
+    "REF-01178",
+    "REF-01190",
+    "REF-01205",
+    "REF-01208",
+    "REF-01248",
+    "REF-01267",
+    "REF-01273",
+    "REF-01294",
+    "REF-01297",
+    "REF-01327",
+    "REF-01391",
+    "REF-01403",
+    "REF-01426",
+    "REF-01462",
+    "REF-01468"
+  ],
+  "notice": "Structural coverage of a stratified evidence pack. Not a population accuracy estimate, not an automated-closure rate, and not a judgement on any historical decision.",
+  "review_candidates": {
+    "count": 46,
+    "examples": [
+      {
+        "event_id": "REF-00009",
+        "historical_disposition": "RELEASE_WITH_NOTE",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00114",
+        "historical_disposition": "DESTROY",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00191",
+        "historical_disposition": "UNKNOWN",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00304",
+        "historical_disposition": "UNKNOWN",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00319",
+        "historical_disposition": "RELEASE",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00326",
+        "historical_disposition": "UNKNOWN",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00337",
+        "historical_disposition": "RELEASE",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00422",
+        "historical_disposition": "UNKNOWN",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00441",
+        "historical_disposition": "RELEASE",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00462",
+        "historical_disposition": "RELEASE",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00470",
+        "historical_disposition": "RELEASE",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00488",
+        "historical_disposition": "RELEASE",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00503",
+        "historical_disposition": "RELEASE",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00518",
+        "historical_disposition": "UNKNOWN",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00521",
+        "historical_disposition": "UNKNOWN",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00586",
+        "historical_disposition": "DESTROY",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00643",
+        "historical_disposition": "UNKNOWN",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00661",
+        "historical_disposition": "RELEASE",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00684",
+        "historical_disposition": "RELEASE",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00738",
+        "historical_disposition": "UNKNOWN",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00742",
+        "historical_disposition": "RELEASE",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00748",
+        "historical_disposition": "RELEASE",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00837",
+        "historical_disposition": "RELEASE_WITH_NOTE",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00843",
+        "historical_disposition": "RELEASE",
+        "open_conflicts": 1
+      },
+      {
+        "event_id": "REF-00869",
+        "historical_disposition": "RELEASE",
+        "open_conflicts": 1
+      }
+    ],
+    "historical_fields_read_here_only": [
+      "case_opened",
+      "triage_outcome",
+      "rules_engine_recommendation",
+      "final_disposition",
+      "reviewer_id",
+      "review_minutes",
+      "systems_opened",
+      "reviewer_overrode",
+      "days_to_disposition",
+      "hours_to_notification",
+      "reported_within_window",
+      "reopened_later",
+      "notes"
+    ],
+    "meaning": "Cases whose recorded disposition coexists with unresolved evidence conflicts. They are candidates for human re-review, not evidence that either side was wrong."
+  }
+}

@@ -27,3 +27,8 @@ prototype/output/*
 
 # Reviewed public evaluation workbook only; original workbooks remain ignored.
 !data/anonymized-evaluation.xlsx
+
+# Assessment artifacts from the public anonymized workbook are committed; real-data outputs under artifacts/private stay local.
+!artifacts/
+artifacts/*
+!artifacts/public/

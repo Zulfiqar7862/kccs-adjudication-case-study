@@ -133,6 +133,23 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(current["revisions"][:-1], previous["revisions"])
         self.assertEqual(self.engine.get_case(tenant, case_id)["state"], "WAITING_EVIDENCE")
 
+    def test_regulatory_clock_is_unchanged_by_review_signature_and_reopen(self):
+        tenant, case_id = self.selected_case(dual=False)
+        def obligation():
+            return next((item for item in self.engine.notifications(tenant) if item["case_id"] == case_id), None)
+        before = obligation()
+        if before is None:
+            self.skipTest("Selected synthetic case carries no notification obligation")
+        packet = self.engine.get_case(tenant, case_id)["packet"]
+        for kind in ("SOP", "STABILITY", "TELEMETRY", "IDENTITY", "BATCH", "CONTRACT"):
+            self.command(tenant, case_id, "reviewer", "evidence", {"kind": kind, "source_ref": f"synthetic://{kind.casefold()}", "content": "TEST STUB only"})
+        references = [item["id"] for item in self.engine.get_case(tenant, case_id)["packet"]["artifacts"]]
+        self.command(tenant, case_id, "reviewer", "review", {"resolutions": {b: references for b in packet["analysis"]["blockers"]}, "note": "stub"})
+        self.command(tenant, case_id, "signer", "sign", {"disposition": "QUARANTINE", "rationale": "Synthetic approval"})
+        self.command(tenant, case_id, "reviewer", "reopen", {"reason": "Synthetic reopening months later"})
+        after = obligation()
+        self.assertEqual((before["alert_at"], before["deadline"]), (after["alert_at"], after["deadline"]))
+
     def test_second_distinct_snapshot_is_rejected(self):
         altered = Path(self.temp.name) / "different-snapshot.xlsx"
         altered.write_bytes(Path(self.source).read_bytes() + b"\n")

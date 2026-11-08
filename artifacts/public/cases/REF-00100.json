@@ -1,0 +1,335 @@
+{
+  "package_version": "evidence-package-v1",
+  "event_id": "REF-00100",
+  "tenant_code": "REF-00101",
+  "assessment": {
+    "assessment_version": "assessment-v1",
+    "event_id": "REF-00100",
+    "tenant_code": "REF-00101",
+    "source_refs": [
+      "01_Excursion_Events#row=16",
+      "02_Product_Master#row=59",
+      "03_Facility_Registry#row=11",
+      "03_Facility_Registry#row=17",
+      "03_Facility_Registry#row=18",
+      "03_Facility_Registry#row=19"
+    ],
+    "time_semantics": {
+      "as_at": "2020-02-13T10:00:00+00:00",
+      "as_at_basis": "excursion_start_utc (valid time)",
+      "known_at": "2026-11-08T13:54:40.078648+00:00",
+      "known_at_basis": "workbook rows are treated as known at the pack extract date; alias confirmations, incident entries and corrections carry their own recorded time",
+      "extract_date": null,
+      "interval_convention": "half-open [from, to); date-only bounds are flagged on the boundary day"
+    },
+    "inputs": {
+      "event_fields_read": [
+        "event_id",
+        "alert_ts_utc",
+        "tenant_code",
+        "shipment_ref",
+        "leg_no",
+        "source_system",
+        "logger_id",
+        "logger_vendor",
+        "logger_fw",
+        "product_ref_as_received",
+        "origin_ref_as_received",
+        "dest_ref_as_received",
+        "lane_text",
+        "carrier_ref_as_received",
+        "mode",
+        "excursion_start_utc",
+        "excursion_end_utc",
+        "duration_min",
+        "min_temp_c",
+        "max_temp_c",
+        "mean_temp_c",
+        "spec_text_as_received",
+        "readings_in_window",
+        "gateway_gap_min",
+        "interpolated",
+        "dock_door_open_flag",
+        "prior_excursions_lane_90d",
+        "consignment_value_usd"
+      ],
+      "provisional_policy_fields": [
+        "regulator_reportable",
+        "reg_window_hours"
+      ],
+      "historical_fields_excluded": [
+        "case_opened",
+        "triage_outcome",
+        "rules_engine_recommendation",
+        "final_disposition",
+        "reviewer_id",
+        "review_minutes",
+        "systems_opened",
+        "reviewer_overrode",
+        "days_to_disposition",
+        "hours_to_notification",
+        "reported_within_window",
+        "reopened_later",
+        "notes"
+      ],
+      "corrections_applied": []
+    },
+    "entities": [
+      {
+        "kind": "PRODUCT",
+        "as_received": "REF-00104",
+        "status": "RESOLVED_EXACT_TENANT_SCOPED",
+        "candidates": [
+          {
+            "internal_sku": "REF-00104",
+            "brand_as_labelled": "REF-00642",
+            "stability_study_ref": "REF-01593",
+            "source_ref": "02_Product_Master#row=59"
+          }
+        ],
+        "unverified_alias_candidates": [],
+        "source_refs": [
+          "02_Product_Master#row=59"
+        ]
+      },
+      {
+        "kind": "FACILITY",
+        "role": "origin",
+        "as_received": "REF-00105",
+        "status": "RESOLVED_MULTIPLE_SOURCE_RECORDS",
+        "source_records": [
+          {
+            "system": "REDACTED - evaluation copy",
+            "record_id": "REF-01620",
+            "timezone_in_source": "UTC",
+            "cold_rooms": "REDACTED - evaluation copy"
+          },
+          {
+            "system": "REDACTED - evaluation copy",
+            "record_id": "REF-01622",
+            "timezone_in_source": "UTC",
+            "cold_rooms": "REDACTED - evaluation copy"
+          },
+          {
+            "system": "REDACTED - evaluation copy",
+            "record_id": "REF-01623",
+            "timezone_in_source": "UTC",
+            "cold_rooms": "REDACTED - evaluation copy"
+          }
+        ],
+        "source_refs": [
+          "03_Facility_Registry#row=17",
+          "03_Facility_Registry#row=18",
+          "03_Facility_Registry#row=19"
+        ],
+        "timezone_trust": "UNTRUSTED: registry timezone is known wrong for two sites (00_README); local-time semantics need site confirmation."
+      },
+      {
+        "kind": "FACILITY",
+        "role": "destination",
+        "as_received": "REF-00106",
+        "status": "RESOLVED",
+        "source_records": [
+          {
+            "system": "REDACTED - evaluation copy",
+            "record_id": "REF-01612",
+            "timezone_in_source": "UTC",
+            "cold_rooms": "REDACTED - evaluation copy"
+          }
+        ],
+        "source_refs": [
+          "03_Facility_Registry#row=11"
+        ],
+        "timezone_trust": "UNTRUSTED: registry timezone is known wrong for two sites (00_README); local-time semantics need site confirmation."
+      },
+      {
+        "kind": "CARRIER_CONTRACT",
+        "as_received": "REF-00107",
+        "status": "UNRESOLVED",
+        "candidates": [],
+        "source_refs": [],
+        "note": "Carrier liability and claims are a separate financial track; they never gate the product disposition or the regulatory clock."
+      }
+    ],
+    "evidence": {
+      "sop": {
+        "valid_at": "2020-02-13T10:00:00+00:00",
+        "candidates": [
+          {
+            "doc_id": "REF-01778",
+            "revision": "REDACTED - evaluation copy",
+            "title": "REDACTED - evaluation copy",
+            "effective_from": "2020-01-06T23:00:00+00:00",
+            "effective_to": "",
+            "applies_to": "REDACTED - evaluation copy",
+            "format": "REDACTED - evaluation copy",
+            "language": "REDACTED - evaluation copy",
+            "source_ref": "05_SOP_Index#row=179",
+            "flags": []
+          },
+          {
+            "doc_id": "REF-01779",
+            "revision": "REDACTED - evaluation copy",
+            "title": "REDACTED - evaluation copy",
+            "effective_from": "2020-01-14T01:00:00+00:00",
+            "effective_to": "",
+            "applies_to": "REDACTED - evaluation copy",
+            "format": "REDACTED - evaluation copy",
+            "language": "REDACTED - evaluation copy",
+            "source_ref": "05_SOP_Index#row=182",
+            "flags": []
+          },
+          {
+            "doc_id": "REF-01780",
+            "revision": "REDACTED - evaluation copy",
+            "title": "REDACTED - evaluation copy",
+            "effective_from": "2020-01-10T04:00:00+00:00",
+            "effective_to": "",
+            "applies_to": "REDACTED - evaluation copy",
+            "format": "REDACTED - evaluation copy",
+            "language": "REDACTED - evaluation copy",
+            "source_ref": "05_SOP_Index#row=186",
+            "flags": []
+          },
+          {
+            "doc_id": "REF-01781",
+            "revision": "REDACTED - evaluation copy",
+            "title": "REDACTED - evaluation copy",
+            "effective_from": "2020-01-14T22:00:00+00:00",
+            "effective_to": "",
+            "applies_to": "REDACTED - evaluation copy",
+            "format": "REDACTED - evaluation copy",
+            "language": "REDACTED - evaluation copy",
+            "source_ref": "05_SOP_Index#row=190",
+            "flags": []
+          },
+          {
+            "doc_id": "REF-01782",
+            "revision": "REDACTED - evaluation copy",
+            "title": "REDACTED - evaluation copy",
+            "effective_from": "2020-01-11T17:00:00+00:00",
+            "effective_to": "2020-03-23T04:00:00+00:00",
+            "applies_to": "REDACTED - evaluation copy",
+            "format": "REDACTED - evaluation copy",
+            "language": "REDACTED - evaluation copy",
+            "source_ref": "05_SOP_Index#row=193",
+            "flags": []
+          },
+          {
+            "doc_id": "REF-01783",
+            "revision": "REDACTED - evaluation copy",
+            "title": "REDACTED - evaluation copy",
+            "effective_from": "2020-01-12T22:00:00+00:00",
+            "effective_to": "",
+            "applies_to": "REDACTED - evaluation copy",
+            "format": "REDACTED - evaluation copy",
+            "language": "REDACTED - evaluation copy",
+            "source_ref": "05_SOP_Index#row=197",
+            "flags": []
+          },
+          {
+            "doc_id": "REF-01784",
+            "revision": "REDACTED - evaluation copy",
+            "title": "REDACTED - evaluation copy",
+            "effective_from": "2020-01-17T21:00:00+00:00",
+            "effective_to": "",
+            "applies_to": "REDACTED - evaluation copy",
+            "format": "REDACTED - evaluation copy",
+            "language": "REDACTED - evaluation copy",
+            "source_ref": "05_SOP_Index#row=201",
+            "flags": []
+          },
+          {
+            "doc_id": "REF-01785",
+            "revision": "REDACTED - evaluation copy",
+            "title": "REDACTED - evaluation copy",
+            "effective_from": "2020-01-15T05:00:00+00:00",
+            "effective_to": "2020-03-23T14:00:00+00:00",
+            "applies_to": "REDACTED - evaluation copy",
+            "format": "REDACTED - evaluation copy",
+            "language": "REDACTED - evaluation copy",
+            "source_ref": "05_SOP_Index#row=203",
+            "flags": []
+          }
+        ],
+        "rejected": [],
+        "conflicts": []
+      },
+      "stability": {
+        "candidates": [
+          {
+            "study_ref": "REF-01593",
+            "product_text_as_written": "REF-00642",
+            "study_type": "REDACTED - evaluation copy",
+            "readable": "REDACTED - evaluation copy",
+            "permitted_excursion_text": "REDACTED - evaluation copy",
+            "file_path_text": "REDACTED - evaluation copy",
+            "ownership_basis": "tenant_code column (file path is where it was found, not who owns it)",
+            "source_ref": "06_Stability_Index#row=102",
+            "usable": false,
+            "flags": [
+              "Readability 'REDACTED - evaluation copy': the study is real and cited but its outcome cannot be read from the index."
+            ]
+          }
+        ],
+        "rejected": []
+      },
+      "telemetry": {
+        "basis": "Aggregate statistics from the alert row (min/max/mean, duration, reading count); the raw temperature series is not in the pack.",
+        "logger_fw": "REDACTED - evaluation copy",
+        "source_system": "REDACTED - evaluation copy",
+        "flags": [
+          "Firmware and calibration status must be verified against vendor records; none are in the pack."
+        ],
+        "bulletins": []
+      }
+    },
+    "conflicts": [],
+    "missing_inputs": [
+      "No carrier contract effective at the excursion names 'ref-00107'; claim track cannot start.",
+      "Controlled SOP documents themselves are not in the pack; the index is metadata, not procedure evidence.",
+      "Stability study REF-01593 is unreadable or only partially readable; a legible controlled copy is required.",
+      "Full stability reports are not in the pack; an index row cannot verify findings or applicability.",
+      "Raw temperature series is not supplied; only aggregates are available.",
+      "No batch identity or lifetime exposure history is supplied; cumulative exposure cannot be computed."
+    ],
+    "required_human_actions": [
+      "A named, authorised human decides the disposition from verified source documents; this assessment is a reviewer aid."
+    ],
+    "notification": {
+      "clock_starts_at": "2020-02-13T11:00:00+00:00",
+      "clock_basis": "alert_ts_utc (receipt at Sentinel), not excursion start and not disposition",
+      "policy_version": "notification-policy-stub-v1",
+      "window": "72 h (provisional; taken from the record, pending an approved tenant/jurisdiction policy)",
+      "due_at": "2020-02-16T11:00:00+00:00",
+      "calendar_semantics": "Fixed hours in UTC. Business-day or calendar-day windows need an explicit calendar and timezone policy that the pack does not contain.",
+      "status": "OPEN_UNFILED",
+      "signatory_policy": "Synthetic site QA and corporate QA (dual)",
+      "regulator_output_language": "REDACTED - evaluation copy",
+      "note": "The prototype records the obligation and reminders only; it never files with a regulator and a reminder is not a receipt."
+    },
+    "conclusion": {
+      "disposition": "ABSTAIN",
+      "readiness": "INCOMPLETE_EVIDENCE",
+      "statement": "No disposition is proposed. The assessment lists verified candidates, rejected evidence with reasons, open conflicts and the inputs a reviewer must obtain."
+    },
+    "manifest": {
+      "code_version": "0.2.0",
+      "assessment_version": "assessment-v1",
+      "policy_version": "notification-policy-stub-v1",
+      "workbook_sha256": "1b7c0c937e5ea43e25c100d14670752736afc3a7ea6d191c1a303892396f620d",
+      "python": "3.12.3",
+      "corrections_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "assessment_sha256": "1075e133c7def795e83287400edda3ed6e0d3bf8b17de0e50d5e0b2da6c8c621"
+  },
+  "section_sha256": {
+    "entities": "4d3135b91d4d422738bb6a99c14dee8376a49bb76135ad370b908a79e4f97db4",
+    "evidence": "58e7dc29b46f706e28f75d9e03468561a9c59daa2ec21cd4f8b789ab64ed4198",
+    "conflicts": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "missing_inputs": "ad1e4e5d3ed453114a3e72a82d3f721b04b87af8f12dd8f41644cff88b79f703",
+    "notification": "d3adcdc4a4220b369772196305715f2dc15a6913497ef7c9a6116b22e1338e10",
+    "manifest": "7be766e5af1b1634049651ba5bf530e1096c96073a1f978fb1cdf214df8a311e"
+  },
+  "package_sha256": "6b987759f939e20915473cd5b8cc9939cbedf16f86d16b97fc0d97915b5b4a8e"
+}
