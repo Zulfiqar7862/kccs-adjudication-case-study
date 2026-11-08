@@ -2,7 +2,7 @@
 
 A runnable, evidence-first adjudication prototype and anonymized case-study submission. The critical component is a durable evidence/review/clock kernel—not a dashboard. It preserves human authority, keeps regulatory clocks independent of case disposition, and records reviewable evidence and audit history.
 
-**Privacy:** public code, fictional fixtures and anonymized analysis only. The supplied workbook and brief, identifying records, generated private reports, databases and credentials are not committed. No ZIP is required.
+**Privacy:** public code, fictional fixtures, a rebuilt anonymized evaluation workbook and anonymized analysis only. The supplied workbook and brief, identifying records, generated private reports, databases and credentials are not committed. No ZIP is required.
 
 ## Start here — follow the submission step by step
 
@@ -12,6 +12,17 @@ A runnable, evidence-first adjudication prototype and anonymized case-study subm
 4. **Review the evidence and lessons:** read the validation strategy, working log and AI-review corrections before assessing the limitations.
 
 **Two useful routes:** evaluators can follow [the four-section reading guide](docs/README.md); developers can start with [the executable walkthrough](prototype/WALKTHROUGH.md). The detailed reference material remains below.
+
+## Download and evaluate the workbook
+
+[**Download the anonymized evaluation workbook**](data/anonymized-evaluation.xlsx?raw=true) · [Workbook guide and transformation limits](data/README.md)
+
+The public copy retains 15 sheets and 420 event rows with consistently replaced keys. Identifiers and narratives are removed or replaced; dates and measurements are synthetic. It is **not the original workbook or outcome-equivalent clinical data**. The original supplied workbook was tested separately and remains private.
+
+```sh
+python -m sentinel --db prototype/output/evaluation.db import data/anonymized-evaluation.xlsx
+python -m sentinel --db prototype/output/evaluation.db report --output prototype/output/evaluation-report.json
+```
 
 ## Evaluation copy
 
@@ -120,7 +131,7 @@ python -m unittest discover -s prototype/tests -v
 Remove-Item Env:SENTINEL_WORKBOOK
 ```
 
-The private test imports the supplied events, checks tenant boundaries, fail-closed evidence, audit integrity, historical visibility and exact replay. A configured invalid path fails; only an unset variable skips. Public CI uses fictional fixtures and never receives the private workbook. Historical dispositions are not clinical ground truth.
+The private test imports the supplied events, checks tenant boundaries, fail-closed evidence, audit integrity, historical visibility and exact replay. A configured invalid path fails; only an unset variable skips. Public CI uses fictional fixtures and the reviewed anonymized evaluation workbook, never the private original. Historical dispositions are not clinical ground truth.
 
 Exact-file replay creates no duplicate cases. A different snapshot requires a new database rather than silently overwriting history. Reports and exports can contain private data and must remain local.
 

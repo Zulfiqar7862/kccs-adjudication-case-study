@@ -24,3 +24,6 @@ data/*
 !data/README.md
 prototype/output/*
 !prototype/output/.gitkeep
+
+# Reviewed public evaluation workbook only; original workbooks remain ignored.
+!data/anonymized-evaluation.xlsx

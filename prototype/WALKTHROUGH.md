@@ -40,7 +40,7 @@ On Windows, replace `python` in subsequent commands with `.\.venv\Scripts\python
 python scripts/check.py
 ```
 
-**Expect:** compilation succeeds, the tests finish with `OK`, and the HTTP demo finishes successfully. With no `SENTINEL_WORKBOOK` configured, the private-workbook test is explicitly skipped. The current suite discovers 27 tests: 26 pass and one is skipped in the public-only run. The final line says `All requested checks passed`.
+**Expect:** compilation succeeds, the tests finish with `OK`, and the HTTP demo finishes successfully. With no `SENTINEL_WORKBOOK` configured, the private-workbook test is explicitly skipped. The suite includes public fixture and bundled-workbook checks; only the separately configured private-workbook test is skipped. The final line says `All requested checks passed`.
 
 A configured but invalid workbook path is an error, not an expected skip. Test counts may change as coverage grows; failed checks must be investigated rather than ignored.
 
@@ -91,7 +91,18 @@ python scripts/api_example.py --tenant DEMO-ALPHA --credentials prototype/output
 
 For mutation payloads and role requirements, read the [API contract](../docs/API.md); Step 3 already exercises those actions automatically.
 
-## Step 5 — Validate the supplied workbook (authorized reviewers only)
+## Step 5 — Evaluate the bundled workbook, then validate the private original
+
+All viewers can [download the anonymized workbook](../data/anonymized-evaluation.xlsx?raw=true), inspect its sheets and run it without private attachments:
+
+```sh
+python -m sentinel --db prototype/output/evaluation.db import data/anonymized-evaluation.xlsx
+python -m sentinel --db prototype/output/evaluation.db report --output prototype/output/evaluation-report.json
+```
+
+Expect 420 cases with evidence blockers and no implicit dispositions. Read the [transformation limits](../data/README.md): the structure is source-derived, but identifiers, text, dates and measurements are replaced. This copy is not clinically equivalent to the original.
+
+### Original supplied workbook — authorized reviewers only
 
 This is separate from the fictional demo. Obtain the supplied workbook through the private evaluation channel; it is intentionally not downloadable from this public repository. Replace the example path with its actual local path.
 
@@ -116,7 +127,7 @@ $env:SENTINEL_WORKBOOK = 'C:\path\to\workbook.xlsx'
 Remove-Item Env:SENTINEL_WORKBOOK
 ```
 
-**Expect:** all 27 current tests pass, including the configured-workbook integration test. Import preserves evidence blockers rather than making implicit dispositions. Exact-file replay does not duplicate cases; a different snapshot requires a new database. Keep the workbook, database, credentials and generated report private. Never attach these outputs to a public issue or PR.
+**Expect:** all tests pass, including the configured-workbook integration test. Import preserves evidence blockers rather than making implicit dispositions. Exact-file replay does not duplicate cases; a different snapshot requires a new database. Keep the workbook, database, credentials and generated report private. Never attach these outputs to a public issue or PR.
 
 ## Step 6 — Read the implementation in execution order
 
