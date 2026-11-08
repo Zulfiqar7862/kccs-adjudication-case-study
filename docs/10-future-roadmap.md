@@ -1,5 +1,18 @@
 # Future roadmap and rollout
 
+## Gated rollout overview
+
+```mermaid
+flowchart TB
+    Prepare["Days 0–30: define and approve the bounded EU pilot"] --> Shadow["Days 31–60: shadow and independently reconcile"]
+    Shadow --> Gate{"Days 61–90: acceptance gates met?"}
+    Gate -- "Yes" --> Pilot["One-tenant review workspace; human disposition"]
+    Gate -- "No" --> Hold["Extend shadow mode, narrow scope or stop"]
+    Pilot --> Expand["Months 4–9+: individually qualify each tenant and site"]
+```
+
+**Proposed rollout, not a delivery guarantee.** The first customer's anonymized selection and source traceability are in [where we land](01-where-we-land.md). Day 90 is a go/no-go decision; it does not override unresolved safety, residency or source-readiness gates.
+
 ## Delivery and decision gates
 
 - **Days 0–30 — define and prepare:** confirm the EU pilot boundary, approved source inventory and ownership, residency and access controls, SOP/study interpretation, signatories, notification policy and timezones, baseline denominators, retention/restore needs, and stop rules. Do not load live records until approval is documented.

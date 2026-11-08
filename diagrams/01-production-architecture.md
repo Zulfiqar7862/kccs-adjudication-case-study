@@ -3,7 +3,7 @@
 This is a production proposal, not the topology implemented by the local prototype. See [system architecture](../docs/02-system-architecture.md).
 
 ```mermaid
-flowchart LR
+flowchart TB
     Sources[Telemetry / TMS / ERP / controlled documents] --> Adapters[Region-local adapters and quarantine]
     Adapters --> Raw[Immutable source objects and provenance]
     Adapters --> Inbox[Durable inbox / normalized events]

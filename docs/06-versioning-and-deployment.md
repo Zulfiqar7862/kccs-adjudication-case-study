@@ -1,5 +1,27 @@
 # Versioning and deployment
 
+## Proposed release and qualification flow
+
+```mermaid
+flowchart TB
+    Change["Reviewed code, schema, policy or model change"] --> Manifest["Versioned release manifest"]
+    Manifest --> CI["Static, dependency, unit and integration checks"]
+    CI --> Replay["Structural workbook replay"]
+    Replay --> Benchmark["Independent retrospective QA benchmark"]
+    Benchmark --> Explain["Record disagreements, evidence and explanations"]
+    Explain --> Recovery["Migration, restore and failure rehearsal"]
+    Recovery --> Gate{"QA, security and operations approve?"}
+    Gate -- "No" --> Hold["Hold release; investigate and repeat qualification"]
+    Gate -- "Yes" --> Shadow["One-tenant shadow deployment"]
+    Shadow --> Canary["Controlled canary and monitored acceptance"]
+    Canary --> Promote["Signed tenant promotion"]
+    Canary -. "Acceptance fails" .-> Rollback["Restore qualified code and configuration"]
+    Promote -. "Regression detected" .-> Rollback
+    Rollback --> Review["Preserve audit; review affected case revisions"]
+```
+
+**Proposed production pipeline.** Current CI covers the early software checks, not clinical qualification or production promotion. Rollback never deletes decisions or audit events. Every change repeats the applicable qualification gates.
+
 ## Qualification, deployment and rollback
 
 Version code, schema, adapter mapping, governed aliases, approved rule/policy/calendar bundles, OCR/parser, optional retrieval index, embedding/model/provider and prompt independently. A case pins the complete release manifest. Do not let “latest” modify signed history or active adjudication without an explicit reevaluation event.

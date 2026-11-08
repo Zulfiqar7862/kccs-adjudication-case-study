@@ -5,9 +5,9 @@ These are the actual persisted prototype states. Approval quorum is policy-depen
 ```mermaid
 stateDiagram-v2
     [*] --> WAITING_EVIDENCE: import
-    WAITING_EVIDENCE --> WAITING_EVIDENCE: record evidence
+    WAITING_EVIDENCE --> WAITING_EVIDENCE: add evidence
     WAITING_EVIDENCE --> READY_FOR_REVIEW: review resolves all blockers
-    READY_FOR_REVIEW --> WAITING_EVIDENCE: new evidence invalidates approvals
+    READY_FOR_REVIEW --> WAITING_EVIDENCE: invalidate review
     READY_FOR_REVIEW --> READY_FOR_REVIEW: first signature when dual approval required
     READY_FOR_REVIEW --> DISPOSED: independent approval quorum reached
     DISPOSED --> WAITING_EVIDENCE: explicit reopen creates new revision
