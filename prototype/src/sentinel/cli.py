@@ -22,7 +22,7 @@ def output(value, path=None):
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(text, encoding='utf-8')
         # Confirm the write without echoing private file contents to the terminal.
-        print(json.dumps({'written': str(target)}, indent=2) + '\n', end='')
+        print(json.dumps({'written': target.as_posix()}, indent=2) + '\n', end='')
     else:
         print(text, end='')
 
