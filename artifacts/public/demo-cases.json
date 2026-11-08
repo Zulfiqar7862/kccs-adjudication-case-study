@@ -1,0 +1,57 @@
+{
+  "selection_rule": "first event in workbook order matching each failure mode",
+  "cases": {
+    "product_reference_missing": {
+      "event_id": "REF-00001",
+      "tenant_code": "REF-00002",
+      "package": "artifacts/public/cases/REF-00001.json",
+      "package_sha256": "a54545a87a7a4fccfd35fd41748c5de66751cc7388be3f5ef653561c50b60011",
+      "readiness": "INCOMPLETE_EVIDENCE",
+      "conflicts": []
+    },
+    "sop_overlap_at_excursion": {
+      "event_id": "REF-00009",
+      "tenant_code": "REF-00010",
+      "package": "artifacts/public/cases/REF-00009.json",
+      "package_sha256": "be22543a15032540ea6baa061b7ed89bbac02119b8bc55feae79bdc011a1bee0",
+      "readiness": "BLOCKED_BY_CONFLICTS",
+      "conflicts": [
+        "SOP REF-01734 has overlapping revisions ['REDACTED - evaluation copy', 'REDACTED - evaluation copy'] in force at the excursion start."
+      ]
+    },
+    "unreadable_stability": {
+      "event_id": "REF-00009",
+      "tenant_code": "REF-00010",
+      "package": "artifacts/public/cases/REF-00009.json",
+      "package_sha256": "be22543a15032540ea6baa061b7ed89bbac02119b8bc55feae79bdc011a1bee0",
+      "readiness": "BLOCKED_BY_CONFLICTS",
+      "conflicts": [
+        "SOP REF-01734 has overlapping revisions ['REDACTED - evaluation copy', 'REDACTED - evaluation copy'] in force at the excursion start."
+      ]
+    },
+    "notification_window_recorded": {
+      "event_id": "REF-00100",
+      "tenant_code": "REF-00101",
+      "package": "artifacts/public/cases/REF-00100.json",
+      "package_sha256": "f5c58c36914ac6f2c31aedabe63a70c98c2e83ed5838385110721f06bcc69430",
+      "readiness": "INCOMPLETE_EVIDENCE",
+      "conflicts": []
+    },
+    "study_absent_from_index": {
+      "event_id": "REF-00177",
+      "tenant_code": "REF-00010",
+      "package": "artifacts/public/cases/REF-00177.json",
+      "package_sha256": "692d43271d8da8bd0187c811568e2d45df94430cc780f396ff7c008a10336361",
+      "readiness": "INCOMPLETE_EVIDENCE",
+      "conflicts": []
+    }
+  },
+  "unmatched_modes": [
+    "carrier_parent_subsidiary_ambiguity",
+    "firmware_bulletin",
+    "product_unresolved_with_alias_hint",
+    "sop_boundary_day",
+    "stability_presentation_mismatch",
+    "untagged_bms_source"
+  ]
+}

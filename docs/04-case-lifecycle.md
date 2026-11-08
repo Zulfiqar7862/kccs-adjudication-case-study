@@ -10,7 +10,6 @@ Review captures every blocker resolution and a structured argument: applicable r
 
 Months later, a bulletin or new source creates an impact-review event through the artifact/product/logger dependency index. Retain original decision, original policy and “known then” facts; open a new revision and re-check current authority and evidence. Notify QA and affected claims/invoices through outbox commands with compensating business actions (e.g. withdraw an invoice), not database reversal. Keep exports of both revisions. Claims deadlines and regulatory follow-up obligations require legal review and independent tracking.
 
-
 ## Implemented case state flow
 
 ```mermaid

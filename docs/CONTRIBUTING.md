@@ -25,6 +25,7 @@ The package has one pinned runtime dependency, `defusedxml==0.7.1`, for safe XML
 - `prototype/src/sentinel/demo.py`: fictional local workflow demonstration.
 - `prototype/src/sentinel/fixtures/sample.py`: synthetic workbook fixture.
 - `prototype/tests/unit/` and `prototype/tests/integration/`: synthetic unit and integration checks.
+
 Keep adapters thin and put workflow invariants in the service/domain implementation. Preserve tenant scoping, expected-version checks, idempotent retry behavior, independent review/signature rules, and explicit boundaries around notification receipts. Changes to these behaviors should include tests for both the expected path and relevant rejection path.
 
 ## Checks and change hygiene

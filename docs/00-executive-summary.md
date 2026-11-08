@@ -18,9 +18,3 @@ Keep disposition with an authorized human. Define the pilot boundary, source own
 
 The source pack's volumes, rates, and modeled costs are inputs, not validated forecasts, population estimates, or outcome labels. The written submission preserves anonymized references to brief sections and workbook sheets/rows; source files and identifying values are not reproduced. Existing test results are described in the [validation strategy](08-validation-and-test-strategy.md); they validate workflow mechanics, not clinical correctness or production readiness.
 
-## Implemented prototype boundary
-
-
-The supported implementation is a local prototype: SQLite, static locally generated bearer identities, and loopback HTTP. It does not include production identity management, TLS termination, external notification or filing integrations, verified receipt ingestion, durable distributed storage, or validated document interpretation. Deploying it outside its intended local environment requires those controls to be designed and implemented separately; the prototype is not a substitute for them.
-
-Sentinel is a local, evidence-first case workflow prototype. It analyzes imported indexes and records workflow actions; it does not make an adjudication or independently validate source documents.

@@ -22,10 +22,16 @@ class CliTests(unittest.TestCase):
             self.assertGreater(first['created'], 0)
             replay = json.loads(self.run_cli(directory, 'import', 'prototype/output/sample.xlsx').stdout)
             self.assertTrue(replay['replayed'])
-            self.run_cli(directory, 'report', '--output', 'prototype/output/report.json')
+            written = self.run_cli(directory, 'report', '--output', 'prototype/output/report.json')
+            self.assertEqual(json.loads(written.stdout), {'written': 'prototype/output/report.json'})
             report = json.loads((Path(directory) / 'prototype/output/report.json').read_text(encoding='utf-8'))
             self.assertEqual(report['states'], {'WAITING_EVIDENCE': first['created']})
+            self.assertNotIn('cases', written.stdout)
             case = report['cases'][0]
+            unknown = self.run_cli(directory, 'tick', '--tenant', 'NOT-IMPORTED', expected=1)
+            self.assertIn('Unknown tenant', unknown.stderr)
+            ticked = json.loads(self.run_cli(directory, 'tick', '--tenant', case['tenant']).stdout)
+            self.assertTrue(ticked['regulators_not_notified'])
             self.run_cli(directory, 'export', '--tenant', case['tenant'], '--case', case['id'],
                          '--output', 'prototype/output/audit.json')
             self.assertTrue(json.loads(self.run_cli(directory, 'verify', 'prototype/output/audit.json').stdout)['valid'])
@@ -43,8 +49,11 @@ class CliTests(unittest.TestCase):
                 self.assertGreaterEqual(len(token), 32)
             if os.name != 'nt':
                 self.assertEqual(path.stat().st_mode & 0o777, 0o600)
-            self.run_cli(directory, 'credentials', '--tenant', case['tenant'], expected=1)
+            duplicate = self.run_cli(directory, 'credentials', '--tenant', case['tenant'], expected=1)
+            self.assertIn('already exists', duplicate.stderr)
             self.assertEqual(json.loads(path.read_text(encoding='utf-8')), credentials)
+            missing = self.run_cli(directory, 'serve', '--credentials', 'prototype/output/absent.json', expected=1)
+            self.assertIn('run `python -m sentinel credentials', missing.stderr)
 
     def test_missing_input_and_malformed_export_fail_cleanly(self):
         with tempfile.TemporaryDirectory() as directory:

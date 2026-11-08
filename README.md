@@ -1,156 +1,119 @@
 # Sentinel adjudication case study
 
-A runnable, evidence-first adjudication prototype and anonymized case-study submission. The critical component is a durable evidence/review/clock kernel—not a dashboard. It preserves human authority, keeps regulatory clocks independent of case disposition, and records reviewable evidence and audit history.
+A runnable, evidence-first prototype and written submission for the Kestrel Cold Chain Solutions adjudication brief. The core is a **tenant-scoped, temporally explicit evidence-assessment kernel** that turns a real workbook alert into a reproducible, hash-addressed evidence assessment — and refuses to conclude when the evidence does not support a conclusion. Human QA keeps the disposition; regulatory clocks run independently of case state.
 
-**Privacy:** public code, fictional fixtures, a rebuilt anonymized evaluation workbook and anonymized analysis only. The supplied workbook and brief, identifying records, generated private reports, databases and credentials are not committed. No ZIP is required.
+Candidate: Zulfiqar. Prototype and documents were produced with heavy AI assistance; see the [working log](docs/07-working-log.md) and [AI review and corrections](docs/11-ai-review-corrections.md).
 
-## Start here — follow the submission step by step
+## Start here
 
-1. **Understand the recommendation:** start with the [guided reading path](docs/README.md), then the executive summary. No installation is needed to review the written submission.
-2. **Explore the design:** follow the guide through architecture, data/time semantics, lifecycle, regulatory clocks and deployment. Diagrams are embedded beside the explanation.
-3. **Run the critical component:** use the [hands-on walkthrough](prototype/WALKTHROUGH.md), with numbered commands, expected results and troubleshooting.
-4. **Review the evidence and lessons:** read the validation strategy, working log and AI-review corrections before assessing the limitations.
-
-**Two useful routes:** evaluators can follow [the four-section reading guide](docs/README.md); developers can start with [the executable walkthrough](prototype/WALKTHROUGH.md). The detailed reference material remains below.
-
-## Download and evaluate the workbook
-
-[**Download the anonymized evaluation workbook**](data/anonymized-evaluation.xlsx?raw=true) · [Workbook guide and transformation limits](data/README.md)
-
-The public copy retains 15 sheets and 420 event rows with consistently replaced keys. Identifiers and narratives are removed or replaced; dates and measurements are synthetic. It is **not the original workbook or outcome-equivalent clinical data**. The original supplied workbook was tested separately and remains private.
-
-```sh
-python -m sentinel --db prototype/output/evaluation.db import data/anonymized-evaluation.xlsx
-python -m sentinel --db prototype/output/evaluation.db report --output prototype/output/evaluation-report.json
-```
-
-## Evaluation copy
-
-| Requested section | Read |
+| You want to… | Go to |
 |---|---|
-| Where we land | [Executive summary](docs/00-executive-summary.md), [recommendation and source mapping](docs/01-where-we-land.md), [open questions](docs/09-risks-assumptions-and-open-questions.md), [rollout](docs/10-future-roadmap.md) |
-| The design | [Architecture](docs/02-system-architecture.md), [data model](docs/03-data-model.md), [lifecycle](docs/04-case-lifecycle.md), [degradation](docs/05-degradation-and-regulatory-clock.md), [versioning/deployment](docs/06-versioning-and-deployment.md), [diagrams](diagrams/README.md) |
-| Working prototype | [Prototype guide](prototype/README.md), [validation](docs/08-validation-and-test-strategy.md), [API](docs/API.md) |
-| Working log | [Decisions and lessons](docs/07-working-log.md), [AI-assisted review corrections](docs/11-ai-review-corrections.md) |
+| Review the submission in the evaluator's four sections | [Reading guide](docs/README.md) and [submission checklist](SUBMISSION_CHECKLIST.md) |
+| Run the prototype in ten minutes | [Clone and run](#clone-and-run) below, then the [step-by-step working guide](docs/17-step-by-step-working.md) (every command with its real output, and what the kernel does with one alert) |
+| Prepare or follow the 20-minute review | [Review walkthrough, hard questions, change response, email draft](docs/16-review-walkthrough.md) |
+| See what the workbook actually contains | [Data findings and assumptions](docs/12-data-findings-and-assumptions.md) |
 
-Source references let evaluators with the original pack trace decisions without publishing identifying records. Proposed production architecture is explicitly separate from implemented local behavior.
+## What is implemented
 
-## Project structure
+- **Assessment kernel** (`prototype/src/sentinel/evidence/assessment.py`): for one alert — tenant-scoped entity resolution (product, facilities, carrier contract) that abstains on ambiguity and surfaces alias observations as *unverified*; SOP selection as at the excursion start with overlapping revisions reported as conflicts and date-only boundary days flagged; stability checks for ownership (by `tenant_code`, not file path), presentation, readability and relevance; telemetry flags for gateway gaps, interpolation, untagged BMS sources (quarantine for attribution) and firmware under a calibration bulletin, with no assumed correction; a notification obligation whose clock starts at alert receipt; a knowledge cutoff (`known_at`) that hides facts recorded later; correction overlays with recorded time that produce a **new** assessment while the original stays byte-identical; an execution manifest and SHA-256 content hashes; evidence packages that can be verified.
+- **Workflow service** (`workflow/service.py`): atomic SQLite import of one workbook snapshot, case revisions, evidence review, independent single/dual signatures, optimistic versions, idempotency keys, reopening with preserved history, hash-chained audit export/verify, alert-derived obligations with a reminder outbox and human-attested receipts.
+- **Interfaces**: CLI (`python -m sentinel`), loopback-only authenticated JSON API, Docker demo.
+- **Reproducible data investigation**: `scripts/inspect_workbook.py` (data-quality report) and `scripts/select_demo_cases.py` (programmatic selection of real cases per failure mode, knowledge-cutoff replay, correction replay).
+- **Tests**: 54 `unittest` tests — unit tests on fictional tables, integration tests on the anonymized workbook, and an opt-in integration test on the supplied pack.
 
-```text
-README.md                 Setup and evaluation index
-.env.example              Optional, non-secret shell settings
-requirements.txt          Editable prototype install from repository root
-Dockerfile                Non-root local demo image
-docker-compose.yml        Isolated, read-only fictional demo
-Makefile                  Development shortcuts
-.github/workflows/        Cross-platform tests and security checks
-data/                     Local private input guidance; workbook ignored
-docs/                     Numbered case-study sections and API/security guides
-diagrams/                 Mermaid architecture and lifecycle diagrams
-scripts/                  Portable check command and example API client
-prototype/
-  README.md
-  pyproject.toml          Installable package and lint configuration
-  requirements.txt        Pinned runtime dependency
-  run.ps1                 Windows setup/CLI launcher
-  src/sentinel/
-    cli.py                Pipeline entry point and commands
-    config.py             Local output configuration
-    ingestion/            XLSX parser and source hashing
-    evidence/             Tenant-scoped candidates, temporal lookup, blockers
-    workflow/             Durable cases, approvals, clocks and audit history
-    api/                  Authenticated loopback JSON API
-    fixtures/             Fictional workbook generator
-    demo.py               Running-HTTP lifecycle demonstration
-  tests/
-    unit/
-    integration/
-  output/                 Ignored reports, databases and credentials
-```
+## What is not implemented
 
-The layout follows the supplied reference without copying empty layers. Identity and temporal analysis stay with evidence; transactions, audit and reminders stay together in the workflow service because their invariants must commit atomically. No fake AI component or unused domain scaffolding is included.
+No live source connectors, no document OCR or interpretation, no language model, no regulator filing or receipt verification, no calendars or business-day policies, no SSO or qualified signatures, no PostgreSQL/regional deployment, no WORM retention. The application never releases or destroys product and never files with a regulator. These are designed in [docs/02](docs/02-system-architecture.md)–[06](docs/06-versioning-and-deployment.md) and the [LLD](docs/13-detailed-design-lld.md) and are labelled *proposed* throughout.
 
-## Clone and run locally
+## Prerequisites
 
-Requires Git and **Python 3.11+**. From the repository root:
+Git and Python 3.11+ (3.11, 3.12 and 3.13 are exercised in CI on Linux, macOS and Windows). The only runtime dependency is `defusedxml`. No paid API, key, or secret is required for any command in this README.
+
+## Clone and run
 
 ```sh
 git clone https://github.com/Zulfiqar7862/kccs-adjudication-case-study.git
 cd kccs-adjudication-case-study
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
+python3 -m venv .venv && source .venv/bin/activate       # Windows: py -3 -m venv .venv; .venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
-python scripts/check.py
-python -m sentinel demo
+python scripts/check.py                                   # compile, 54 tests, HTTP lifecycle demo on fictional data
+python -m sentinel demo                                   # the lifecycle demo on its own
 ```
 
-On Windows, use `py -3 -m venv .venv` and `.venv\Scripts\Activate.ps1`, or run:
+Expected: `Ran 54 tests … OK (skipped=2)`, a JSON lifecycle report ending with `"audit_integrity": "PASS"` and `"regulators_not_notified": true`, then `All requested checks passed.`
 
-```powershell
-./prototype/run.ps1 demo
+## Execute against the supplied workbook
+
+Place the pack **outside** the checkout or in `data/` (ignored except for the anonymized copy). Never commit it.
+
+```sh
+export PACK=/absolute/path/to/KCCS_Sentinel_Reference_Data_Pack.xlsx
+SENTINEL_WORKBOOK=$PACK python scripts/check.py                                   # all 54 tests, including the private pack test
+python scripts/inspect_workbook.py $PACK --output-dir artifacts/private           # data-quality report
+python -m sentinel --db prototype/output/private.db import $PACK                   # 420 cases, atomic, replay-safe
+python scripts/select_demo_cases.py --db prototype/output/private.db --output-dir artifacts/private
+python -m sentinel --db prototype/output/private.db assess-all --compare-history --output artifacts/private/assessment-summary.json
+python -m sentinel --db prototype/output/private.db assess --tenant T-VIRENT --event EXC-110336 --output artifacts/private/EXC-110336.json
+python -m sentinel --db prototype/output/private.db assess --tenant T-VIRENT --event EXC-110336 --known-at 2026-01-01T00:00:00+00:00
+python -m sentinel --db prototype/output/private.db verify-assessment artifacts/private/EXC-110336.json
 ```
 
-The launcher creates the environment if needed, installs the package and forwards arguments to the CLI. It does not change execution policy. All commands use the repository root as the working directory. The package can also be installed directly with `python -m pip install -e ./prototype`.
+Expected outputs (observed on the supplied pack, 2026-11-08):
 
-`check.py` compiles the source, runs the tests and executes the real HTTP demo. The demo uses temporary fictional data and verifies evidence blockers, independent dual approval, reopening, preserved audit history and reminder retry. It checks workflow mechanics, not clinical correctness.
+- `import` → `"created": 420`; a second import → `"replayed": true, "created": 0`.
+- `select_demo_cases` → `artifacts/private/demo-cases.json` naming one real event per failure mode (blank product reference, firmware bulletin, SOP overlap, untagged BMS source, unreadable study, unverified alias hint, recorded notification window, study absent from index, presentation mismatch) plus a knowledge-cutoff replay and a correction replay with hashes.
+- `assess-all` → 420 assessments, all `ABSTAIN`; 234 `BLOCKED_BY_CONFLICTS`, 186 `INCOMPLETE_EVIDENCE`; conflict kinds and 118 review candidates. This is structural coverage of a stratified pack, **not** an accuracy or automated-closure estimate.
+- `assess … --known-at 2026-01-01` → the TT-CB-114 bulletin is reported `NOT_KNOWN_AT_CUTOFF` and the assessment hash differs from the current-knowledge one.
+- `verify-assessment` → `{"valid": true}`.
 
-## Start the local API
+`artifacts/private/` is ignored by git. The same commands run on the anonymized copy produce `artifacts/public/`, which is committed so reviewers without the pack can inspect real output shapes (firmware, readability, tenant constraints and incidents are redacted in that copy, so those failure modes do not appear there).
+
+## Local API
 
 ```sh
 python -m sentinel sample
 python -m sentinel import prototype/output/sample.xlsx
 python -m sentinel credentials --tenant DEMO-ALPHA --tenant DEMO-BETA
-python -m sentinel serve
+python -m sentinel serve                                  # http://127.0.0.1:8080, loopback only
+python scripts/api_example.py --tenant DEMO-ALPHA         # in another shell
 ```
 
-Open `http://127.0.0.1:8080/health`. From another activated terminal:
+Contract: [docs/API.md](docs/API.md). Credentials are local development stubs; do not expose the server.
 
-```sh
-python scripts/api_example.py --tenant DEMO-ALPHA
+## Inspect outputs
+
+| Output | Where | Contains |
+|---|---|---|
+| Data-quality report | `artifacts/<private|public>/workbook-inspection.{json,md}` | sheet/column profiles, overlaps, resolution counts, firmware, timestamps |
+| Demo case packages | `artifacts/<private|public>/cases/<event>.json` | full assessment, section hashes, package hash |
+| Replay index | `artifacts/<private|public>/demo-cases.json` | selected cases, knowledge-cutoff replay, correction replay |
+| Coverage summary | `artifacts/<private|public>/assessment-summary.json` | readiness, conflict kinds, review candidates |
+| Audit bundle | `python -m sentinel export --tenant … --case … --output …` then `verify` | hash-chained case history |
+
+## Troubleshooting
+
+- `ModuleNotFoundError: sentinel` → activate the venv and run `python -m pip install -r requirements.txt` from the repo root.
+- `Error: Only one workbook snapshot is supported` → you imported a different file into the same database; use a new `--db` path.
+- `Error: … already exists` from `credentials` → pass `--output` with a new path or delete the old file.
+- `Error: … not found; run python -m sentinel credentials` from `serve` → generate credentials first.
+- `Error: Event … is not available to tenant …` → the event belongs to another tenant or does not exist; both are reported identically by design.
+- `SENTINEL_WORKBOOK` set to a wrong path → the private test fails rather than silently skipping; unset it to skip.
+- Port 8080 busy → `python -m sentinel serve --port 8081` and adjust `scripts/api_example.py` accordingly.
+
+## Limitations and known risks
+
+The pack has no raw temperature series, no documents, no batch history, no recorded-time history and no calendars; the prototype models each as an explicit missing input and never synthesizes evidence. The workbook is treated as known at its extract date (2026-09-14) because no better recorded time exists. Entity resolution is exact-match only; alias observations are surfaced, never applied. The notification window is taken from the record as a *provisional* policy input. Hash chains are tamper-evidence, not WORM retention. The anonymized copy is structurally faithful but not outcome-equivalent. Full register: [risks and open questions](docs/09-risks-assumptions-and-open-questions.md).
+
+## Project layout
+
+```
+README.md, SUBMISSION_CHECKLIST.md
+docs/            00–16 numbered submission documents, API and security notes
+diagrams/        Mermaid diagram sources
+prototype/       installable package (src/sentinel), tests, walkthrough
+scripts/         check.py, inspect_workbook.py, select_demo_cases.py, api_example.py, anonymized workbook builder
+data/            anonymized evaluation workbook (the supplied pack is never committed)
+artifacts/       public/ committed (anonymized outputs); private/ ignored (real outputs)
 ```
 
-This is a JSON API, not a dashboard. The server binds only to loopback; Ctrl-C stops it. Data persists in `prototype/output/sentinel.db`. Generated credentials are local development stubs and refuse accidental overwrite. Never commit them or expose this server publicly.
-
-## Execute against the supplied workbook
-
-Keep the authorized workbook outside the checkout or in ignored `data/`. Never force-add it.
-
-```sh
-python -m sentinel --db prototype/output/private.db import /absolute/path/to/your-workbook.xlsx
-python -m sentinel --db prototype/output/private.db report --output prototype/output/private-report.json
-SENTINEL_WORKBOOK=/absolute/path/to/your-workbook.xlsx python -m unittest discover -s prototype/tests -v
-```
-
-PowerShell equivalent for the integration test:
-
-```powershell
-$env:SENTINEL_WORKBOOK = 'C:\private\your-workbook.xlsx'
-python -m unittest discover -s prototype/tests -v
-Remove-Item Env:SENTINEL_WORKBOOK
-```
-
-The private test imports the supplied events, checks tenant boundaries, fail-closed evidence, audit integrity, historical visibility and exact replay. A configured invalid path fails; only an unset variable skips. Public CI uses fictional fixtures and the reviewed anonymized evaluation workbook, never the private original. Historical dispositions are not clinical ground truth.
-
-Exact-file replay creates no duplicate cases. A different snapshot requires a new database rather than silently overwriting history. Reports and exports can contain private data and must remain local.
-
-## Configuration and Docker
-
-`.env.example` documents optional variables; Python does **not** automatically load `.env` files. `SENTINEL_OUTPUT` changes the default database, generated sample and credential directory. Explicit CLI paths override those defaults. Existing local files in `artifacts/` are not moved or deleted; select an existing compatible database with `--db` and credentials with `serve --credentials`, or use a fresh output directory. `SENTINEL_WORKBOOK` is only an opt-in integration-test input, not an automatic import.
-
-Docker is optional; the normal Python workflow needs no daemon:
-
-```sh
-docker compose run --build --rm prototype
-```
-
-The container runs the fictional demo as a non-root user with a read-only filesystem, temporary scratch storage, and no external network. Dependencies download during image build. It mounts no private data and publishes no API port. This is not a production deployment. The Docker build context excludes workbooks, credentials and generated outputs.
-
-## Scope and limitations
-
-Implemented: durable SQLite transactions, authenticated tenant-scoped HTTP operations, idempotency, version conflicts, evidence review, independent single/dual approvals, reopening, alert-derived obligations, explicit reminder retries, human-attested receipts, and audit export/verification.
-
-Not implemented: live source connectors, clinically validated rules, verified document interpretation, SSO/qualified signatures, regulator delivery, supervised scheduling, legal calendars, distributed availability or immutable seven-year retention. The application never autonomously releases or destroys product, calls a model, or files with a regulator. Text-based signatory selection is a prototype heuristic. Audit hashes detect alteration relative to a trusted copy, not malicious rewriting by a database administrator.
-
-See [security](docs/SECURITY.md), [contributing](docs/CONTRIBUTING.md) and [validation](docs/08-validation-and-test-strategy.md).
+Configuration lives in `.env.example` (Python does not auto-load it). `docker compose run --build --rm prototype` runs the fictional demo in an isolated container.

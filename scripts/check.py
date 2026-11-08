@@ -1,4 +1,5 @@
 """Portable local/CI check entry point. Private tests are opt-in via environment."""
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -12,4 +13,7 @@ for arguments in [
     result = subprocess.run([sys.executable, *arguments], cwd=ROOT, check=False)
     if result.returncode:
         raise SystemExit(result.returncode)
-print('All requested checks passed. Private integrations are skipped unless SENTINEL_WORKBOOK is set.')
+if os.environ.get('SENTINEL_WORKBOOK'):
+    print('All requested checks passed, including the private-workbook integration test.')
+else:
+    print('All requested checks passed. Private integrations are skipped unless SENTINEL_WORKBOOK is set.')
