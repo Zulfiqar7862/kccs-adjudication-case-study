@@ -33,7 +33,7 @@ python -m sentinel --db prototype/output/private.db import /absolute/path/to/wor
 SENTINEL_WORKBOOK=/absolute/path/to/workbook.xlsx python -m unittest discover -s prototype/tests -v
 ```
 
-All supplied records are exercised by the private integration test; public CI runs fictional data only. Keep the workbook and generated reports private. `output/` is ignored except for its directory marker. Default paths are relative to the invocation directory; use repository-root commands or explicit absolute paths.
+All supplied records are exercised by the private integration test; public CI runs fictional fixtures and the reviewed anonymized evaluation workbook. Keep the workbook and generated reports private. `output/` is ignored except for its directory marker. Default paths are relative to the invocation directory; use repository-root commands or explicit absolute paths.
 
 ## More commands
 

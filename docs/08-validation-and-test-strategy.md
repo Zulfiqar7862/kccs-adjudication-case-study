@@ -18,7 +18,7 @@ Generated files are local artifacts and must not be staged or published. Use tem
 
 ## Private workbook checks
 
-Any integration check that reads an authorized private workbook must be explicitly opt-in through `SENTINEL_WORKBOOK`, set to an absolute local path. When unset, the private check should report an explicit skip; when set to an unreadable or invalid workbook, it should fail rather than silently fall back to a fixture. Never print workbook contents, include them in test output, or commit the input or resulting reports. Public CI and reproducible public tests must remain synthetic and independent of this variable.
+Any integration check that reads an authorized private workbook must be explicitly opt-in through `SENTINEL_WORKBOOK`, set to an absolute local path. When unset, the private check should report an explicit skip; when set to an unreadable or invalid workbook, it should fail rather than silently fall back to a fixture. Never print workbook contents, include them in test output, or commit the input or resulting reports. Public CI uses synthetic fixtures and the reviewed anonymized workbook independently of this variable.
 
 ## Behaviors worth covering
 
@@ -35,4 +35,4 @@ Production qualification should add repeatable tests for tenant isolation, concu
 
 ## Public-test constraints
 
-The public test suite should use synthetic fixtures and the fictional sample workbook, not supplied or otherwise private records. Tests should check domain outcomes and workflow boundaries without asserting that the prototype validates the meaning of source documents.
+The public test suite uses synthetic fixtures and the separately reviewed anonymized evaluation workbook, never the private original records. Tests should check domain outcomes and workflow boundaries without asserting that the prototype validates the meaning of source documents.
