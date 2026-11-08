@@ -112,6 +112,7 @@ class Engine:
             raise DomainError('Event rows are missing required identity or timestamp columns')
         source_hash = workbook.sha256(path)
         tables['_observed_at'] = self.now()
+        tables['_source_hash'] = source_hash
         events = tables['01_Excursion_Events']
         with self.transaction() as db:
             if db.execute('SELECT 1 FROM imports WHERE hash=?', (source_hash,)).fetchone():
