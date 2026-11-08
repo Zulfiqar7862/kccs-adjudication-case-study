@@ -33,10 +33,11 @@ Each document contains its relevant inline diagrams. The [diagram index](../diag
 
 ## Step 3 — Working Prototype
 
-1. Follow the [hands-on walkthrough](../prototype/WALKTHROUGH.md) to install and run the fictional HTTP lifecycle demo.
-2. Read [validation and long-term reliability](08-validation-and-test-strategy.md) to separate current checks from proposed qualification gates.
-3. Inspect and run the [bundled anonymized evaluation workbook](../data/README.md). It preserves structure, not clinical outcomes. If you hold the authorized original workbook, use the walkthrough's private-input step. The workbook must be provided locally; public CI uses fictional fixtures and the reviewed anonymized workbook.
-4. For a code review, use the walkthrough's source-reading order, the [prototype module map](../prototype/README.md) and the [API contract](API.md).
+1. If you hold the supplied workbook, run the full suite against it first: `SENTINEL_WORKBOOK=/absolute/path/to/pack.xlsx python scripts/check.py`. This is the brief's "execution against the provided workbook"; the [verification record](08-validation-and-test-strategy.md#verification-record--2026-11-08) lists the expected aggregates.
+2. Follow the [hands-on walkthrough](../prototype/WALKTHROUGH.md) to install and run the fictional HTTP lifecycle demo.
+3. Read [validation and long-term reliability](08-validation-and-test-strategy.md) to separate current checks from proposed qualification gates.
+4. Inspect and run the [bundled anonymized evaluation workbook](../data/README.md). It preserves structure, not clinical outcomes. The workbook must be provided locally; public CI uses fictional fixtures and the reviewed anonymized workbook.
+5. For a code review, use the walkthrough's source-reading order, the [prototype module map](../prototype/README.md) and the [API contract](API.md).
 
 **Checkpoint:** demonstrate rejected premature signing, evidence review, independent approval, preserved history after reopening, and reminder retry. Do not interpret these structural checks as clinical validation.
 

@@ -8,10 +8,10 @@ Install the prototype in editable mode as described in [Contributing](CONTRIBUTI
 python scripts/check.py
 ```
 
-To generate a fictional workbook for local manual checks:
+To generate a fictional workbook for local manual checks (`demo` does not write one; it uses a temporary database):
 
 ```sh
-python -m sentinel demo
+python -m sentinel sample --output prototype/output/sample.xlsx
 ```
 
 Generated files are local artifacts and must not be staged or published. Use temporary SQLite databases and temporary output paths in tests so test runs do not rely on or overwrite a developer's local data.
@@ -36,3 +36,21 @@ Production qualification should add repeatable tests for tenant isolation, concu
 ## Public-test constraints
 
 The public test suite uses synthetic fixtures and the separately reviewed anonymized evaluation workbook, never the private original records. Tests should check domain outcomes and workflow boundaries without asserting that the prototype validates the meaning of source documents.
+
+## Verification record — 2026-11-08
+
+Results from the end-to-end pass taken immediately before submission. Private outputs stayed local; only aggregates are recorded.
+
+| Check | Command | Result |
+|---|---|---|
+| Fresh install from the README | `python3 -m venv .venv && python -m pip install -r requirements.txt` | Installs `sentinel-adjudication` and `defusedxml==0.7.1` only |
+| Compile, public tests, HTTP lifecycle demo | `python scripts/check.py` | Passed; private check explicitly skipped |
+| Full suite against the supplied workbook | `SENTINEL_WORKBOOK=<pack> python -m unittest discover -s prototype/tests` | 30 tests, all passed |
+| Supplied workbook import and report | `python -m sentinel --db … import <pack>` then `report --output …` | 420 cases created, all `WAITING_EVIDENCE` with blockers; exact-file replay created 0 |
+| Public anonymized workbook | same commands on `data/anonymized-evaluation.xlsx` | 420 cases, same structural outcome |
+| API | `serve`, `scripts/api_example.py`, unauthenticated request | 200 with bearer, 401 without |
+| Reminder stub, export and verify | `tick --tenant …`, `tick --fail`, `export`, `verify` | Reminders delivered / retried; exported bundle `valid: true` |
+| Lint and container | `ruff check …`, `docker compose run --build --rm prototype` | Passed |
+| Hosted CI on `main` | GitHub Actions | CI (9 jobs) and Security workflows green on the current head |
+
+Re-run this table before any later submission; it is the acceptance check for "does it still work", not a clinical or production qualification.

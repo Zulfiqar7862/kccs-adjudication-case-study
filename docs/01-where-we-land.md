@@ -6,6 +6,32 @@ Proceed with a bounded, human-controlled evidence workflow and a gated, single-s
 
 The proposed first pilot is referenced only as **the EU pilot tenant** (`12_Tenant_Constraints`, row 2). Its residency position, signatory roles, auditability needs, source ownership, and permitted processing define a narrow pilot boundary—not permission to onboard other tenants or reuse their data. The brief’s four deliverables are addressed below: **A. Where you land, and why; B. The design; C. Something running; D. Your working log.**
 
+### Why this tenant first
+
+| Reason | Where it comes from |
+|---|---|
+| Its renewal is already conditional on exactly the capability this design is built around: producing, for a dated disposition, the SOP revision in force, the stability data relied on, the temperature series, and the approver. | Brief §3 (March inspection), customer quote in §4, board commitment 3 |
+| Its data-processing agreement fixes residency in Europe, so the pilot forces the regional-cell and tenant-scoping design to be real from day one rather than retrofitted. | Brief §4 (customer quote); `12_Tenant_Constraints`, row 2 |
+| It asks to be told which version produced a recommendation and when that changes—the same requirement Dr Rao's pre-change replay condition imposes. | Brief §4, §6 (Dr Rao's condition) |
+| One tenant, one site, one jurisdiction keeps the first clock policy, signatory roster and source inventory small enough to reconcile by hand in shadow mode. | Board minute: "ship this to one customer and be certain" |
+| It has no cross-tenant precedent dependency, so the pilot cannot repeat the August leakage path. | Brief §3 (August), §4 (counsel quote) |
+
+Customer and person names are deliberately not reproduced in this public repository; the brief is confidential. The selection is identifiable to the reviewer from the row reference and the quoted constraints.
+
+### Brief incidents and quotes mapped to design controls
+
+| Brief detail | Requirement derived | Design control (document) |
+|---|---|---|
+| November: one customer's prompt change moved recommendations for 31 of 34 customers; destroy share rose from 11% to 19%; nine days to detect; USD 310k of product incinerated. | Any policy, rule or model change must be versioned, tenant-scoped and replayed against known cases before release. | Versioned policy bundles, per-tenant release manifests, Dr Rao's replay gate before every change ([versioning](06-versioning-and-deployment.md)). No model in the disposition path in the first release. |
+| February: 1,912 alerts in 38 minutes left the queue unusable for 31 hours; four genuine cases from other customers missed their 72-hour window. | The regulatory clock must not depend on queue health, and one tenant's storm must not starve another's deadline. | Obligations created from alert time independently of the case; reserved regulatory workers; per-tenant fairness and incident grouping ([degradation](05-degradation-and-regulatory-clock.md)). |
+| March: an inspector asked for the SOP in force, stability data, temperature series and approver for a disposition on a given date; only the outcome and approver existed. | Every signed disposition must pin the exact evidence versions it relied on and be retrievable for seven years. | Bitemporal evidence facts, frozen signed packets, hash-chained audit export; worked example in the [data model](03-data-model.md). |
+| April: a firmware build under-reported by up to 1.8 °C; 214 closed cases affected, 61 re-adjudicated differently, nine carrier invoices withdrawn. | Telemetry provenance (device, firmware, calibration) must be evidence, and corrections must open new revisions, not rewrite history. | Firmware/calibration blockers in evidence analysis; reopen creates a new revision and preserves the prior one; compensating business actions via outbox ([lifecycle](04-case-lifecycle.md)). |
+| June: a 30-day model sunset forced three weeks on an unqualified replacement. | No silent provider or version substitution; degraded mode must be explicit. | Model omitted rather than swapped when unqualified; version pinned per case revision ([degradation](05-degradation-and-regulatory-clock.md)). |
+| August: a similar-case lookup put one customer's case into a direct competitor's draft; contract clause forbids derived artefacts crossing tenants. | No index, model or derived artefact built on one tenant's data may serve another. | `tenant_id` leads every key, index and export; cross-tenant precedent retrieval is a deliberate non-goal (below). |
+| Regulatory windows: 72 hours in two markets, five days in Brazil, next business day for one US state programme; 14 late filings in two quarters, each stuck behind a flat-battery sensor. | Windows are per jurisdiction and programme, calendar-aware, and start at alert time. | Policy-driven obligation table and worked clock example ([degradation](05-degradation-and-regulatory-clock.md)). |
+| CFO: USD 3,000/month model ceiling, 23 reviewers at about USD 1.5M/year, and the bill must be flat "on a quiet Sunday". | Cost must be predictable and bounded per tenant and per case, not usage-spiky. | Cost position and counterargument in [risks](09-risks-assumptions-and-open-questions.md). |
+| Reviewer: "I spend my day looking things up"; 1,100-row private spreadsheet with no schema, backup or second owner. | Capture the reasoning, not just the outcome code; bring the spreadsheet's content under a schema inside tenant boundaries. | Structured review argument (rule, fact, citation, uncertainty, rationale) on every case ([lifecycle](04-case-lifecycle.md)). |
+
 ## A. Where you land, and why
 
 The operational problem is evidence assembly and accountable timing, not a lack of automated verdicts. The reference pack reports 11,400 monthly alerts and 2,050 human-adjudicated cases; these are source-pack aggregates, not independently validated forecasts. The dataset is stratified and cannot establish population rates or prove a pilot outcome. Historical recommendations, dispositions, and notification records are not correctness labels for new cases.

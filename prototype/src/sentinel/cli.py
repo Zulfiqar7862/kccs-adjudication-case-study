@@ -5,13 +5,13 @@ import os
 import secrets
 import sqlite3
 import zipfile
+from collections import Counter
+from pathlib import Path
 from xml.etree.ElementTree import ParseError
 
 from defusedxml.common import DefusedXmlException
-from collections import Counter
-from pathlib import Path
-from .config import output_directory
 
+from sentinel.config import output_directory
 from sentinel.workflow.service import DomainError, Engine, verify_export
 
 
@@ -21,8 +21,14 @@ def output(value, path=None):
         target = Path(path)
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(text, encoding='utf-8')
+        # Confirm the write without echoing private file contents to the terminal.
+        print(json.dumps({'written': str(target)}, indent=2) + '\n', end='')
     else:
         print(text, end='')
+
+
+def imported_tenants(engine):
+    return sorted({event['tenant_code'] for event in engine.tables()['01_Excursion_Events']})
 
 
 def main():
@@ -75,7 +81,10 @@ def main():
                     identities[secrets.token_urlsafe(32)] = {'tenant': tenant, 'actor': f'local-{tenant}-{role}', 'role': role}
             path = Path(args.output)
             path.parent.mkdir(parents=True, exist_ok=True)
-            fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+            try:
+                fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+            except FileExistsError:
+                raise ValueError(f'{path} already exists; pass --output with a new path or remove the old file') from None
             with os.fdopen(fd, 'w', encoding='utf-8') as stream:
                 json.dump(identities, stream, indent=2)
             output({'created': str(path), 'identities': len(identities), 'notice': 'Local only. Keep this file private.'})
@@ -94,7 +103,10 @@ def main():
             output(engine.ingest(args.workbook))
         elif args.command == 'serve':
             from sentinel.api.http import make_server
-            identities = json.loads(Path(args.credentials).read_text(encoding='utf-8'))
+            credentials_path = Path(args.credentials)
+            if not credentials_path.is_file():
+                raise ValueError(f'{credentials_path} not found; run `python -m sentinel credentials --tenant <CODE>` first')
+            identities = json.loads(credentials_path.read_text(encoding='utf-8'))
             server = make_server(engine, identities, port=args.port)
             print(f'Local API http://127.0.0.1:{server.server_port} (Ctrl-C to stop)', flush=True)
             try:
@@ -106,13 +118,16 @@ def main():
         elif args.command == 'export':
             output(engine.export(args.tenant, args.case), args.output)
         elif args.command == 'tick':
+            tenants = imported_tenants(engine)
+            if args.tenant not in tenants:
+                raise DomainError(f'Unknown tenant {args.tenant!r}; imported tenants: {", ".join(tenants)}', 404)
+
             def transport(key, payload):
                 if args.fail:
                     raise ConnectionError('Injected local transport outage')
             output({'stub': True, 'regulators_not_notified': True, 'results': engine.tick(args.tenant, transport)})
         elif args.command == 'report':
-            tables = engine.tables()
-            tenants = sorted({event['tenant_code'] for event in tables['01_Excursion_Events']})
+            tenants = imported_tenants(engine)
             states, blockers, clocks, details = Counter(), Counter(), Counter(), []
             for tenant in tenants:
                 for case in engine.list_cases(tenant):

@@ -22,6 +22,19 @@ flowchart TB
 
 **Proposed production behavior.** Evidence waiting, retries and reopening do not pause or restart the legal clock. A worker outage requires independent detection and authorized fallback, not an assumed clock suspension. Reconcile fallback records after recovery. The prototype implements internal reminders and human-attested receipts only; it does not implement filing, receipt verification or regional failover.
 
+## Reporting windows stated in the brief
+
+| Jurisdiction or programme (brief §4) | Window | Start basis | Calendar rule needed |
+|---|---|---|---|
+| Two markets | 72 hours | Alert/detection time | Fixed hours; timezone of the obligation, not the reviewer |
+| Brazil | 5 days | Alert/detection time | Calendar days; confirm whether local holidays extend the window |
+| One US state programme | Next business day | Alert/detection time | Versioned business-day calendar for that state |
+| Any tenant/jurisdiction without an approved policy | Unknown | — | Urgent manual policy work and conservative escalation; never "not required" |
+
+Fourteen filings were late in two quarters, each queued behind a non-actionable alert. The design response is that the obligation is created from the alert and runs on its own worker and priority; queue health, evidence waiting, reopening and disposition do not touch it.
+
+**Worked example (72-hour market).** Alert at 2026-02-10 14:20 UTC. Obligation due 2026-02-13 14:20 UTC regardless of when triage happens. Reminder pages at 50% (2026-02-12 02:20), 75% (2026-02-12 20:20) and 90% (2026-02-13 07:08) of the window, then on overdue. If the case is still `WAITING_EVIDENCE` at 90%, regulatory operations file on the facts available and the case continues; a later reopen in June creates a new revision but does not create a second 72-hour clock. The prototype implements the obligation row, deadline and reminder outbox; the paging thresholds, calendars and filing adapter are proposed.
+
 ## Failure modes and regulatory consequences
 
 | Failure | Behavior and recovery | Clock effect |
