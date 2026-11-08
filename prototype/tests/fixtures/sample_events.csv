@@ -1,5 +1,0 @@
-event_id,alert_ts_utc,tenant_code,product_ref_as_received,excursion_start_utc,logger_fw,max_temp_c,min_temp_c,source_system,gateway_gap_min,interpolated,regulator_reportable,reg_window_hours,hours_to_notification
-SYN-001,2030-01-01 00:00,SYN-A,SYN-SKU-1,2029-12-31 23:50,SYN-FW,9,3,SYN-SOURCE,0,N,N,,
-SYN-002,2030-01-02 00:00,SYN-B,SYN-SKU-1,2030-01-01 23:50,SYN-FW,12,2,SYN-SOURCE,10,Y,Y,72,73
-SYN-003,2030-01-03 00:00,SYN-A,,2030-01-02 23:50,TT-2.14.3,4,0,SYS-03,0,N,Y,24,
-SYN-004,2030-01-04 00:00,SYN-A,SYN-SKU-2,2030-01-03 23:50,SYN-FW,7,3,SYN-SOURCE,0,N,Y,72,72

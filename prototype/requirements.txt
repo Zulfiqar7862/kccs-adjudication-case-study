@@ -1,1 +1,1 @@
--r ../requirements.txt
+defusedxml==0.7.1

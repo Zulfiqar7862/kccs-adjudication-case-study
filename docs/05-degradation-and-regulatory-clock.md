@@ -1,25 +1,26 @@
-# 5. Degradation and the regulatory clock
+# Degradation and regulatory clock
 
-## 2.5 Failure, degradation and the regulatory clock
+## Failure modes and regulatory consequences
 
-| Failure | Product/case behaviour | Regulatory behaviour |
+| Failure | Behavior and recovery | Clock effect |
 |---|---|---|
-| Model / embedding API unavailable or forbidden | Deterministic dossier + approved templates, lexical lookup and manual QA. No unqualified alternate model. | Continues independently; an LLM is not in this lane. |
-| SOP/stability source unavailable | Use already captured approved bytes only when required version/freshness is defensible; otherwise WAITING/manual escalation, not current-document substitution. | Deadline continues; file initial deviation with known facts and permitted follow-up, under Regulatory Affairs policy. |
-| Telemetry source gap | Mark incomplete; bounded retries/watermark; BMS permanent gaps require alternate evidence/manual assessment. Never fabricate samples. | Alert-based clock unchanged; outage is not an extension. |
-| TMS/occupancy unavailable | No BMS auto-close; hold affected evidence compilation. Isolate tenant work queues. | Unresolved-reportability escalation continues. |
-| Broker/workflow worker down | PostgreSQL outbox survives; retry/backoff with jitter; leases expire. Independent sweeper reconstructs missed timer work. | DB ledger is authoritative; independent health alarm on oldest unresolved deadline/sweeper heartbeat. |
-| Case database unavailable | API cannot acknowledge durable intake or accept signatures. Adapters buffer encrypted raw envelopes/cursors; operational outage route captures alert receipt independently where supported. | Page immediately; RA uses last replicated ledger and approved emergency register/filing process; reconcile receipts on recovery. Do not claim zero loss if both intake and emergency capture fail. |
-| Regulator endpoint/email unavailable | Filing stays SUBMITTING/FAILED, not CONFIRMED; attach failed attempt evidence. | Retry by idempotency key, page RA before slack expires; approved alternate filing channel, human receipt verification. Clock never pauses. |
-| Region outage | Fail within allowed geography only. EU data never fails over to US for convenience. | Execute regional recovery + emergency RA runbook, preserve original due instants, disclose any missed duty. |
-| WORM store unavailable | Do not commit a signed final decision without its durable frozen bundle. Raw landing buffer retries. | Notification may proceed through emergency channel without a final disposition; record and later reconcile its receipt. |
+| Source/document/OCR unavailable | Keep last artifact with freshness warning; block unsupported readiness; circuit-break adapter; retry with jitter and per-source quota; controlled manual upload. | None: obligations and human filing route continue. |
+| Model/provider unavailable or unqualified replacement | Omit optional narrative/retrieval augmentation; present structured evidence; never silently switch to an unqualified provider. | None; no model dependency in deadline path. |
+| Telemetry late, duplicate, permanently missing | Preserve actual series and lineage; dedupe source identity; late evidence triggers reevaluation; gaps remain explicit. | Detection clock is not retroactively shifted by reordering. |
+| Queue/worker outage or alert storm | Durable inbox/outbox; reserved regulatory workers; per-tenant fairness, incident grouping, backpressure; backlog-age and deadline-priority monitoring; replay after recovery. | Deadline still elapses; on-call uses manual registry/filing if capacity is at risk. |
+| Relational store unavailable | Reject mutations, do not acknowledge commits or issue unlogged signatures; durable source retention; audited manual emergency procedure and later reconciliation. | External duty continues. Secondary monitoring and regulatory owners cannot depend solely on the failed database. |
+| Filing transport failure/timeout | Record attempt; retry same stable key; query remote status when outcome is unknown; require receiver dedupe or human reconciliation before resend. A request accepted by an API is not necessarily a legal receipt. | Clock continues until qualifying receipt; page humans early. |
+| Region unavailable | Fail over only to an approved same-residency recovery site; otherwise stop data movement and invoke regional manual continuity. | No automatic waiver or clock pause; notify compliance leadership. |
+| Audit object corrupt/missing | Fail export verification, page integrity incident, restore verified backup; do not fabricate historical records. | Independent filing duties remain; document control assesses audit impact. |
 
-Backpressure reserves notification capacity and per-tenant worker quotas. A tenant's storm cannot consume every worker, model budget or signer queue. Dead-letter queues have an owner, oldest age alarm and replay tool; they are not a place where an obligation silently expires. “Notification attempted”, “received by regulator” and “signed disposition” are different metrics.
+Proposed targets to agree with operations: audit bundle retrieval within one hour; durable committed case records RPO 0 within the regional replication design, and tested region-recovery RPO/RTO (e.g. ≤15 minutes/≤60 minutes) only if budget and legal policy support it. These are targets, not benchmarked guarantees. Seven years of retained evidence is mandatory; QA/legal must define start event, legal holds, deletion and key-retention policy. Archive original bytes, parsed facts, rendered signed packet, policy/code/model versions and qualified signature evidence. Test restoration and export regularly; hashes alone are insufficient.
 
+## Local prototype limit
 
+The local reminder/outbox is an internal stub only. It neither pauses nor satisfies a legal clock and does not file or confirm delivery. A human-entered receipt is an attestation, not a verified external receipt. Production must separately qualify deadline continuity, escalation, manual filing, and reconciliation.
 
-## What the local clock proves
+## Notification and audit boundaries
 
-`temporal/clock.py` is a pure arithmetic replay of historical flags. It never determines jurisdiction or reportability independently. Missing reportability is UNKNOWN_REPORTABILITY; missing windows are UNKNOWN_WINDOW. Every result has calendar qualification false. A pending notification remains pending regardless of case waits or disposition time. No notification is sent.
+The notification obligation is created from the original alert data independently of later case review or signature. Its deadline is derived from the alert time and configured reporting window. A recorded receipt is a separate human attestation; it is not created by reminder processing and is not independently verified. The `tick` command processes an internal reminder/outbox stub only. It does not send a regulatory filing or establish that an external recipient received anything.
 
-See [degradation modes](../diagrams/degradation-modes.md).
+Audit records are hash-chained and can be exported and checked for chain consistency. This is tamper-evidence within the local application, not WORM storage, a qualified electronic signature, or proof that recorded facts are true.

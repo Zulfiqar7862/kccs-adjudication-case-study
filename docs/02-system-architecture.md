@@ -1,65 +1,57 @@
-# 2. System architecture — HLD
+# System architecture
 
-## 2.1 HLD: a regional evidence plane, an independent clock lane
+This document separates the **implemented local prototype** from the **proposed production design**. Production topology is not implemented or deployment-qualified.
 
-The architecture below is a **production proposal**, not a claim that these services have been deployed. The implemented surface is the local evidence kernel described in chapter 3.
+## Implemented prototype components
 
+### Component overview
 
+```text
+XLSX snapshot ──> workbook ──> evidence analysis ──> SQLite service
+                                             │          ├─ cases and revisions
+CLI ─────────────────────────────────────────┘          ├─ audit and idempotency
+Loopback HTTP API ──────────────────────────────────────┤
+                                                        └─ notification obligations/outbox
+```
 
-Each residency cell contains ingestion, tenant-scoped evidence, case state, timers, retrieval and audit storage. The global control plane contains only deployment identities, policy versions, health counters and regional routing; no case payload, batch key, embedding or prompt crosses cells. Region is part of every storage, queue and encryption-key choice. EU means processing, logs, backups and model endpoints in the EU; India-only uses India endpoints only if the tenant allows them. APAC is not proof of India residency. the API-prohibited Indian tenant receives deterministic retrieval/templates and manual QA without an external model; self-hosting is a separately approved later option.
+- `prototype/src/sentinel/ingestion/workbook.py` uses the standard-library ZIP support for XLSX containers and `defusedxml` for XML parsing; it returns row dictionaries, retains source row numbers, and computes a file SHA-256 digest.
+- `prototype/src/sentinel/evidence/analysis.py` normalizes timestamps to UTC, selects tenant-scoped SOP index candidates by effective date, and returns candidate rows and blockers. Index rows are not authoritative evidence or a disposition.
+- `prototype/src/sentinel/workflow/service.py` owns the SQLite-backed import, case workflow, command validation, audit trail, notifications, and export verification.
+- `prototype/src/sentinel/api/http.py` provides a loopback-only JSON adapter over the service. Its bearer identities are a local prototype stub.
+- `prototype/src/sentinel/cli.py` and `prototype/src/sentinel/demo.py` provide the root CLI and fictional end-to-end workflow.
 
-Use Python services with typed contracts; FastAPI for production HTTP, PostgreSQL 16+ for transactional/temporal data and pgvector only when needed; object storage with versioning/Object Lock; an at-least-once broker and durable workflow worker. Temporal can host long waits, but deadline facts stay in PostgreSQL and are independently swept. A six-person team should start with a modular case/evidence application and separate connector/clock workers, not a microservice per table. The clock lane is a real deployment/resource boundary because the February queue incident proves shared fate is dangerous. An optional LLM adapter is another separate, permissioned boundary because it is unavailable or prohibited for some tenants.
+## Scope of the production proposal
 
-### Components, ownership and crossings
+The implemented prototype is described above; the following sections specify the wider system proposed for a gated rollout, not implemented functionality. Policy values are proposed engineering defaults unless identified as workbook facts; QA/legal must approve regulatory semantics.
 
-| Boundary | Owns | Interface and why separate |
-|---|---|---|
-| Source adapters | Vendor cursors, rate limits, raw envelopes, source sequence/arrival time, schema errors | Emits immutable evidence envelopes. Adapters absorb nine incompatible systems without leaking source quirks into adjudication. |
-| Identity and reference registry | Tenant product/presentation versions; site/room/equipment mappings; legal entities; alias proposals and approvals; controlled rule facts | Returns candidates plus provenance for `(tenant, ref, valid_at, known_at)`. Human stewardship, not retrieval score, settles conflicting identity. |
-| Evidence compiler / kernel | Dependency graph, evidence completeness, typed arithmetic, verified citations and manifest | Produces a dossier with facts, uncertainty and blockers. Pure evaluation is replayable; no network or filing side effects. |
-| Case workflow / reviewer workbench | Case episodes, wait reasons, assignments, manual tasks, signatory matrix and decision snapshots | Commands require expected case version and idempotency key. Coordinates work; cannot edit source truth or stop the clock. |
-| Notification obligations worker | Reportability-review task, jurisdiction policy, due instant, escalation schedule, filing attempts and confirmed receipt | Durable deadline-first queue independent of disposition or model. Regulatory Affairs owns unresolved obligations. |
-| Retrieval and optional language service | Tenant-specific evidence/precedent search, approved translations, constrained drafting | Receives only eligible source excerpts; returns claim-to-citation mapping. Cannot set state or write a disposition. |
-| Audit/export | WORM snapshots, signature binding, export jobs, retention/legal holds and verification | Exports byte-identical signed basis without a live source system or re-calling a model. |
-| Commercial investigation | Carrier causation, contract/amendment review, claims deadlines and accounting compensations | References clinical decision but cannot decide product fitness. Separate failure and approval domain. |
+## Deployment and component boundaries
 
-### Source-specific ingestion
+Deploy a regional cell for each authorized residency boundary, initially an EU pilot cell. Keep tenant keys, queues, blobs, indexes, backups, logs and processing inside the required region. A shared control plane may distribute code/package hashes and non-sensitive health totals only, never evidence, embeddings, prompts or case identifiers. The tenant requiring exclusive derived artifacts gets a tenant-exclusive data/derived-artifact boundary. India-only and EU-only are enforced by egress/network/storage policy, not a request flag.
 
-* SYS-01 REST: poll within 300 requests/min, incremental cursor, cache unchanged results; retain 5-minute buckets as buckets, never label them raw. Acquire available raw before 30 days; the seven-year basis cannot depend on the vendor's retention. Four-hour reconnect backfill generates a new evidence version.
-* SYS-02 MQTT: at least once, 90-minute disorder; transport dedup key includes tenant, device, vendor message identity and payload hash. A reused ID with changed payload is a conflict, not a duplicate to drop. Event-time windows carry watermark/completeness. A late reading can invalidate a recommendation or reopen a signed episode.
-* SYS-03 BMS: permanent gaps, no tenant tag, availability 97.8% (`11!G4:I4`). Land restricted raw room events in a cell-local quarantine domain. Resolve time-bounded room occupancy from TMS before fan-out into tenant evidence. Never broadcast a shared room's tenant list. Unmapped is a manual task, not “no product loaded”.
-* SYS-04 TMS CDC: capture LSN/version, deletes and leg/equipment changes; join occupancy at event time rather than current location. ERP SFTP: checksum, source date, complete-file marker, late-file alerts and schema validation; stale feeds never silently become current.
-* SharePoint/Box/manual/fax: controlled manual intake, malware scan, OCR as an untrusted transcription, document hash and page bounding boxes, two-person QA approval of numeric rules and handwritten exceptions. There is no SharePoint API assumed by the pack. the controlled-SOP repository REST obeys 60 req/min; prefetch governed revisions, do not perform seven systems' lookups synchronously while a reviewer waits.
+[Production architecture diagram](../diagrams/01-production-architecture.md).
 
-No external text can instruct the compiler to change policy or invoke a tool. An LLM sees inert quoted evidence and has no execution credentials. Numerical limits and citations are checked against approved structured facts, not the draft prose.
+Start with a modular service and separately deployed ingestion and deadline workers, not a microservice per table. A relational transaction covers case version, approval event, batch reservation and outbox intent; distribute only at real trust, scaling or fault boundaries. The deadline worker has its own connection pool, reserved workers and queue so evidence extraction, a model outage or alert storms cannot starve notification work. Source object storage is separate because retention and large immutable bytes differ from transactional queries. Signature and filing integrations remain separately qualified authorities.
 
-## 2.2 Capacity, availability and economics
+## Source adapters, identity and ordering
 
-At 10M readings/day, average ingestion is ~116 readings/s. Case volume is only 11,400 alerts/month, ~380/day, and ~2,050 adjudications/month (`13!B3:B8`). These are different scaling domains. Store telemetry in time-partitioned object files plus searchable metadata; do not put every reading into a graph database. Use a 10× sustained telemetry sizing assumption initially and load-test it, then measure actual peak rate: the supplied BMS burst is an alert burst, not a raw-reading throughput measurement. The 1,912/38-minute burst is ~0.84 alerts/s; the failure was queue fairness, not inherently extraordinary compute load.
+Tab `11_Systems_Inventory` defines the initial adapter contracts:
 
-Proposed SLOs: durable accepted-alert recording p99 <60s; timer sweep every minute; deadline escalation page within 5 minutes; cell-local case API 99.9%; audit export p95 <10 min and every validated request <1 h. Targets require operational validation. PostgreSQL synchronous multi-AZ protects accepted obligations (target RPO 0 within that failure domain); region disaster RPO ≤5 min/RTO ≤1 h is a planning target, not achieved evidence. Backups/DR remain within contractual geography. A low-RPO outbox stream and a separate obligation ledger backup support manual notification during regional recovery.
-
-**Retention sizing assumptions**, deliberately not presented as measured compression: 80 bytes/reading × 10M × 365 × 7 = 2.044 TB logical; three copies ≈6.13 TB. JSON overhead, index sizes, encryption metadata, leap days and compression are excluded; benchmark Parquet compression and vendor raw payloads before procurement. A 20MB evidence bundle × 2,050 × 12 × 7 ≈3.44TB; three copies ≈10.33TB. Documents ~16,596 indexed repository PDFs (11,040 stability + 4,312 SOP + 1,244 contracts); at an assumed 2MB each, ~33GB before versions/OCR. Retain the **complete relied-on series and source bytes** for seven years, with legal holds and immutability; general telemetry retention beyond that subset needs a separate agreed policy. These are sizing scenarios, not a mandate to retain all unrelated telemetry seven years.
-
-**Budget arithmetic** (`13!B25:B28`, prices `B33:C38`):
-
-| Gate | Monthly maximum / scenario |
+| Source | Integration and required behavior |
 |---|---|
-| Per screened alert | $0.06 × 11,400 = $684 |
-| Per human case | $1.10 × 2,050 = $2,255 |
-| Sum of both maxima | $2,939; this fits CFO's $3,000, leaving $61, but only if the two ceilings are additive. Seek explicit finance confirmation. |
-| Proposed baseline screening | No model; retrieval allowance assumed $0.002/alert = $22.80 |
-| Two small-model drafts per case | Each 18k input + 2k output tokens: $0.0144 + $0.008 = $0.0224/call; two × 2,050 = $91.84 |
-| Human-case retrieval allowance | Assumed $0.02/case = $41 |
-| Large-model fallback for 20% | One 40k/4k call costs $0.18; 410 calls = $73.80 |
-| Total scenario | $229.44/month, ~7.65% of the $3,000 cap; not a measured provider invoice. All cases are costed as API-eligible, so prohibitions can only reduce calls. |
+| Telemetry provider A SYS-01 | REST poll below the 300 req/min hard limit; tenant/cursor checkpoints, overlapping fetch window and dedupe; up to four hours of reconnect backfill. Persist source bytes before acknowledging ingestion. |
+| Gateway provider B SYS-02 | MQTT at-least-once push; dedupe by source event ID, retain out-of-order samples up to the documented 90 minutes and accept later corrections as new evidence, not overwritten samples. |
+| Building monitoring SYS-03 | OPC-UA → Kafka; gaps have no backfill. Persist gap evidence. Missing tenant tags go to a restricted quarantine with human assignment; never route by a fuzzy facility-name guess. |
+| Transport management SYS-04 | Debezium CDC; transaction/order cursor, shipment/leg associations and correction events. |
+| Tenant ERP SYS-05 | SFTP batches with per-file digest, manifest and atomic publication; late files occur 3–6 times/month. Keep event-time and receipt-time distinct. |
+| Stability SYS-06 | No API in the inventory. Controlled, tenant-approved document export with manifest and QA ownership attestation; no invented SharePoint API access. OCR is an extraction proposal, not evidence approval. |
+| SOP SYS-07 | Controlled document library REST below 60 req/min; fetch exact revision and annexes, not just latest; retain original and rendition with hashes. |
+| Contracts SYS-08 | Controlled Box/shared-drive export plus legal-entity, amendment and temporal review; names of a parent/subsidiary cannot substitute for contractual counterparty. |
+| Carrier SYS-09 | Source-specific REST/EDI adapters and controlled CSV/email/fax manual intake; preserve sender, attachment and translation provenance. Unsupported formats create human work, not a silent success. |
 
-Enforce counters before each call, input/output token limits, at most two baseline drafts plus one escalation call per case, tenant daily and platform monthly budgets, and no unbounded agent loops. Retrieval is separately metered; cap hard cases at $1.10 including retrieval, not just on average. Larger context or repeated human regeneration consumes a token reservation and can fall back to deterministic templates. Provider A small is the starting procurement option where permitted: regional endpoints, zero retention and 12-month notice; exact India location/processor terms still need confirmation. Provider B's lower price does not compensate for US-only/no zero-retention/30-day sunset. No embedding endpoint is used for prohibited tenants; SQL/lexical retrieval works without one.
+Canonical envelope: `tenant_id, source_system, source_event_id, source_revision, event_time_utc, observed_at_utc, ingested_at_utc, schema_version, source_uri, source_sha256, correlation_id, payload`. Unique inbox key is `(tenant, source, event_id, source_revision)`; a same-key/different-hash conflict is quarantined. Store cursor and inbox commit atomically. Producer retry is normal. Never use hash equality of temperature/duration alone to conclude that two physical excursions are duplicates.
 
-One always-on listed GPU: $5.67 × 730 = $4,139.10/month; two regions $8,278.20, before retrieval and idle redundancy. Sunday costs persist. Scheduled GPU inference may later be batch-qualified, but is not a free always-ready alternative. Storage, ingestion and indexing are a separate capital line (`13!B27`); provision and price them explicitly rather than burying them in the cheap model figure.
+Maintain governed `entity_alias(tenant, entity_kind, alias, canonical_id, valid interval, recorded interval, confirmer, evidence_id)`. Exact alias resolution can return zero, one or many candidates. Zero/many require review. Facility identity, site timezone, product presentation and carrier legal entity are distinct domains; do not collapse them into a global name map. The ad hoc alias workbook is a source of proposals, not authority. Route incidents to parent groups for operational triage, but retain each child's case, product context and regulatory obligation.
 
+## Prototype integration contract
 
-
-See [architecture](../diagrams/architecture.md) and [data flow](../diagrams/data-flow.md).
-
-The implementation remains a modular local application. Every requested Python boundary has real behavior; deployment boundaries described here are proposed, not operational infrastructure.
+The local API contract, route and role behavior, and workbook shape are documented in [API and data contract](API.md). Security boundaries and local-only limitations are in [Security](SECURITY.md); deployment and development commands are in [Contributing](CONTRIBUTING.md).

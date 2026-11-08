@@ -1,23 +1,17 @@
-# Future roadmap
+# Future roadmap and rollout
 
-## Before the first live customer
+## Delivery and decision gates
 
-1. Establish QA/legal source authority: actual SOP/annexure/stability bytes, presentation identity, signers, legal calendars and regulator filing receipt rules.
-2. Back up and curate the privately maintained reasoning corpus with the data owner's permission. Keep derived artifacts tenant-scoped.
-3. Implement a transactional case/obligation/outbox store and independently staffed timer lane; exercise manual emergency filing.
-4. Qualify a narrow operator-managed-SOP cohort with complete source evidence and independently reviewed historical outcomes. Sample the previously unaudited auto-close population.
-5. Demonstrate WORM snapshot retention, one-hour basis export, tenant isolation and recovery under the documented incident burst.
+- **Days 0–30 — define and prepare:** confirm the EU pilot boundary, approved source inventory and ownership, residency and access controls, SOP/study interpretation, signatories, notification policy and timezones, baseline denominators, retention/restore needs, and stop rules. Do not load live records until approval is documented.
+- **Days 31–60 — shadow and reconcile:** compare synthetic or explicitly authorized pilot packets against independent human reconstructions. Measure source completeness, temporal selection, tenant isolation, audit export, missing-source handling, backlog, and clock calculations. Keep the tool advisory and non-dispositive.
+- **Days 61–90 — go/no-go:** allow review-workspace use only after QA, security, data-governance, and operational acceptance of the prior gates. Otherwise extend shadow mode, narrow scope, or stop. Human disposition authority remains explicit.
+- **Months 4–9 and beyond — conditional expansion:** evaluate each tenant and site independently for residency, data-use restrictions, provenance, tags, freshness, policy, signatories, recovery, and support. Do not infer that the first pilot authorizes a multi-tenant deployment.
 
-## Ninety-day cohort
+## Phase intent
 
-Days 0–14: ownership, source contracts and acceptance corpus. Days 15–42: read-only adapters, evidence snapshots and independent deadline dashboard. Days 43–70: shadow replay, reviewer tasks, signature staging, fault injection and local-language review. Days 71–90: a one-site assisted cohort, named on-call and exercised rollback; no autonomous product dispositions.
+1. **Days 0–30 — define and approve:** establish the bounded pilot, data/source ownership, residency and access, approved policies/signatories, clock and retention semantics, baselines, operational owners, and stop criteria. Do not load live records before documented approval.
+2. **Days 31–60 — shadow and reconcile:** compare authorized cases with independent human reconstructions; exercise source gaps, audit retrieval, isolation, backlog, and clock paths. Keep Sentinel advisory.
+3. **Days 61–90 — go/no-go:** allow review-workspace use only if QA, security, governance, and operations accept the evidence. If gates fail, extend shadow mode, narrow scope, or stop. The milestone is a decision, not a production-readiness promise.
+4. **Months 4–9+ — conditional expansion:** assess each additional tenant/site independently; no pilot approval automatically transfers.
 
-## Following cohorts
-
-Months 4–6 add a qualified EU cell and the renewal-sensitive EU cohort. Months 7–9 expand by contractual policy cohort only after source readiness, calendar/language/signature gates and isolation drills. The remaining customer contracts are not all enumerated in the pack, so the all-customer date is a conditional forecast rather than a promise to waive qualification.
-
-Add approved non-actionable closure classes individually with independent safety evidence. Keep a no-model path; consider optional drafting only after fact authority and residency are solved. Replace narrow lexical presentation hazards with stewarded identifiers, not an unqualified classifier. Add production concurrency, event schema evolution, dependency impact search and signed compensating actions before relying on automated reopen workflows.
-
-## Avoided growth
-
-Do not build a new large case UI, replace every upstream system, create an unscoped cross-customer knowledge base or rewrite all legacy forks into prompts. Infrastructure specialization follows measured load, not fashionable diagrams. Each additional automation class must lower reviewer lookup effort without weakening the right to sign.
+This phased plan is contingent on implementation and qualification of the proposal in [versioning and deployment](06-versioning-and-deployment.md), and the open questions in [risks](09-risks-assumptions-and-open-questions.md).

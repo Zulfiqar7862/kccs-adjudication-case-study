@@ -1,43 +1,37 @@
-# Risks, assumptions and open questions
+# Risks, assumptions, and open questions
 
-## Positions on contradictory sources
+## Six board commitments: qualify before accepting as guarantees
 
-- Narrative single-event allowance versus cumulative shelf-life language: do not choose by convenience. Obtain the approved presentation study and governing SOP annexure (brief §2; `02_Product_Master`, `06_Stability_Index`).
-- Alert and excursion onset are distinct clocks; source narratives and queue timestamps do not fully reconcile. Use the explicit receipt-based notification rule while preserving conflicting source assertions (`00_README`).
-- Overlapping revision validity does not prove supersession or applicability. Free-text scope and handwritten annotations need qualified stewardship (`05_SOP_Index`, `12_Tenant_Constraints`).
-- Readability flags override allowance-looking index text. Long-term/accelerated studies do not automatically establish excursion permission (`06_Stability_Index`; README rule).
-- A folder is not ownership authority; explicit tenant scope controls retrieval, and conflicting path metadata becomes a gap (`06_Stability_Index`).
-- Clinical suitability, commercial liability and regulator notification are independent. Some override rationales conflate them; historical human choice is not automatically validated truth (`09_Override_Reasons`).
-- “EU only” versus permission for some US API processing is legally ambiguous. Take the stricter geography until counsel defines the exception and derived-data treatment (`12_Tenant_Constraints`).
-
-## Explicit assumptions and missing facts
-
-Prototype naive/date-only timestamps use UTC midnight; production requires approved issuing/site timezone and inclusive/exclusive boundary semantics. Snapshot metadata cannot reconstruct transaction history. The exact document, batch, pallet, room occupancy and raw reading series are absent. Presentation checks are narrow lexical hazards, not a clinical classifier. Calibration is a bounded uncertainty interval; exact sensor correction and bulletin device/date scope need evidence.
-
-Required clarifications: legal calendar timezone/holidays/cutoffs; products/markets triggering reports; who owns emergency filing; signatory/dual-approval authority and expiry; every unlisted tenant contract; approved document/annexure scope; historical correction records; legal holds/deletion conflicts; actual source peak rates; storage compression; provider regional/zero-retention terms; benchmark clinical outcomes independently approved by QA.
-
-## Complete pack inventory
-
-All sheets were read fully, including layout sheets. The loader retains all populated cells, original headers, formula/error locations, dimensions and row provenance. No source attachment or complete private-cell dump is public.
-
-| Sheet | Public interpretation / caution |
+| Commitment in the brief | Recommendation |
 |---|---|
-| `00_README` | Sampling strata, known data defects and interpretation rules. Layout, not a normal table. |
-| `01_Excursion_Events` | 43 columns: event/receipt/tenant/shipment/leg; source/logger/firmware; raw product/site/carrier names; mode; excursion bounds/duration; thermal summaries/spec/read-count/gaps/interpolation/dock flag; lane history/value; review/recommendation/disposition/override metrics; separate reportability/window/notification fields; reopen and notes. Historical labels are excluded from eligibility features. |
-| `02_Product_Master` | ERP, tenant, brand/INN/SKU/GTIN/legacy, storage/MKT/excursion text, study reference, light sensitivity and update time. Update time is not recorded history. |
-| `03_Facility_Registry` | Source IDs/names/codes, country/timezone, rooms/licence/BMS tags, creation and active status. No tenant/occupancy history and known timezone inconsistencies. |
-| `04_Carrier_Contracts` | Legal entity/aliases/parent, effective interval, law, cold-chain/liability/cap/claim window and amendments. Product fitness is separate. |
-| `05_SOP_Index` | Document/tenant/title/revision, effective interval, free-text supersession/site scope, format/pages/language and limit location. Metadata is not controlled bytes. |
-| `06_Stability_Index` | Study/product/tenant/type/test temperatures/duration/outcome/allowance/path/pages/indexer/readability. Incomplete coverage, wrong presentation and ownership-path hazards. |
-| `07_Alias_Observations` | Entity kind, two strings, sameness flag, frequencies, confirmer/date/comment. No adequate tenant/validity/authority contract. |
-| `08_Reviewer_Queue_Log` | Case/reviewer/region/offset/local start/end, active time/systems/action/queue wait/interruptions/shift. Offset is reviewer-local, not facility timezone. |
-| `09_Override_Reasons` | Case/reviewer, assistant suggestion, human choice and verbatim reason. Selected rationale population, not all overrides. No original rationale text is republished. |
-| `10_Reviewer_Questions` | Twelve questions, current sources, typical minutes and frequency. Map to identity/reference, exposure, occupancy, contracts, authority, reportability, precedent and audit services. |
-| `11_Systems_Inventory` | System/data/access/freshness/rate/ordering-backfill/availability/problems. One ingestion model cannot erase different delivery guarantees. |
-| `12_Tenant_Constraints` | Tenant/region/volume/residency/API/signature/language/SOP ownership/other terms; eight examples plus an aggregate of 26. No-clause is not privacy permission. |
-| `13_Volume_And_Cost` | Layout metrics plus price/input/output/region/retention/notice/latency table. Population denominators and inference/retrieval versus storage budgets differ. Personal compensation information is intentionally not reproduced. |
-| `14_Incident_Log` | Reference/date/title/severity/event/consequence for six failure modes driving isolation, clocks, replay, retention and qualified changes. |
+| Median alert-to-signed-disposition under 24 hours by the end of the first full quarter after go-live | Treat as a monitored target, not a promise. Define eligible-case population, pause rules, baseline, and safety guardrails; the source-pack median is 6.2 days. Do not rush decisions or waive evidence to meet a clock. |
+| At least 70% of alerts closed without human review | Do not optimize this quota before validating the denominator, false closures, and source quality. The pack reports about 64% current rules-engine closures while also describing an approximately 82% non-actionable alert share; those are not interchangeable, validated rates. No automated disposition is in scope. |
+| Full decision basis produced within one hour for seven years | A useful requirement, but it needs tested retrieval, backup/restore, access control, and an approved retention regime. The local hash chain is not WORM storage, and the prototype does not establish either the one-hour service level or seven-year retention. |
+| Stay within the cost ceiling | The modeled inference/retrieval allowance is **$2,939/month** against a **$3,000/month** ceiling, leaving **$61/month** before omitted ingestion, storage, indexing, retention, and operations. One always-on self-hosted instance is modeled at **$4,082.40/month**, above that ceiling before other costs. These scopes are not equivalent to a complete production budget. |
+| No notifiable deviation reported outside its applicable window | Zero late notifications is an outcome to measure and govern, not a software guarantee. First approve policy and clock inputs, then test backlog, outage, escalation, delivery evidence, and manual fallback. The reminder stub does not deliver a filing. |
+| First customer live within 90 days; all 34 within nine months | Use day 90 as a go/no-go for one bounded EU pilot, not a promise of production readiness. The 34-tenant target requires individual residency, data-use, source, signatory, and operating-control review. Broader onboarding in months 4–9 or later remains conditional. |
 
-## Remaining prototype risks
+All six commitments should have named owners, definitions, and stop criteria before they become acceptance gates. A target is not evidence that it can be met safely.
 
-In-memory workflow and local SQLite are not production durability or HA. Hash chains are not administrator-proof archives. A reviewed-basis string is not Part 11 authentication. No automatic notification or external source connector exists. Output is evidence eligibility, not disposition correctness, automation coverage or legal compliance certification.
+## Explicit exclusions
+
+- **Automated release/destroy or other dispositions:** rejected because the evidence is incomplete and historical labels are not ground truth; accountable human authority remains required.
+- **A general-purpose or cross-tenant model/precedent service:** rejected for the initial scope because it adds data-use, residency, leakage, change-control, and validation risks without being needed for evidence assembly.
+- **Fuzzy identity resolution, guessed SOP limits, fabricated telemetry, or silent correction:** excluded because uncertain matches and missing records must remain visible blockers, not confident-looking facts.
+- **A universal deadline or clock reset on reopen:** excluded because policies vary and reopening does not change when the original alert occurred.
+- **Claims of salvage, savings, compliance, accuracy, or guaranteed service levels:** excluded until prospectively measured against agreed baselines and complete costs. The stratified workbook sample is not a population estimate.
+
+## Silent or contradictory areas and positions taken
+
+| Gap or tension | Position pending accountable confirmation |
+|---|---|
+| A universal automated-closure target versus tenant-specific signatories and incomplete SOP/stability indexes (`05_SOP_Index`, `06_Stability_Index`, `12_Tenant_Constraints`) | No automated disposition. Index candidates cannot establish the underlying document's applicability or clinical limits. QA must validate the actual source evidence and authorized policy. |
+| “As at” could mean applicable then or known then (brief B) | Model both valid time and recorded time in production. The prototype only has one snapshot's observation time plus SOP effective dates; it does not pretend to reconstruct unavailable historical knowledge. |
+| Reportability, calendars, detection semantics and legally sufficient receipt are not fully specified (`01_Excursion_Events`, `12_Tenant_Constraints`) | Preserve original alert timestamps; use supplied windows only as provisional inputs. Unknown windows require urgent manual review, not exemption. A stored human receipt is not independently verified delivery. |
+| Current closure and non-actionable percentages use different denominators (`13_Volume_And_Cost`) | Do not infer automated accuracy or savings from their difference. Establish prospective definitions and independent false-safe-closure evaluation. |
+| Seven-year auditability without a specified retention start, legal-hold or deletion policy (brief board requirements) | Archive immutable source/version evidence in the production design; QA/legal must approve retention semantics. Local hashes are not sufficient. |
+| A fixed onboarding schedule without validated connector readiness or full operating costs (brief; `11_Systems_Inventory`, `13_Volume_And_Cost`) | Treat dates as conditional gates. Confirm source access, total cost and recovery staffing before widening the pilot. |
+
+## Material prototype/production boundary
+
+The prototype accepts one immutable snapshot per database, uses one snapshot observation time plus limited SOP effective-date selection rather than full bitemporal history, and relies on local identity/signature stubs. Production readiness additionally depends on source-owner agreements, qualified signatories, retention/legal-hold policy, recovery objectives and tested restore, total operating costs, and legally approved clock/receipt semantics. See [data model](03-data-model.md), [degradation](05-degradation-and-regulatory-clock.md), and [deployment](06-versioning-and-deployment.md).

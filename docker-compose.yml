@@ -1,14 +1,11 @@
 services:
   prototype:
     build: .
-    image: kccs-adjudication:local
-    command: ["--workbook", "/app/data/KCCS_Sentinel_Reference_Data_Pack.xlsx", "--out", "/app/prototype/output"]
-    volumes:
-      - ./data:/app/data:ro
-      - ./prototype/output:/app/prototype/output
+    command: ["demo"]
     network_mode: none
     read_only: true
+    cap_drop: [ALL]
     security_opt:
       - no-new-privileges:true
-    cap_drop: [ALL]
-    tmpfs: [/tmp]
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128m,mode=1777

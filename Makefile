@@ -1,26 +1,22 @@
+.PHONY: setup test check demo sample import credentials serve lint
 PYTHON ?= python3
-VENV ?= .venv
-PY := $(VENV)/bin/python
-RUFF := $(VENV)/bin/ruff
-export PYTHONPATH := $(CURDIR)/prototype/src
-.PHONY: setup test test-unit test-integration run e2e lint docker-build docker-run
+VENV_PYTHON = .venv/bin/python
 setup:
-	PYTHON=$(PYTHON) VENV=$(VENV) bash scripts/setup_local_env.sh
+	$(PYTHON) -m venv .venv
+	$(VENV_PYTHON) -m pip install -e ./prototype
 test:
-	$(PY) -m pytest --cov=adjudication --cov-branch --cov-report=term-missing --cov-report=json:.local-evidence/coverage.json --cov-fail-under=90
-test-unit:
-	$(PY) -m pytest prototype/tests/unit --cov=adjudication --cov-branch --cov-report=term-missing --cov-fail-under=90
-test-integration:
-	$(PY) -m pytest prototype/tests/integration
-run:
-	PYTHON=$(PY) bash scripts/run_prototype.sh
-e2e:
-	$(PY) -m pytest prototype/tests/unit/test_rules.py -k fixture_cli_reproducibility
-	$(PY) -m pytest prototype/tests/integration/test_workbook_pipeline.py
+	$(VENV_PYTHON) -m unittest discover -s prototype/tests -v
+check:
+	$(VENV_PYTHON) scripts/check.py
+demo:
+	$(VENV_PYTHON) -m sentinel demo
+sample:
+	$(VENV_PYTHON) -m sentinel sample
+import:
+	$(VENV_PYTHON) -m sentinel import prototype/output/sample.xlsx
+credentials:
+	$(VENV_PYTHON) -m sentinel credentials --tenant DEMO-ALPHA --tenant DEMO-BETA
+serve:
+	$(VENV_PYTHON) -m sentinel serve
 lint:
-	$(RUFF) check prototype scripts
-	$(RUFF) format --check prototype scripts
-docker-build:
-	docker build -t kccs-adjudication:local .
-docker-run:
-	docker compose run --rm prototype
+	$(VENV_PYTHON) -m compileall -q prototype/src prototype/tests scripts

@@ -1,54 +1,38 @@
 # Validation and test strategy
 
-## Public-data contract
+## Standard checks
 
-All committed fixtures are hand-made: four synthetic events and three synthetic product rows. They share field names with the workbook but do not copy customer rows, names, values or outcomes. Their expected output is a manually stated aggregate contract. Synthetic tests cover tenant isolation, aliases, study hazards, half-open time ranges, two-axis corrections, clocks, lifecycle waits/reopen, output guardrails and audit tamper detection.
+Install the prototype in editable mode as described in [Contributing](CONTRIBUTING.md), then run the repository check from the root:
 
-Workbook integration modules use `pytest.mark.skipif` and skip cleanly when `data/KCCS_Sentinel_Reference_Data_Pack.xlsx` is absent. Normal CI runs the entire suite without that file and a separate unit-only coverage gate. Real-workbook dossiers and detailed logs stay in gitignored local folders. No CI artifact upload contains private output.
+```sh
+python scripts/check.py
+```
 
-## Layers
+To generate a fictional workbook for local manual checks:
 
-- Unit tests check missing/ambiguous identity, tenant scoping, invalid numeric/time inputs, wrong presentation, unreadability and guardrails.
-- A synthetic golden checks the expected aggregate report; it is not clinical ground truth.
-- Hypothesis properties check that an under-reading interval never lowers the observed bound and that disposition waits cannot move notification results.
-- Two-axis tests preserve prior knowledge after correction, retain overlaps and enforce tenant/interval boundaries.
-- Workflow tests preserve original due instants and prior episodes across waits and reopening; audit tests verify persistence and detect a modified event.
-- Fixture CLI end-to-end checks all five expected files, then compares every file byte-for-byte across two runs.
-- Optional real-workbook tests read all 15 sheets, verify aggregate results/tenant isolation and replay every historical reopen flag without changing the original duty. That replay is a simulation, not validation of past signed decisions.
+```sh
+python -m sentinel demo
+```
 
-## Sanitized measured evidence
+Generated files are local artifacts and must not be staged or published. Use temporary SQLite databases and temporary output paths in tests so test runs do not rely on or overwrite a developer's local data.
 
-Final local and fresh-clone results are recorded below after execution. The evidence contains only aggregate counts; detailed logs and per-case output are not published.
+## Private workbook checks
 
-| Executed check | Result |
-|---|---|
-| Full local Python 3.13.5 suite, workbook present | 49 passed; 99.19% combined statement/branch coverage |
-| Entire suite, workbook physically removed | 45 passed, 4 skipped; 95.30% combined coverage |
-| Actual workbook | All 15 sheets and 420 events; original bytes unchanged |
-| Product references | 297 exact source; 72 unverified alias; 51 missing |
-| Notification fixed-hour replay | 14 late; 14 within window; 392 historical not-reportable flags |
-| Eligibility | 420 NEEDS_EVIDENCE; zero signed dispositions or proposed closures |
-| Repeated CLI outputs | All five files byte-identical across runs |
-| Ruff | Check and format gates passed |
-| Bandit | No findings in prototype source |
-| Runtime dependency audit | No known vulnerabilities reported |
-| Public staged payload | Gitleaks found no leaks; tracked-file/PII review performed |
-| Docker | Not installed on this box; build/run not executed |
+Any integration check that reads an authorized private workbook must be explicitly opt-in through `SENTINEL_WORKBOOK`, set to an absolute local path. When unset, the private check should report an explicit skip; when set to an unreadable or invalid workbook, it should fail rather than silently fall back to a fixture. Never print workbook contents, include them in test output, or commit the input or resulting reports. Public CI and reproducible public tests must remain synthetic and independent of this variable.
 
-Detailed execution logs and coverage JSON remain under ignored `.local-evidence/`. A fresh clone of the published repository completed the README sequence: `make setup`; `make test` without a workbook (45 passed, 4 skipped, 95.30%); copy an authorised local workbook; `make test` (49 passed, 99.19%); `make run`; `make e2e`; and `make lint`. Private inputs/outputs did not dirty the public working tree.
+## Behaviors worth covering
 
-The initial public commit also passed all hosted workflows:
+- Workbook parsing, row preservation, timestamp normalization, SOP effective dates, and `known_at` visibility relative to the import's `tables['_observed_at']` timestamp.
+- Candidate analysis and fail-closed blockers, including the fact that indexes do not establish an adjudication.
+- Snapshot import replay and rejection of a different snapshot; expected-version conflicts and idempotent retries.
+- Evidence/review/signature prerequisites, independent approvers, reopening before signed-case changes, and the local-only dual-signature text heuristic.
+- Original-alert notification obligations, internal reminder processing, and the separation of reminder delivery from a manually attested receipt.
+- Audit-chain export and verification without treating a valid hash chain as WORM retention or proof of factual correctness.
 
-- [CI — Python 3.11 and 3.13](https://github.com/Zulfiqar7862/kccs-adjudication-case-study/actions/runs/42398123899)
-- [Security — dependency audit, Bandit and full-history Gitleaks](https://github.com/Zulfiqar7862/kccs-adjudication-case-study/actions/runs/42398123930)
-- [Synthetic prototype replay](https://github.com/Zulfiqar7862/kccs-adjudication-case-study/actions/runs/42398123934)
+## Long-term reliability approach
 
-These run links pin concrete evidence rather than claiming an untested environment. The final documentation-only update is rechecked by the same workflows.
+Production qualification should add repeatable tests for tenant isolation, concurrency, source gaps and corrections, deadline behavior during outages/backlogs, restore and retention, audit export, false-safe closure, and independently verified delivery. Pin code, policy, source mappings, and any optional model version per release/case; gate promotion on reconciled shadow results and accountable QA/security/operations approval. These are proposed qualification gates, not tests already passed by the local prototype.
 
-## Long-term controls
+## Public-test constraints
 
-A changed rule, reference, retrieval index, prompt, model or translation requires reproducible differential evaluation, QA review of clinically material disagreements, sampled unchanged cases, a qualification manifest and a rollback/fallback rehearsal. Historical outcome labels must never become eligibility input features. Extend the regression corpus with independently reviewed incident cases; do not regenerate expected values from the changed implementation.
-
-Production release also needs actual controlled documents, jurisdiction calendars/reportability, signature authority, concurrent batch exposure updates, outbox recovery, tenant-isolation fuzzing and regulator receipt integration tests. These are design gates, not tested features of the local prototype.
-
-At 03:00 Europe/Berlin, alert on missing timer heartbeat, unresolved low-slack obligations, filing failures, stale source watermarks, foreign-tenant retrieval, invalid evidence hashes and budget exhaustion. A deterministic fixture passing nightly does not establish current source correctness. Run independent sampling, source contracts and restore/failover drills.
+The public test suite should use synthetic fixtures and the fictional sample workbook, not supplied or otherwise private records. Tests should check domain outcomes and workflow boundaries without asserting that the prototype validates the meaning of source documents.

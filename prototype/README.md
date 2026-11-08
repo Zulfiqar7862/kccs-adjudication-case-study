@@ -1,11 +1,44 @@
 # Working prototype
 
-This is a local deterministic evidence kernel with explicit module boundaries, not a deployed clinical adjudicator. `ingestion` reads/validates all workbook sheets; `identity` returns tenant-scoped candidates; `temporal` owns fixed-hour replay and a two-axis SQLite reference store; `evidence` surfaces gaps; `rules` composes the dossier; `recommendations` provides guarded no-model task lists; `workflow` demonstrates waits/reopens; `audit` verifies a local hash chain; `reporting` writes five deterministic files.
+The installable `sentinel` package implements the critical evidence/lifecycle/clock core. This is the working component, not a collection of architectural placeholders.
 
-From the repository root: `make setup`, `make test`, then supply the private workbook and `make run`. For public fixtures:
+From the **repository root**:
 
-```bash
-.venv/bin/python -m adjudication.cli --fixtures prototype/tests/fixtures --out prototype/output
+```sh
+python -m pip install -e ./prototype
+python scripts/check.py
+python -m sentinel demo
 ```
 
-From this directory, `../.venv/bin/python -m pytest` uses its own pytest configuration. Runtime dependencies are listed by the forwarding requirements file; install the package from the root for the console entry point. Never commit real output files. The assistant and document dependencies explicitly return unavailable/fallback, not invented source facts.
+On Windows, `./prototype/run.ps1 demo` creates the environment, installs and runs the same command. The tests use Python's built-in `unittest`, so no pytest configuration or dependency is needed.
+
+## Boundaries
+
+- `ingestion/workbook.py`: hardened XLSX parsing, source row provenance and digest.
+- `evidence/analysis.py`: tenant/identity matching, temporal candidates and fail-closed blockers; not clinical decisions.
+- `workflow/service.py`: SQLite transaction boundary for case revisions, reviews, independent signatures, audit events, obligations and reminder outbox.
+- `api/http.py`: authenticated loopback requests, input limits and domain-error responses.
+- `cli.py`, `config.py`: local administrative commands and explicit output settings.
+- `fixtures/sample.py`, `demo.py`: deterministic fictional input and real HTTP demonstration.
+- `tests/unit/`: parsing/candidate/configuration checks; `tests/integration/`: persistence, concurrency, CLI, HTTP, lifecycle and opt-in private workbook.
+
+The service remains cohesive so changes to case state, audit history and idempotency commit together. Splitting those into independent storage services would weaken the critical invariant without helping this prototype.
+
+## Authorized workbook
+
+```sh
+python -m sentinel --db prototype/output/private.db import /absolute/path/to/workbook.xlsx
+SENTINEL_WORKBOOK=/absolute/path/to/workbook.xlsx python -m unittest discover -s prototype/tests -v
+```
+
+All supplied records are exercised by the private integration test; public CI runs fictional data only. Keep the workbook and generated reports private. `output/` is ignored except for its directory marker. Default paths are relative to the invocation directory; use repository-root commands or explicit absolute paths.
+
+## More commands
+
+```sh
+python -m sentinel --help
+python -m sentinel report
+python -m sentinel tick --help
+```
+
+Notification statuses are part of `report`; use `tick --tenant TENANT` for the internal reminder stub. Neither operation contacts a regulator. Use `export --tenant TENANT --case CASE --output PATH` and `verify PATH` for audit bundles. See the [API contract](../docs/API.md) and [root guide](../README.md) for the complete workflow and limitations.

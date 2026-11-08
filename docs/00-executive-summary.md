@@ -1,15 +1,26 @@
 # Executive summary
 
-**Zulfiqar Ali Ahmed — Workcats take-home**
+Sentinel is an evidence-first case workflow prototype. It assembles tenant-scoped evidence candidates and blockers for accountable human review; it does not adjudicate, recommend a disposition, or validate source documents. The recommendation is to proceed only toward a bounded, human-controlled EU pilot with explicit readiness gates—not to treat a 90-day milestone as production approval.
 
-The central problem is substantiating a regulated human decision, not producing a more confident prediction. Build a tenant-scoped evidence service, an independent regulatory-obligation lane and a signed, immutable historical basis. The design deliberately leaves pharmaceutical disposition with authorised people.
+## What exists today
 
-The hardest implemented component is the deterministic **evidence-eligibility and temporal-reference kernel**. It runs against the actual local workbook but refuses to treat indexes, ambiguous aliases or an overlapping SOP revision as permission to release product. The reference store can answer both “valid at the event” and “known at the decision”. Small executable workflow and hash-chain boundaries make waiting and reopening semantics testable without pretending to deploy the entire platform.
+The local Python/SQLite implementation imports a single XLSX snapshot, analyzes evidence indexes, manages case revisions and review/signatures, enforces optimistic versions and idempotency, exports/verifies hash-chained audit history, and tracks notification obligations with an internal reminder/outbox stub. It includes a CLI and loopback-only HTTP adapter. Exact-file replay is safe; a different workbook snapshot is rejected. Public examples use synthetic data; private workbook checks are opt-in.
 
-The local run processes 15 sheets and 420 events. Product resolution yields 297 exact-source matches, 72 unverified alias candidates and 51 missing. Fixed-hour historical replay identifies 14 late notification examples. All 420 cases still lack evidence needed for a defensible clinical disposition: zero automated product decisions or proposed closures are generated. These are stratified-pack counts, not population statistics.
+## What is proposed, not implemented
 
-Start with one Indian site/lane for the customer whose SOPs the operator manages (`12_Tenant_Constraints`, operator-managed row). Its controlled sources give the team a narrower first qualification. Make the renewal-sensitive EU customer the next cohort after an EU cell and audit retrieval are qualified. The first 90 days are for source readiness, QA shadow evaluation and on-call/manual fallback, not a quota of model-based closures.
+Regional production cells, production identity/TLS, source and filing integrations, a PostgreSQL ledger, immutable object retention, full bitemporal evidence, independently operated deadline processing, qualified signatures, verified receipts, multi-snapshot reconciliation, and disaster recovery all require separate implementation and qualification. A recorded receipt is a human attestation; a reminder is not an external filing. Hash chaining is not WORM retention, legal non-repudiation, or proof of factual correctness.
 
-Board goals for unconditional automation, universally fast signed outcomes and zero late notifications need safety conditions. Lab waits do not extend reporting deadlines; model outages must not stop the clock; a new model is not automatically an acceptable rollback. Every behavioral change requires reviewed differential replay.
+## Decision and next step
 
-This public repository is a fresh derivative: no source attachment, private workbook, contact details, compensation information, original history or real-case output is tracked. Tests use explicitly hand-made synthetic CSVs. Workbook-dependent tests skip without the user's own local copy. The private report is generated outside the repository. See the validation document for current measured evidence and honest limits.
+Keep disposition with an authorized human. Define the pilot boundary, source ownership, residency, policies, signatories, clocks, baselines, retention, and stop rules before any live records. Run shadow comparisons and reconcile exceptions before a QA/security/governance/operations go/no-go. Expand tenant by tenant only after independent review. See [where we land](01-where-we-land.md), [rollout](10-future-roadmap.md), and [open risks](09-risks-assumptions-and-open-questions.md).
+
+## Evidence and verification limits
+
+The source pack's volumes, rates, and modeled costs are inputs, not validated forecasts, population estimates, or outcome labels. The written submission preserves anonymized references to brief sections and workbook sheets/rows; source files and identifying values are not reproduced. Existing test results are described in the [validation strategy](08-validation-and-test-strategy.md); they validate workflow mechanics, not clinical correctness or production readiness.
+
+## Implemented prototype boundary
+
+
+The supported implementation is a local prototype: SQLite, static locally generated bearer identities, and loopback HTTP. It does not include production identity management, TLS termination, external notification or filing integrations, verified receipt ingestion, durable distributed storage, or validated document interpretation. Deploying it outside its intended local environment requires those controls to be designed and implemented separately; the prototype is not a substitute for them.
+
+Sentinel is a local, evidence-first case workflow prototype. It analyzes imported indexes and records workflow actions; it does not make an adjudication or independently validate source documents.

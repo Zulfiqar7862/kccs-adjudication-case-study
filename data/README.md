@@ -1,7 +1,12 @@
-# Local private data
+# Local-only inputs
 
-Place your authorised `KCCS_Sentinel_Reference_Data_Pack.xlsx` in this directory, retaining that exact filename. It is intentionally **not** included in the public repository and is ignored by git. The source brief PDF and private report must not be added here or anywhere in public history.
+No source workbook, source PDF or source-derived report is included in this public repository.
 
-Without the workbook, `make test` runs synthetic tests and skips workbook integration modules. After copying it, run `make test` and `make run`. All fifteen sheets are read locally, and the workbook is never rewritten. Detailed generated dossiers stay in ignored `prototype/output/`; local test/coverage logs stay in `.local-evidence/`.
+For a generated fictional workbook, run `python -m sentinel sample`. It writes
+`prototype/output/sample.xlsx`, which is ignored by Git. For authorized private data, keep the
+workbook outside the repository (recommended), or place it here. All `.xlsx` and `.pdf`
+files are ignored. Never force-add them.
 
-MIT licensing covers the authored code/documentation, not rights to the supplied private data. Do not upload your data in issues, pull requests, screenshots or CI artifacts.
+Run the private integration checks with `SENTINEL_WORKBOOK` set to an absolute path.
+When the variable is unset, private integration tests report an explicit skip. When set
+to an invalid path or invalid workbook, they fail. Public CI uses only fictional fixtures.
