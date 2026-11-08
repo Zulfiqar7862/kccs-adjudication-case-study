@@ -32,7 +32,7 @@ The CFO's quote (brief section 4) states USD 3,000/month for model spend. The pa
 
 | Number in repo | Recomputed | Reproduces? | Note |
 |---|---|---|---|
-| USD 2,939/month | 2,255 + 684 = 2,939 | Yes | But it is the **sum of the ceilings**, not a modelled spend. Doc 09 calls it "modeled inference/retrieval allowance ... leaving $61", which reads as if 2,939 were expected spend. Reword to "sum of per-unit ceilings". |
+| USD 2,939/month | 2,255 + 684 = 2,939 | Yes | But it is the **sum of the ceilings**, not a modelled spend. Doc 09 now describes it as the sum of per-unit ceilings; an earlier draft had called it modelled spend. |
 | USD 4,082.40 self-hosted | 5.67 x 720 h = 4,082.40 | Only with a 720-hour (30-day) month | At 730 h (average month, 8,760/12): 5.67 x 730 = **USD 4,139.10**. Difference USD 56.70. Doc 09 should state the hour basis; this doc uses 4,139.10. |
 
 ## 3. Routes

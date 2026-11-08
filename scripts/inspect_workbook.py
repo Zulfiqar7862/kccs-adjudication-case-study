@@ -206,10 +206,12 @@ def main() -> int:
         for row in stability:
             tenant = norm(row.get("tenant_code"))
             path_text = norm(row.get(path_col))
-            owner_hint = tenant.split("-")[0] if tenant else ""
-            if owner_hint and owner_hint not in path_text:
+            # Tenant codes are "T-NAME"; the folder is misleading when it names a different tenant than the owner column.
+            owner_hint = tenant.split("-", 1)[-1] if "-" in tenant else tenant
+            other_tenants = {norm(r.get("tenant_code")).split("-", 1)[-1] for r in stability if norm(r.get("tenant_code"))} - {owner_hint, ""}
+            if owner_hint and owner_hint not in path_text and any(other in path_text for other in other_tenants):
                 mismatched.append({"study_ref": row.get("study_ref"), "tenant_code": row.get("tenant_code"), "row": row["_row"]})
-        f["stability_path_does_not_mention_owner_tenant"] = {"column": path_col, "count": len(mismatched), "examples": mismatched[:10]}
+        f["stability_path_names_a_different_tenant_than_owner"] = {"column": path_col, "count": len(mismatched), "examples": mismatched[:10]}
     readable_col = next((k for k in (stability[0] if stability else {}) if "readab" in k.casefold()), None)
     if readable_col:
         f["stability_readability"] = dict(Counter(str(r.get(readable_col, "")).strip() for r in stability))

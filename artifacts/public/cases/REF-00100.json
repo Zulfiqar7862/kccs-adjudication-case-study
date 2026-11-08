@@ -17,7 +17,7 @@
     "time_semantics": {
       "as_at": "2020-02-13T10:00:00+00:00",
       "as_at_basis": "excursion_start_utc (valid time)",
-      "known_at": "2026-11-08T13:54:40.078648+00:00",
+      "known_at": "2026-11-08T14:09:35.872698+00:00",
       "known_at_basis": "workbook rows are treated as known at the pack extract date; alias confirmations, incident entries and corrections carry their own recorded time",
       "extract_date": null,
       "interval_convention": "half-open [from, to); date-only bounds are flagged on the boundary day"
@@ -321,7 +321,7 @@
       "python": "3.12.3",
       "corrections_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
     },
-    "assessment_sha256": "1075e133c7def795e83287400edda3ed6e0d3bf8b17de0e50d5e0b2da6c8c621"
+    "assessment_sha256": "7dc4dee53128b8d973be49316f5850969c77a4d554a2fc3cc3f9ce03baaafc65"
   },
   "section_sha256": {
     "entities": "4d3135b91d4d422738bb6a99c14dee8376a49bb76135ad370b908a79e4f97db4",
@@ -331,5 +331,5 @@
     "notification": "d3adcdc4a4220b369772196305715f2dc15a6913497ef7c9a6116b22e1338e10",
     "manifest": "7be766e5af1b1634049651ba5bf530e1096c96073a1f978fb1cdf214df8a311e"
   },
-  "package_sha256": "6b987759f939e20915473cd5b8cc9939cbedf16f86d16b97fc0d97915b5b4a8e"
+  "package_sha256": "f5c58c36914ac6f2c31aedabe63a70c98c2e83ed5838385110721f06bcc69430"
 }

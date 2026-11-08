@@ -1,6 +1,6 @@
 {
   "workbook_sha256": "1b7c0c937e5ea43e25c100d14670752736afc3a7ea6d191c1a303892396f620d",
-  "inspected_at": "2026-11-08T13:54:39+00:00",
+  "inspected_at": "2026-11-08T14:09:35+00:00",
   "sheets": {
     "00_README": {
       "rows": 40,
@@ -2465,61 +2465,10 @@
       "study_ref_absent_from_index": 5,
       "product_without_study_ref": 7
     },
-    "stability_path_does_not_mention_owner_tenant": {
+    "stability_path_names_a_different_tenant_than_owner": {
       "column": "file_path_text",
-      "count": 107,
-      "examples": [
-        {
-          "study_ref": "REF-01786",
-          "tenant_code": "REF-00002",
-          "row": 2
-        },
-        {
-          "study_ref": "REF-01522",
-          "tenant_code": "REF-00002",
-          "row": 3
-        },
-        {
-          "study_ref": "REF-01524",
-          "tenant_code": "REF-00002",
-          "row": 4
-        },
-        {
-          "study_ref": "REF-01789",
-          "tenant_code": "REF-00002",
-          "row": 5
-        },
-        {
-          "study_ref": "REF-01791",
-          "tenant_code": "REF-00002",
-          "row": 6
-        },
-        {
-          "study_ref": "REF-01792",
-          "tenant_code": "REF-00002",
-          "row": 7
-        },
-        {
-          "study_ref": "REF-01528",
-          "tenant_code": "REF-00002",
-          "row": 8
-        },
-        {
-          "study_ref": "REF-01530",
-          "tenant_code": "REF-00002",
-          "row": 9
-        },
-        {
-          "study_ref": "REF-01795",
-          "tenant_code": "REF-00002",
-          "row": 10
-        },
-        {
-          "study_ref": "REF-01532",
-          "tenant_code": "REF-00002",
-          "row": 11
-        }
-      ]
+      "count": 0,
+      "examples": []
     },
     "stability_readability": {
       "REDACTED - evaluation copy": 107

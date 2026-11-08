@@ -5,7 +5,7 @@
       "event_id": "REF-00001",
       "tenant_code": "REF-00002",
       "package": "artifacts/public/cases/REF-00001.json",
-      "package_sha256": "839b724f15f61442e9203df86a0be24a4036b335a35954709d1511f806a88c85",
+      "package_sha256": "a54545a87a7a4fccfd35fd41748c5de66751cc7388be3f5ef653561c50b60011",
       "readiness": "INCOMPLETE_EVIDENCE",
       "conflicts": []
     },
@@ -13,27 +13,27 @@
       "event_id": "REF-00009",
       "tenant_code": "REF-00010",
       "package": "artifacts/public/cases/REF-00009.json",
-      "package_sha256": "3083bdfece5e98e18f18408e546903228242f6b542e56fc82d191293511aea82",
+      "package_sha256": "be22543a15032540ea6baa061b7ed89bbac02119b8bc55feae79bdc011a1bee0",
       "readiness": "BLOCKED_BY_CONFLICTS",
       "conflicts": [
-        "SOP ref-01734 has overlapping revisions ['REDACTED - evaluation copy', 'REDACTED - evaluation copy'] in force at the excursion start."
+        "SOP REF-01734 has overlapping revisions ['REDACTED - evaluation copy', 'REDACTED - evaluation copy'] in force at the excursion start."
       ]
     },
     "unreadable_stability": {
       "event_id": "REF-00009",
       "tenant_code": "REF-00010",
       "package": "artifacts/public/cases/REF-00009.json",
-      "package_sha256": "3083bdfece5e98e18f18408e546903228242f6b542e56fc82d191293511aea82",
+      "package_sha256": "be22543a15032540ea6baa061b7ed89bbac02119b8bc55feae79bdc011a1bee0",
       "readiness": "BLOCKED_BY_CONFLICTS",
       "conflicts": [
-        "SOP ref-01734 has overlapping revisions ['REDACTED - evaluation copy', 'REDACTED - evaluation copy'] in force at the excursion start."
+        "SOP REF-01734 has overlapping revisions ['REDACTED - evaluation copy', 'REDACTED - evaluation copy'] in force at the excursion start."
       ]
     },
     "notification_window_recorded": {
       "event_id": "REF-00100",
       "tenant_code": "REF-00101",
       "package": "artifacts/public/cases/REF-00100.json",
-      "package_sha256": "6b987759f939e20915473cd5b8cc9939cbedf16f86d16b97fc0d97915b5b4a8e",
+      "package_sha256": "f5c58c36914ac6f2c31aedabe63a70c98c2e83ed5838385110721f06bcc69430",
       "readiness": "INCOMPLETE_EVIDENCE",
       "conflicts": []
     },
@@ -41,7 +41,7 @@
       "event_id": "REF-00177",
       "tenant_code": "REF-00010",
       "package": "artifacts/public/cases/REF-00177.json",
-      "package_sha256": "cc932e65ec43615d89e8007b857e3248e37e22502f0c2ffdaae546e6ba244981",
+      "package_sha256": "692d43271d8da8bd0187c811568e2d45df94430cc780f396ff7c008a10336361",
       "readiness": "INCOMPLETE_EVIDENCE",
       "conflicts": []
     }

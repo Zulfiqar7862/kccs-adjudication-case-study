@@ -17,7 +17,7 @@
     "time_semantics": {
       "as_at": "2020-02-20T16:00:00+00:00",
       "as_at_basis": "excursion_start_utc (valid time)",
-      "known_at": "2026-11-08T13:54:40.078648+00:00",
+      "known_at": "2026-11-08T14:09:35.872698+00:00",
       "known_at_basis": "workbook rows are treated as known at the pack extract date; alias confirmations, incident entries and corrections carry their own recorded time",
       "extract_date": null,
       "interval_convention": "half-open [from, to); date-only bounds are flagged on the boundary day"
@@ -279,7 +279,7 @@
         "rejected": [],
         "conflicts": [
           {
-            "doc_id": "ref-01734",
+            "doc_id": "REF-01734",
             "revisions": [
               "REDACTED - evaluation copy",
               "REDACTED - evaluation copy"
@@ -318,7 +318,7 @@
       }
     },
     "conflicts": [
-      "SOP ref-01734 has overlapping revisions ['REDACTED - evaluation copy', 'REDACTED - evaluation copy'] in force at the excursion start."
+      "SOP REF-01734 has overlapping revisions ['REDACTED - evaluation copy', 'REDACTED - evaluation copy'] in force at the excursion start."
     ],
     "missing_inputs": [
       "No carrier contract effective at the excursion names 'ref-00016'; claim track cannot start.",
@@ -329,7 +329,7 @@
       "No batch identity or lifetime exposure history is supplied; cumulative exposure cannot be computed."
     ],
     "required_human_actions": [
-      "Document control must state which revision of ref-01734 governed on 2020-02-20.",
+      "Document control must state which revision of REF-01734 governed on 2020-02-20.",
       "A named, authorised human decides the disposition from verified source documents; this assessment is a reviewer aid."
     ],
     "notification": {
@@ -357,15 +357,15 @@
       "python": "3.12.3",
       "corrections_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
     },
-    "assessment_sha256": "0050b209c082628d092f849548083367211abb4fde2e28bcb53b4afb96cbc992"
+    "assessment_sha256": "00a3dc8f1509de2aeb9cced5a8b4d9dbfc021dd3db3077de556c28e3442e9b61"
   },
   "section_sha256": {
     "entities": "636e34eea5117f340f6a8cf0ca3e857ed86ee1a821c670a4b0200fa4371fee72",
-    "evidence": "dfe32167ffb6fb67542602d1a8fb16c0804364926d1adfbf87655e8e459a9507",
-    "conflicts": "2dbd2682e505907e521949ae1ffdd311ac9439d4f0a240d964c8afd69d729ad7",
+    "evidence": "172f5a69bc74c4df90df6a043cb7e20ee1c8f2d9f2f3668c4aa14bab4935d56b",
+    "conflicts": "3619e9847ef3a9722999722444070ef7808897c6fef4cf6d1f47567e6dbe64c7",
     "missing_inputs": "b7d5e7e55f0a343ee576b18c255bf8661cac4929fa095b7837b7a7fe4e3524ac",
     "notification": "7297783fc7ae43d1c123c71cbfdc475d99088be700e3fcc808dd7ac87b3daf24",
     "manifest": "7be766e5af1b1634049651ba5bf530e1096c96073a1f978fb1cdf214df8a311e"
   },
-  "package_sha256": "3083bdfece5e98e18f18408e546903228242f6b542e56fc82d191293511aea82"
+  "package_sha256": "be22543a15032540ea6baa061b7ed89bbac02119b8bc55feae79bdc011a1bee0"
 }

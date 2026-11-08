@@ -29,7 +29,7 @@ MODES = {
     "product_reference_missing": lambda a: any(e["kind"] == "PRODUCT" and e["status"] == "MISSING_REFERENCE" for e in a["entities"]),
     "untagged_bms_source": lambda a: a["evidence"]["telemetry"]["source_system"].upper() == "SYS-03",
     "carrier_parent_subsidiary_ambiguity": lambda a: any(e["kind"] == "CARRIER_CONTRACT" and e["status"] == "AMBIGUOUS_PARENT_OR_SUBSIDIARY" for e in a["entities"]),
-    "sop_boundary_day": lambda a: any("date-only" in f for c in a["evidence"]["sop"]["candidates"] for f in c["flags"]),
+    "sop_boundary_day": lambda a: any("date-only" in f for c in a["evidence"]["sop"]["candidates"] for f in c["flags"]) or bool(a["evidence"]["sop"]["rejected"]),
     "notification_window_recorded": lambda a: a["notification"]["due_at"] is not None,
 }
 

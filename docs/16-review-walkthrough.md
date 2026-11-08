@@ -29,7 +29,7 @@ python -m sentinel --db prototype/output/private.db import <pack>
 python scripts/select_demo_cases.py --db prototype/output/private.db --output-dir artifacts/private
 ```
 
-`check.py` should report 53 tests passing (2 are skipped unless `SENTINEL_WORKBOOK` is set; with it, all 53 run).
+`check.py` should report 54 tests passing (2 are skipped unless `SENTINEL_WORKBOOK` is set; with it, all 53 run).
 
 1. **Whole-pack posture (30 s).** Show `artifacts/private/assessment-summary.json`, produced by
    `python -m sentinel --db prototype/output/private.db assess-all --compare-history --output artifacts/private/assessment-summary.json`.
@@ -51,7 +51,7 @@ python scripts/select_demo_cases.py --db prototype/output/private.db --output-di
 
 Fallback if the workbook will not load on the day: use `data/anonymized-evaluation.xlsx` and the pre-generated `artifacts/public/` summaries (same commands, replaced keys, synthetic dates). Say so out loud.
 
-Other demo cases, if asked: EXC-112198 (T-AURA, blank product reference), EXC-111008 (SYS-03 untagged, quarantined for attribution), EXC-112583 (unreadable study), EXC-111064 (unresolved product, unverified alias hint that is shown but never resolves), EXC-110287 (T-KAVERI, 72 h window recorded on the row), EXC-111519 (study absent from the index).
+Other demo cases, if asked: EXC-112198 (T-AURA, blank product reference), EXC-111008 (SYS-03 untagged, quarantined for attribution), EXC-112583 (unreadable study), EXC-111064 (unresolved product, unverified alias hint that is shown but never resolves), EXC-110287 (T-KAVERI, 360 h window recorded on the row), EXC-111519 (study absent from the index).
 
 ### 1.2 Closing honesty statement (say it near-verbatim)
 
@@ -78,7 +78,7 @@ Other demo cases, if asked: EXC-112198 (T-AURA, blank product reference), EXC-11
 
 ### (ii) The notification clock with calendars and regulator receipts
 
-**What the prototype does.** Obligations are derived from the alert, with the clock starting at alert receipt (`test_notification_clock_starts_at_alert_receipt`), and are independent of the case lifecycle, so reopening or a slow review changes nothing. A reminder outbox with retries exists; a receipt is human-attested. The policy is `notification-policy-stub-v1`. Windows come from the supplied rows (for example 72 h on the EXC-110287 row) and are provisional.
+**What the prototype does.** Obligations are derived from the alert, with the clock starting at alert receipt (`test_notification_clock_starts_at_alert_receipt`), and are independent of the case lifecycle, so reopening or a slow review changes nothing. A reminder outbox with retries exists; a receipt is human-attested. The policy is `notification-policy-stub-v1`. Windows come from the supplied rows (for example 360 h on the EXC-110287 row; 72 h on the T-AURA and T-NORDIA rows) and are provisional.
 
 **What is stubbed.** Legal calendars (business days, holidays, time zones), the definition of "detection" that starts the clock, reportability rules per regulator, the filing channel, and receipt ingestion. Unknown windows are treated as urgent manual review, never as exempt. Outbox delivery is internal; nothing contacts a regulator.
 
@@ -105,7 +105,7 @@ Because the closure number is worth little compared with what goes wrong after i
 
 ### Q3. "Your as-at query assumes the SOP index is complete and date-only. What happens on the boundary day, and with T-KAVERI's paper annexures?"
 
-It does not assume completeness; it refuses to infer it. Boundary: effective ranges are half-open, and an excursion on a day where one revision ends and the next begins is flagged, not silently assigned (`test_policy_interval_boundaries_are_half_open_and_flagged`). Overlapping revisions are a conflict, not "pick the latest" (`test_overlapping_sop_revisions_are_a_conflict`; in the pack 35 events on sop-vir-9115 Rev 04/05, 15 on sop-kav-5329, 13 on sop-kav-9392). Because the index is date-only, I cannot tell hours-level changeover, so the flag sends it to a human. Site-specific limits in an annexure are required evidence: a site-scoped SOP with no registered annexure is a blocker (`test_site_specific_scope_requires_annexure`). A scanned annexure with handwritten amendments is *registered as a document* in production with a QA-attested transcription of the amended limits; the prototype does no OCR and does not read it. If the index itself is wrong or incomplete, no code of mine detects it; that is why an index entry is evidence of existence, not of applicability, and why the pilot gate includes QA reconciliation of the index for the pilot tenant before go-live ([doc 10](10-future-roadmap.md), [doc 12](12-data-findings-and-assumptions.md)). The residual risk is a missing revision that does not appear anywhere. I record it in [doc 09](09-risks-assumptions-and-open-questions.md).
+It does not assume completeness; it refuses to infer it. Boundary: effective ranges are half-open, and an excursion on a day where one revision ends and the next begins is flagged, not silently assigned (`test_policy_interval_boundaries_are_half_open_and_flagged`). Overlapping revisions are a conflict, not "pick the latest" (`test_overlapping_sop_revisions_are_a_conflict`; in the pack 35 events on sop-vir-9115 Rev 04/05, 16 on sop-kav-5329, 13 on sop-kav-9392). Because the index is date-only, I cannot tell hours-level changeover, so the flag sends it to a human. Site-specific limits in an annexure are required evidence: a site-scoped SOP with no registered annexure is a blocker (`test_site_specific_scope_requires_annexure`). A scanned annexure with handwritten amendments is *registered as a document* in production with a QA-attested transcription of the amended limits; the prototype does no OCR and does not read it. If the index itself is wrong or incomplete, no code of mine detects it; that is why an index entry is evidence of existence, not of applicability, and why the pilot gate includes QA reconciliation of the index for the pilot tenant before go-live ([doc 10](10-future-roadmap.md), [doc 12](12-data-findings-and-assumptions.md)). The residual risk is a missing revision that does not appear anywhere. I record it in [doc 09](09-risks-assumptions-and-open-questions.md).
 
 ### Q4. "How does Cl.22 survive a shared embedding index or a shared model fine-tune?"
 
@@ -159,7 +159,7 @@ What I would ask in the room: effective date semantics (alert time vs detection 
 > python scripts/check.py
 > python -m sentinel demo
 > ```
-> `check.py` reports 53 passing tests (2 more run against the supplied workbook when `SENTINEL_WORKBOOK` is set).
+> `check.py` reports 54 passing tests (2 more run against the supplied workbook when `SENTINEL_WORKBOOK` is set).
 >
 > Where the four deliverables are:
 > - **A, where I land:** `docs/00-executive-summary.md`, `docs/01-where-we-land.md`, `docs/09-risks-assumptions-and-open-questions.md`, `docs/10-future-roadmap.md`, `docs/12-data-findings-and-assumptions.md`.
@@ -186,7 +186,7 @@ What I would ask in the room: effective date semantics (alert time vs detection 
 Zulfiqar must do these personally; none can be delegated to the tooling that wrote the documents.
 
 - [ ] Read docs 00–16 end to end. Be able to explain every number you cite (64%, 2,939, 420/234/186, 118) without opening the file.
-- [ ] Run `python scripts/check.py` from a fresh clone and virtualenv, and `python -m sentinel demo`. Run once with `SENTINEL_WORKBOOK` set and confirm 53 tests pass with none skipped.
+- [ ] Run `python scripts/check.py` from a fresh clone and virtualenv, and `python -m sentinel demo`. Run once with `SENTINEL_WORKBOOK` set and confirm 54 tests pass with none skipped.
 - [ ] Run every command in 1.1 with the real workbook; compare the output with the points listed. Rehearse the demo twice, timed.
 - [ ] Decide the privacy stance for tenant codes (they are pseudonymous codes from the pack, but the pack is confidential): keep, replace with generic labels, or ask in writing. Check `docs/` and `data/anonymized-evaluation.xlsx` for any customer or person name. Confirm `artifacts/private/` and the supplied workbook are not tracked.
 - [ ] Verify the repository is public and readable, the link in the email works in a private window, and the licence/readme state is as you intend.

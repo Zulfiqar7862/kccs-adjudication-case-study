@@ -52,6 +52,7 @@ UNTAGGED_SOURCE_SYSTEMS = ("SYS-03",)
 FIRMWARE_TOKEN = re.compile(r"\b[A-Z]{2}-\d+\.\d+\.\d+\b")
 BULLETIN_TOKEN = re.compile(r"\b[A-Z]{2}-CB-\d+\b")
 MAGNITUDE = re.compile(r"up to\s+([0-9]+(?:\.[0-9]+)?)\s*°?\s*C", re.IGNORECASE)
+OPEN_ENDED_WORDS = {"evergreen", "open", "open-ended", "ongoing", "none", "n/a"}
 
 
 class AccessDenied(Exception):
@@ -185,7 +186,8 @@ def _resolve_carrier(tables, event, when: datetime | None, out) -> None:
                 try:
                     start = parse_time(str(_field(row, "effective_from")))
                     end_text = str(_field(row, "effective_to")).strip()
-                    end = parse_time(end_text) if end_text else None
+                    # The legal team's index writes "evergreen" for open-ended contracts.
+                    end = None if not end_text or end_text.casefold() in OPEN_ENDED_WORDS else parse_time(end_text)
                 except (TypeError, ValueError):
                     continue
                 if start <= when and (end is None or when < end + timedelta(days=1)):
@@ -234,10 +236,21 @@ def _sop_evidence(tables, tenant, when: datetime | None, out) -> list[dict]:
         section["candidates"].append(item)
     for doc_id, rows in by_doc.items():
         if len(rows) > 1:
+            doc_id = str(_field(rows[0], "doc_id"))
             revisions = sorted(str(_field(r, "revision")) for r in rows)
             section["conflicts"].append({"doc_id": doc_id, "revisions": revisions, "reason": "Effective windows overlap at the excursion start; supersedes_text is free text and does not settle precedence."})
             out["conflicts"].append(f"SOP {doc_id} has overlapping revisions {revisions} in force at the excursion start.")
             out["required_human_actions"].append(f"Document control must state which revision of {doc_id} governed on {when.date().isoformat()}.")
+    # Revisions whose date-only end equals the excursion date are excluded by the half-open convention,
+    # but the index never says whether end dates are inclusive: that is a conflict, not a silent drop.
+    for row in _table(tables, "05_SOP_Index"):
+        end_text = str(_field(row, "effective_to")).strip()
+        if _norm(_field(row, "tenant_code")) == tenant and re.fullmatch(r"\d{4}-\d{2}-\d{2}", end_text) and end_text == when.date().isoformat():
+            doc_id, revision = str(_field(row, "doc_id")), str(_field(row, "revision"))
+            section["rejected"].append({"doc_id": doc_id, "revision": revision, "effective_to": end_text, "source_ref": _ref("05_SOP_Index", row),
+                                        "reason": "effective_to is date-only and equals the excursion date; excluded under the half-open convention, but the index does not state whether end dates are inclusive."})
+            out["conflicts"].append(f"SOP {doc_id} {revision} ends on the excursion date; the boundary convention and timezone must be confirmed before it is excluded.")
+            out["required_human_actions"].append(f"Document control must confirm whether {doc_id} {revision} still governed on {end_text} and in which site timezone.")
     if not candidates:
         out["missing_inputs"].append("No same-tenant SOP index row is effective at the excursion start.")
     if any(f for c in section["candidates"] for f in c["flags"] if "annexure" in f):

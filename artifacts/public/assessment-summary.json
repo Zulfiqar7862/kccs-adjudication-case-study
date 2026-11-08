@@ -9,12 +9,12 @@
     "ABSTAIN": 420
   },
   "conflict_kinds": {
-    "SOP ref-01734": 35,
-    "SOP ref-01784": 15,
-    "SOP ref-01785": 13,
-    "SOP ref-01774": 6,
-    "SOP ref-01728": 5,
-    "SOP ref-01759": 4
+    "SOP REF-01734": 35,
+    "SOP REF-01784": 15,
+    "SOP REF-01785": 13,
+    "SOP REF-01774": 6,
+    "SOP REF-01728": 5,
+    "SOP REF-01759": 4
   },
   "product_resolution": {
     "MISSING_REFERENCE": 42,

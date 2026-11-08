@@ -50,7 +50,7 @@ The required validation cases for the chosen component map to tests as follows. 
 | Wrong product presentation | `test_wrong_presentation_is_a_conflict_not_a_match`; the pack test asserts the mode occurs in the supplied data | unit, pack |
 | Missing and unreadable stability evidence | `test_missing_and_unreadable_stability_evidence` | unit |
 | Overlapping SOP revision windows | `test_overlapping_sop_revisions_are_a_conflict`; the public test asserts overlaps are detected in the anonymized pack | unit, public, pack |
-| Policy interval boundaries | `test_policy_interval_boundaries_are_half_open_and_flagged` | unit (the pack has no boundary-day case) |
+| Policy interval boundaries | `test_policy_interval_boundaries_are_half_open_and_flagged` | unit, pack (EXC-110098 and EXC-112093 end a revision on the excursion date) |
 | Ambiguous site scope | `test_site_specific_scope_requires_annexure` | unit |
 | Missing product reference | `test_missing_product_reference` | unit |
 | Untrusted alias mapping | `test_alias_observations_are_surfaced_but_never_resolve` (includes an alias confirmed after `known_at`) | unit, pack |
@@ -74,11 +74,11 @@ Results from the end-to-end pass taken immediately before submission (2026-11-08
 | Check | Command | Result |
 |---|---|---|
 | Fresh install from the README | `python3 -m venv .venv && python -m pip install -r requirements.txt` | Installs `sentinel-adjudication` and `defusedxml==0.7.1` only |
-| Compile, public tests, HTTP lifecycle demo | `python scripts/check.py` | 53 tests, 2 skipped (private pack not configured); demo lifecycle PASS |
-| Full suite against the supplied workbook | `SENTINEL_WORKBOOK=<pack> python scripts/check.py` | 53 tests, all passed |
+| Compile, public tests, HTTP lifecycle demo | `python scripts/check.py` | 54 tests, 2 skipped (private pack not configured); demo lifecycle PASS |
+| Full suite against the supplied workbook | `SENTINEL_WORKBOOK=<pack> python scripts/check.py` | 54 tests, all passed |
 | Workbook inspection | `python scripts/inspect_workbook.py <pack> --output-dir artifacts/private` | 15 sheets, 420 events; findings in `workbook-inspection.json` |
 | Supplied workbook import and report | `python -m sentinel --db … import <pack>` then `report --output …` | 420 cases created, all `WAITING_EVIDENCE` with blockers; exact-file replay created 0 |
-| Demo case selection and replays | `python scripts/select_demo_cases.py --db … --output-dir artifacts/private` | 9 of 11 failure modes found in the pack; knowledge-cutoff replay and correction replay produced distinct hashes; the original package still verifies |
+| Demo case selection and replays | `python scripts/select_demo_cases.py --db … --output-dir artifacts/private` | 10 of 11 failure modes found in the pack (carrier parent/subsidiary ambiguity does not occur); knowledge-cutoff replay and correction replay produced distinct hashes; the original package still verifies |
 | Coverage summary | `python -m sentinel --db … assess-all --compare-history --output …` | 420 ABSTAIN; 234 BLOCKED_BY_CONFLICTS, 186 INCOMPLETE_EVIDENCE; 118 review candidates; about 2 s |
 | Public anonymized workbook | same commands on `data/anonymized-evaluation.xlsx` → `artifacts/public/` | 420 ABSTAIN; 78 BLOCKED_BY_CONFLICTS, 342 INCOMPLETE_EVIDENCE (firmware, readability and constraints are redacted there) |
 | API | `serve`, `scripts/api_example.py`, unauthenticated request | 200 with bearer, 401 without |
