@@ -1,5 +1,27 @@
 # Degradation and regulatory clock
 
+## Independent clock and failure paths
+
+```mermaid
+flowchart TB
+    Alert["Original alert / detection event"] --> Case["Case evidence and human review"]
+    Alert --> Policy["Approved reporting policy and calendar"]
+    Policy --> Due["Durable obligation and original due time"]
+    Case --> Wait["Missing source: hold readiness and assign owner"]
+    Wait --> Resume["Evidence restored: revalidate before review"]
+    Due --> Clock["Independent deadline worker"]
+    Clock --> Notify["Regulatory operations queue"]
+    Notify --> Filing["Approved filing adapter"]
+    Filing --> Receipt["Verify qualifying receipt"]
+    Filing -. "Delivery unavailable" .-> Manual["Authorized manual filing and escalation"]
+    Manual --> Receipt
+    Clock -. "Worker or regional outage" .-> Fallback["Independent paging and approved fallback register"]
+    Fallback --> Manual
+    Receipt --> Reconcile["Reconcile attempts and receipt evidence"]
+```
+
+**Proposed production behavior.** Evidence waiting, retries and reopening do not pause or restart the legal clock. A worker outage requires independent detection and authorized fallback, not an assumed clock suspension. Reconcile fallback records after recovery. The prototype implements internal reminders and human-attested receipts only; it does not implement filing, receipt verification or regional failover.
+
 ## Failure modes and regulatory consequences
 
 | Failure | Behavior and recovery | Clock effect |

@@ -18,6 +18,24 @@ All operational primary/foreign keys begin with `tenant_id`; database row securi
 | `audit_event` | Tenant/case revision, actor, action, old/new packet references, previous hash, current hash, external checkpoint. |
 | `outbox` / `job` | Stable effect key, next attempt, retry count, lease/timeout, error category, durable result; transactional enqueue. |
 
+### Evidence selection across two time axes
+
+```mermaid
+flowchart TB
+    Context["Tenant, subject, excursion time and review cutoff"] --> Scope["Enforce tenant and subject scope"]
+    Source["Source artifact: digest, version and provenance"] --> Facts["Evidence facts: valid and recorded intervals"]
+    Facts --> Scope
+    Scope --> Valid["Valid-time filter: applicable at excursion time"]
+    Valid --> Known["Recorded-time filter: known at review cutoff"]
+    Known --> Candidates["Return all matching evidence candidates"]
+    Candidates --> QA["QA resolves missing or overlapping evidence"]
+    QA --> Revision["Case revision pins evidence and policy versions"]
+    Revision --> Packet["Review and signatures bind the frozen packet"]
+    Packet --> Audit["Preserve signed revision and audit history"]
+```
+
+**Proposed production model.** Valid time answers “when did this apply?”; recorded time answers “when did the system know it?”. Neither a later correction nor a reopened case overwrites the earlier signed revision. The local snapshot limitation is described below.
+
 Bitemporal records use half-open intervals. Example: select the SOP applicable **at excursion time**, as known **at review time**:
 
 ```sql

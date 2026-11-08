@@ -6,13 +6,19 @@ This document separates the **implemented local prototype** from the **proposed 
 
 ### Component overview
 
-```text
-XLSX snapshot ──> workbook ──> evidence analysis ──> SQLite service
-                                             │          ├─ cases and revisions
-CLI ─────────────────────────────────────────┘          ├─ audit and idempotency
-Loopback HTTP API ──────────────────────────────────────┤
-                                                        └─ notification obligations/outbox
+```mermaid
+flowchart TB
+    Workbook["Authorized XLSX snapshot"] --> Import["Ingestion: parse, hash and preserve rows"]
+    Import --> Analysis["Evidence analysis: candidates and blockers"]
+    Analysis --> Service["Workflow service: cases, review and clocks"]
+    CLI["CLI / fictional demo"] --> Service
+    HTTP["Authenticated loopback JSON API"] --> Service
+    Service --> DB[("SQLite: cases, evidence, audit and outbox")]
+    Service --> Export["Private audit export and verification"]
+    Service --> Reminder["Internal reminder stub: no regulator delivery"]
 ```
+
+**Implemented locally.** The API and CLI are adapters; state, audit and outbox changes share the workflow service's transaction boundary. Evidence analysis does not authorize a disposition.
 
 - `prototype/src/sentinel/ingestion/workbook.py` uses the standard-library ZIP support for XLSX containers and `defusedxml` for XML parsing; it returns row dictionaries, retains source row numbers, and computes a file SHA-256 digest.
 - `prototype/src/sentinel/evidence/analysis.py` normalizes timestamps to UTC, selects tenant-scoped SOP index candidates by effective date, and returns candidate rows and blockers. Index rows are not authoritative evidence or a disposition.
@@ -28,7 +34,31 @@ The implemented prototype is described above; the following sections specify the
 
 Deploy a regional cell for each authorized residency boundary, initially an EU pilot cell. Keep tenant keys, queues, blobs, indexes, backups, logs and processing inside the required region. A shared control plane may distribute code/package hashes and non-sensitive health totals only, never evidence, embeddings, prompts or case identifiers. The tenant requiring exclusive derived artifacts gets a tenant-exclusive data/derived-artifact boundary. India-only and EU-only are enforced by egress/network/storage policy, not a request flag.
 
-[Production architecture diagram](../diagrams/01-production-architecture.md).
+### Proposed production data flow
+
+```mermaid
+flowchart TB
+    Sources[Telemetry / TMS / ERP / controlled documents] --> Adapters[Region-local adapters and quarantine]
+    Adapters --> Raw[Immutable source objects and provenance]
+    Adapters --> Inbox[Durable inbox / normalized events]
+    Inbox --> Cases[Case and evidence workflow]
+    Inbox --> Clock[Independent obligations scheduler]
+    Raw --> Resolve[Identity and temporal evidence resolver]
+    Resolve --> Cases
+    Cases --> Review[Authenticated QA workbench]
+    Review --> Sign[Qualified signature service]
+    Sign --> Ledger[Transactional case / batch / audit ledger]
+    Ledger --> Outbox[Transactional outbox]
+    Outbox --> Export[Evidence bundle / protected archive]
+    Clock --> Reg[Regulatory operations queue]
+    Reg --> Delivery[Approved filing adapters / human fallback]
+    Delivery --> Receipts[Verified receipts and escalation]
+    Ledger --> Metrics[Regional monitoring / independent paging]
+```
+
+**Proposed, not implemented.** The obligations scheduler is separate from the review queue so a waiting case cannot pause a filing duty. Qualified signatures and regulator delivery remain separate authorities.
+
+[Standalone architecture diagram](../diagrams/01-production-architecture.md). This embedded diagram mirrors the standalone version; update both when changing this flow.
 
 Start with a modular service and separately deployed ingestion and deadline workers, not a microservice per table. A relational transaction covers case version, approval event, batch reservation and outbox intent; distribute only at real trust, scaling or fault boundaries. The deadline worker has its own connection pool, reserved workers and queue so evidence extraction, a model outage or alert storms cannot starve notification work. Source object storage is separate because retention and large immutable bytes differ from transactional queries. Signature and filing integrations remain separately qualified authorities.
 

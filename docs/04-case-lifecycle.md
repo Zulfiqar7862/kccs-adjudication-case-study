@@ -11,18 +11,25 @@ Review captures every blocker resolution and a structured argument: applicable r
 Months later, a bulletin or new source creates an impact-review event through the artifact/product/logger dependency index. Retain original decision, original policy and “known then” facts; open a new revision and re-check current authority and evidence. Notify QA and affected claims/invoices through outbox commands with compensating business actions (e.g. withdraw an invoice), not database reversal. Keep exports of both revisions. Claims deadlines and regulatory follow-up obligations require legal review and independent tracking.
 
 
-```text
-import → waiting for evidence → record evidence → review → sign
-                                                    ↑       │
-                                                    └ reopen┘
+## Implemented case state flow
+
+```mermaid
+stateDiagram-v2
+    [*] --> WAITING_EVIDENCE: import
+    WAITING_EVIDENCE --> WAITING_EVIDENCE: add evidence
+    WAITING_EVIDENCE --> READY_FOR_REVIEW: review resolves all blockers
+    READY_FOR_REVIEW --> WAITING_EVIDENCE: invalidate review
+    READY_FOR_REVIEW --> READY_FOR_REVIEW: first signature when dual approval required
+    READY_FOR_REVIEW --> DISPOSED: independent approval quorum reached
+    DISPOSED --> WAITING_EVIDENCE: explicit reopen creates new revision
 ```
+
+**Implemented locally.** Recording evidence invalidates review and pending signatures. Reopening starts a new revision while retaining the prior signed revision; it never resets an existing regulatory obligation.
+
+[Standalone lifecycle diagram](../diagrams/02-case-lifecycle.md). This embedded diagram mirrors the standalone version; update both when changing the state flow.
 
 Evidence analysis begins with candidates and blockers, not a decision. A reviewer records evidence and resolves every blocker before review; the review also requires references across SOP, stability, telemetry, identity, batch, and contract categories. Signing requires an allowed disposition and an independent signer; the reviewer cannot sign their own packet. A signed case must be explicitly reopened before evidence changes. Every mutation uses an expected integer case version and an idempotency key: stale versions and conflicting key reuse are rejected, while an identical retry can return its prior result.
 
 The optional dual-approval rule is currently a local heuristic: service code searches the tenant's `who_signs_a_disposition` text for the word `dual` using a case-insensitive regular expression. When matched, both `site_qa` and `corporate_qa` signatures are required. This text match is not a policy engine and is not suitable as a production authorization control.
 
-## State flow diagram
-
-The following illustrates the local workflow and the production proposal's explicit reopen boundary. Waiting for evidence is not a terminal state; clocks are independent of this case state.
-
-[View lifecycle diagram](../diagrams/02-case-lifecycle.md).
+The additional production waiting states described above carry an owner, required evidence, next check and escalation deadline. They are a proposed extension, not additional persisted prototype states.
