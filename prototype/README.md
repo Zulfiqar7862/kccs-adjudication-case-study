@@ -2,6 +2,8 @@
 
 The installable `sentinel` package implements the critical evidence/lifecycle/clock core. This is the working component, not a collection of architectural placeholders.
 
+**First visit?** Follow the [step-by-step walkthrough](WALKTHROUGH.md) for installation, expected output, API exploration and optional private-workbook validation. For the written submission, start with the [reading guide](../docs/README.md).
+
 From the **repository root**:
 
 ```sh
