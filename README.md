@@ -1,17 +1,90 @@
 # Sentinel adjudication case study
 
-A runnable, evidence-first prototype and written submission for the Kestrel Cold Chain Solutions adjudication brief. The core is a **tenant-scoped, temporally explicit evidence-assessment kernel** that turns a real workbook alert into a reproducible, hash-addressed evidence assessment — and refuses to conclude when the evidence does not support a conclusion. Human QA keeps the disposition; regulatory clocks run independently of case state.
+A working prototype and written submission for the Kestrel Cold Chain Solutions adjudication brief. Given one temperature-excursion alert, it assembles and checks the evidence a qualified person needs — in that customer's records only, as of the moment it happened, with what was known at the time — and says plainly what is missing or contradictory. It never decides the outcome; a named human does.
 
-Candidate: Zulfiqar. Prototype and documents were produced with heavy AI assistance; see the [working log](docs/07-working-log.md) and [AI review and corrections](docs/11-ai-review-corrections.md).
+Candidate: Zulfiqar. Built with heavy AI assistance; see the [working log](docs/07-working-log.md).
 
-## Start here
+## Three ways in
 
-| You want to… | Go to |
-|---|---|
-| Review the submission in the evaluator's four sections | [Reading guide](docs/README.md) and [submission checklist](SUBMISSION_CHECKLIST.md) |
-| Run the prototype in ten minutes | [Clone and run](#clone-and-run) below, then the [step-by-step working guide](docs/17-step-by-step-working.md) (every command with its real output, and what the kernel does with one alert) |
-| Prepare or follow the 20-minute review | [Review walkthrough, hard questions, change response, email draft](docs/16-review-walkthrough.md) |
-| See what the workbook actually contains | [Data findings and assumptions](docs/12-data-findings-and-assumptions.md) |
+| If you are… | Start here | Time |
+|---|---|---|
+| **Anyone** — no code needed | [The whole thing in plain English](docs/PLAIN_ENGLISH.md) | 10 min |
+| **Someone who wants to run it** | [Quick start](#quick-start) below, then [step-by-step working](docs/17-step-by-step-working.md) | 15 min |
+| **An evaluator** following the four requested sections | [Reading guide](docs/README.md) and [submission checklist](SUBMISSION_CHECKLIST.md) | 2–3 h |
+
+## Quick start
+
+You need Git and Python 3.11 or newer. Nothing else: no accounts, no API keys, no network services.
+
+```sh
+git clone https://github.com/Zulfiqar7862/kccs-adjudication-case-study.git
+cd kccs-adjudication-case-study
+./run.sh                                             # Windows: .\run.ps1
+```
+
+That creates a private Python environment, installs the prototype, runs all 54 tests and a full lifecycle demo on fictional data, and ends with `All requested checks passed.`
+
+With the supplied workbook (keep it outside the repository; it is never committed):
+
+```sh
+./run.sh pack /path/to/KCCS_Sentinel_Reference_Data_Pack.xlsx     # tests, inspection, import, examples, all 420 assessments
+./run.sh explain EXC-110336                                        # one alert, in plain English
+./run.sh explain EXC-110336 --known-at 2026-01-01T00:00:00+00:00   # the same alert, as it was known in January
+```
+
+`pack` ends with a short summary and the example alerts it chose. `explain` prints what was identified, which procedure and study apply, whether the readings can be trusted, the conflicts, what is missing, what a person must do next, the regulator clock, and the result — always **abstain**. Full reports land in `artifacts/private/` (ignored by git).
+
+Other commands: `./run.sh serve` (local API on `127.0.0.1:8080`), `./run.sh demo`, `./run.sh help`. Every `./run.sh X` not listed is passed to `python -m sentinel X`; the full command reference is in [prototype/README.md](prototype/README.md).
+
+## Step by step
+
+Every step is one command. Full captured output and what happens inside at each step: [docs/17-step-by-step-working.md](docs/17-step-by-step-working.md).
+
+| # | Step | Command | What you should see |
+|---|---|---|---|
+| 1 | Get the code | `git clone https://github.com/Zulfiqar7862/kccs-adjudication-case-study.git && cd kccs-adjudication-case-study` | a folder with `run.sh`, `docs/`, `prototype/` |
+| 2 | Set up and prove it works (fictional data) | `./run.sh` (Windows `.\run.ps1`) | `Ran 54 tests … OK`, a demo ending `"audit_integrity": "PASS"`, then `All requested checks passed.` |
+| 3 | Run everything on the supplied workbook | `./run.sh pack /path/to/KCCS_Sentinel_Reference_Data_Pack.xlsx` | five numbered stages, then `Assessed 420 alerts. Decisions proposed by the software: 0` with the blocking problems and the example alerts chosen |
+| 4 | Read the data-quality report | open `artifacts/private/workbook-inspection.md` | sheet inventory, overlapping SOP revisions, product resolution counts, firmware builds |
+| 5 | Explain one alert in plain English | `./run.sh explain EXC-110336` | what was identified, procedure and study in force, telemetry trust, **conflicts**, missing items, what a person must do, regulator clock, `RESULT: BLOCKED …` |
+| 6 | Ask "what did we know in January?" | `./run.sh explain EXC-110336 --known-at 2026-01-01T00:00:00+00:00` | the April calibration bulletin is hidden; one conflict fewer; a different fingerprint |
+| 7 | Save a verifiable evidence package | `./run.sh --db prototype/output/pack-9fe3fad7d0f7.db assess --tenant T-VIRENT --event EXC-110336 --output artifacts/private/EXC-110336.json` | `{"written": …}` |
+| 8 | Prove it has not been altered | `./run.sh --db prototype/output/pack-9fe3fad7d0f7.db verify-assessment artifacts/private/EXC-110336.json` | `{"valid": true}` (edit the file and it becomes `false`) |
+| 9 | Try to read another customer's alert | `./run.sh --db prototype/output/pack-9fe3fad7d0f7.db assess --tenant T-AURA --event EXC-110336` | `Error: Event 'EXC-110336' is not available to tenant 'T-AURA'` — same message as for an alert that does not exist |
+| 10 | Apply a correction and get a *new* assessment | `./run.sh explain EXC-110336 --corrections artifacts/private/demo-correction.json --known-at 2026-09-21T00:00:00+00:00` | the presentation-mismatch conflict is gone; `Corrections applied: 1`; the package from step 7 still verifies |
+| 11 | See the coverage summary | open `artifacts/private/assessment-summary.json` | 420 `ABSTAIN`; 234 blocked by conflicts, 186 incomplete; 118 review candidates |
+| 12 | Walk a case through review, signature and reopen over HTTP | `./run.sh serve`, then in another shell `python scripts/api_example.py` | the local API on `127.0.0.1:8080`; routes in [docs/API.md](docs/API.md) |
+
+The database name in steps 7–9 is `pack-` plus the first 12 characters of the workbook's SHA-256; step 3 prints it and writes it to `prototype/output/last-pack.txt`. `./run.sh explain` reads that file, so steps 5, 6 and 10 need no `--db`.
+
+### What happens inside one assessment (step 5)
+
+1. **Authorise** — the alert must belong to the customer asking; otherwise "not available", identical to "does not exist".
+2. **Fix the two clocks** — *as-at* is the moment the temperature left range (which rules applied); *known-at* is the knowledge cutoff (what facts existed), defaulting to the workbook's extract date.
+3. **Overlay corrections** recorded on or before *known-at*; the stored tables are never changed.
+4. **Identify the product** by exact match inside the customer's own master only; two matches = ambiguous; none = unresolved, with any reviewer alias noted as *unverified*.
+5. **Identify the facilities** across the three source systems; contradictory timezones are a conflict.
+6. **Identify the carrier contract** in force at *as-at*; a name that matches two legal entities is a conflict; claims never gate the decision.
+7. **Select the procedure (SOP) revisions** in force at *as-at*; two revisions of one document in force at once = conflict; a revision ending on that day = reported, not dropped.
+8. **Check the stability study**: owned by this customer (ownership column, not folder), same presentation, readable, and actually states an excursion limit; otherwise not usable, with the reason.
+9. **Check the temperature readings**: gaps, interpolation, untagged building-system source (quarantine), and firmware under a calibration bulletin recorded by *known-at* — flagged with the bulletin's stated bound, never "corrected".
+10. **Create the regulator-clock view** from the alert time; no window on record = urgent policy review, never "not required".
+11. **Conclude**: always `ABSTAIN`; readiness is *blocked* if any conflict, *incomplete* if anything is missing, else *assembled*.
+12. **Pin and fingerprint**: code, rules and policy versions, workbook hash, corrections hash; SHA-256 over the whole result.
+
+## What you get
+
+```
+docs/PLAIN_ENGLISH.md            the problem, the solution and a glossary, no jargon
+docs/17-step-by-step-working.md  every command with real output; how one alert is processed
+docs/README.md                   evaluator reading guide (four sections, in order)
+docs/00 … 16                     the submission: decision, design (HLD + LLD), data findings,
+                                 cost, operations, validation, working log, review walkthrough
+prototype/                       the code (src/sentinel) and 54 tests
+scripts/                         check, inspect the workbook, choose examples, explain an alert
+artifacts/public/                real outputs from the anonymized workbook (committed)
+data/anonymized-evaluation.xlsx  a structure-preserving, anonymized copy for people without the pack
+```
 
 ## What is implemented
 
@@ -25,15 +98,11 @@ Candidate: Zulfiqar. Prototype and documents were produced with heavy AI assista
 
 No live source connectors, no document OCR or interpretation, no language model, no regulator filing or receipt verification, no calendars or business-day policies, no SSO or qualified signatures, no PostgreSQL/regional deployment, no WORM retention. The application never releases or destroys product and never files with a regulator. These are designed in [docs/02](docs/02-system-architecture.md)–[06](docs/06-versioning-and-deployment.md) and the [LLD](docs/13-detailed-design-lld.md) and are labelled *proposed* throughout.
 
-## Prerequisites
+## Manual commands (what `run.sh` does for you)
 
-Git and Python 3.11+ (3.11, 3.12 and 3.13 are exercised in CI on Linux, macOS and Windows). The only runtime dependency is `defusedxml`. No paid API, key, or secret is required for any command in this README.
-
-## Clone and run
+Python 3.11, 3.12 and 3.13 are exercised in CI on Linux, macOS and Windows. The only runtime dependency is `defusedxml`.
 
 ```sh
-git clone https://github.com/Zulfiqar7862/kccs-adjudication-case-study.git
-cd kccs-adjudication-case-study
 python3 -m venv .venv && source .venv/bin/activate       # Windows: py -3 -m venv .venv; .venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 python scripts/check.py                                   # compile, 54 tests, HTTP lifecycle demo on fictional data
@@ -104,16 +173,6 @@ Contract: [docs/API.md](docs/API.md). Credentials are local development stubs; d
 
 The pack has no raw temperature series, no documents, no batch history, no recorded-time history and no calendars; the prototype models each as an explicit missing input and never synthesizes evidence. The workbook is treated as known at its extract date (2026-09-14) because no better recorded time exists. Entity resolution is exact-match only; alias observations are surfaced, never applied. The notification window is taken from the record as a *provisional* policy input. Hash chains are tamper-evidence, not WORM retention. The anonymized copy is structurally faithful but not outcome-equivalent. Full register: [risks and open questions](docs/09-risks-assumptions-and-open-questions.md).
 
-## Project layout
-
-```
-README.md, SUBMISSION_CHECKLIST.md
-docs/            00–16 numbered submission documents, API and security notes
-diagrams/        Mermaid diagram sources
-prototype/       installable package (src/sentinel), tests, walkthrough
-scripts/         check.py, inspect_workbook.py, select_demo_cases.py, api_example.py, anonymized workbook builder
-data/            anonymized evaluation workbook (the supplied pack is never committed)
-artifacts/       public/ committed (anonymized outputs); private/ ignored (real outputs)
-```
+## Configuration and container
 
 Configuration lives in `.env.example` (Python does not auto-load it). `docker compose run --build --rm prototype` runs the fictional demo in an isolated container.

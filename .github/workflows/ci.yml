@@ -47,3 +47,22 @@ jobs:
       - name: Run the Windows launcher
         shell: pwsh
         run: ./prototype/run.ps1 demo
+      - name: Root runner, newcomer path (check, then explain on the anonymized workbook)
+        shell: pwsh
+        run: |
+          ./run.ps1
+          ./run.ps1 pack data/anonymized-evaluation.xlsx
+          ./run.ps1 explain REF-00009
+  runner:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Root runner, newcomer path (check, then explain on the anonymized workbook)
+        run: |
+          ./run.sh
+          ./run.sh pack data/anonymized-evaluation.xlsx
+          ./run.sh explain REF-00009
+          ./run.sh explain REF-00009 --known-at 2019-01-01T00:00:00+00:00
