@@ -4,6 +4,15 @@ A runnable, evidence-first adjudication prototype and anonymized case-study subm
 
 **Privacy:** public code, fictional fixtures and anonymized analysis only. The supplied workbook and brief, identifying records, generated private reports, databases and credentials are not committed. No ZIP is required.
 
+## Start here — follow the submission step by step
+
+1. **Understand the recommendation:** start with the [guided reading path](docs/README.md), then the executive summary. No installation is needed to review the written submission.
+2. **Explore the design:** follow the guide through architecture, data/time semantics, lifecycle, regulatory clocks and deployment. Diagrams are embedded beside the explanation.
+3. **Run the critical component:** use the [hands-on walkthrough](prototype/WALKTHROUGH.md), with numbered commands, expected results and troubleshooting.
+4. **Review the evidence and lessons:** read the validation strategy, working log and AI-review corrections before assessing the limitations.
+
+**Two useful routes:** evaluators can follow [the four-section reading guide](docs/README.md); developers can start with [the executable walkthrough](prototype/WALKTHROUGH.md). The detailed reference material remains below.
+
 ## Evaluation copy
 
 | Requested section | Read |
