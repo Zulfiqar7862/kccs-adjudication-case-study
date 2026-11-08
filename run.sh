@@ -34,7 +34,9 @@ case "${1:-check}" in
     PACK="${2:?usage: ./run.sh pack /path/to/pack.xlsx}"
     [ -f "$PACK" ] || { echo "No such file: $PACK"; exit 1; }
     mkdir -p artifacts/private prototype/output
-    DB=prototype/output/private.db
+    # One database per workbook snapshot (the service refuses to mix snapshots); remember the last one for `explain`.
+    DB="prototype/output/pack-$($V -c "from sentinel.ingestion.workbook import sha256; print(sha256('$PACK')[:12])").db"
+    echo "$DB" > prototype/output/last-pack.txt
     echo "1/5  Running all tests against the workbook ..."
     SENTINEL_WORKBOOK="$(cd "$(dirname "$PACK")" && pwd)/$(basename "$PACK")" $V -m unittest discover -s prototype/tests 2>&1 | tail -3
     echo "2/5  Inspecting the workbook (data-quality report) ..."

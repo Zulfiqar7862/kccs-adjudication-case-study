@@ -17,7 +17,9 @@ switch ($Command) {
   "pack" {
     $Pack = $Rest[0]; if (-not $Pack -or -not (Test-Path $Pack)) { throw "usage: .\run.ps1 pack C:\path\to\pack.xlsx" }
     New-Item -ItemType Directory -Force artifacts\private, prototype\output | Out-Null
-    $Db = "prototype\output\private.db"
+    $Sha = & $V -c "from sentinel.ingestion.workbook import sha256; print(sha256(r'$Pack')[:12])"
+    $Db = "prototype\output\pack-$Sha.db"
+    Set-Content prototype\output\last-pack.txt $Db
     Write-Host "1/5  Running all tests against the workbook ..."
     $env:SENTINEL_WORKBOOK = (Resolve-Path $Pack).Path
     & $V -m unittest discover -s prototype\tests 2>&1 | Select-Object -Last 3

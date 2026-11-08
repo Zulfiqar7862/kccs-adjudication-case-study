@@ -34,10 +34,18 @@ STATUS = {
 }
 
 
+def default_db() -> str:
+    """The database `run.sh pack` used last, else the conventional private.db."""
+    marker = output_directory() / "last-pack.txt"
+    if marker.is_file() and marker.read_text(encoding="utf-8").strip():
+        return marker.read_text(encoding="utf-8").strip()
+    return str(output_directory() / "private.db")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("event")
-    parser.add_argument("--db", default=str(output_directory() / "private.db"))
+    parser.add_argument("--db", default=default_db())
     parser.add_argument("--known-at", help="Pretend it is this moment; anything recorded later is hidden")
     parser.add_argument("--corrections", help="JSON file of corrections to overlay")
     args = parser.parse_args()
