@@ -58,10 +58,9 @@ Requires Git and **Python 3.11+**. From the repository root:
 ```sh
 git clone https://github.com/Zulfiqar7862/kccs-adjudication-case-study.git
 cd kccs-adjudication-case-study
-# Until PR #1 is merged, select the submitted branch:
-git switch hoplite/naukratis-184532b3
 python3 -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 python scripts/check.py
 python -m sentinel demo
