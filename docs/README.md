@@ -2,6 +2,8 @@
 
 This guide follows the four requested submission sections. Read in the order below; each step explains what to look for and what you should understand before moving on. No installation is required for the written review.
 
+If you are not an engineer, read [the whole thing in plain English](PLAIN_ENGLISH.md) first.
+
 The project is a **human-controlled evidence and case-workflow prototype**, not a production regulatory platform. Diagrams and captions distinguish implemented behavior from proposed production controls. Source attachments and identifying records are intentionally absent from this public repository.
 
 ## Step 1 — Where You Land

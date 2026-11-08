@@ -1,17 +1,54 @@
 # Sentinel adjudication case study
 
-A runnable, evidence-first prototype and written submission for the Kestrel Cold Chain Solutions adjudication brief. The core is a **tenant-scoped, temporally explicit evidence-assessment kernel** that turns a real workbook alert into a reproducible, hash-addressed evidence assessment — and refuses to conclude when the evidence does not support a conclusion. Human QA keeps the disposition; regulatory clocks run independently of case state.
+A working prototype and written submission for the Kestrel Cold Chain Solutions adjudication brief. Given one temperature-excursion alert, it assembles and checks the evidence a qualified person needs — in that customer's records only, as of the moment it happened, with what was known at the time — and says plainly what is missing or contradictory. It never decides the outcome; a named human does.
 
-Candidate: Zulfiqar. Prototype and documents were produced with heavy AI assistance; see the [working log](docs/07-working-log.md) and [AI review and corrections](docs/11-ai-review-corrections.md).
+Candidate: Zulfiqar. Built with heavy AI assistance; see the [working log](docs/07-working-log.md).
 
-## Start here
+## Three ways in
 
-| You want to… | Go to |
-|---|---|
-| Review the submission in the evaluator's four sections | [Reading guide](docs/README.md) and [submission checklist](SUBMISSION_CHECKLIST.md) |
-| Run the prototype in ten minutes | [Clone and run](#clone-and-run) below, then the [step-by-step working guide](docs/17-step-by-step-working.md) (every command with its real output, and what the kernel does with one alert) |
-| Prepare or follow the 20-minute review | [Review walkthrough, hard questions, change response, email draft](docs/16-review-walkthrough.md) |
-| See what the workbook actually contains | [Data findings and assumptions](docs/12-data-findings-and-assumptions.md) |
+| If you are… | Start here | Time |
+|---|---|---|
+| **Anyone** — no code needed | [The whole thing in plain English](docs/PLAIN_ENGLISH.md) | 10 min |
+| **Someone who wants to run it** | [Quick start](#quick-start) below, then [step-by-step working](docs/17-step-by-step-working.md) | 15 min |
+| **An evaluator** following the four requested sections | [Reading guide](docs/README.md) and [submission checklist](SUBMISSION_CHECKLIST.md) | 2–3 h |
+
+## Quick start
+
+You need Git and Python 3.11 or newer. Nothing else: no accounts, no API keys, no network services.
+
+```sh
+git clone https://github.com/Zulfiqar7862/kccs-adjudication-case-study.git
+cd kccs-adjudication-case-study
+./run.sh                                             # Windows: .\run.ps1
+```
+
+That creates a private Python environment, installs the prototype, runs all 54 tests and a full lifecycle demo on fictional data, and ends with `All requested checks passed.`
+
+With the supplied workbook (keep it outside the repository; it is never committed):
+
+```sh
+./run.sh pack /path/to/KCCS_Sentinel_Reference_Data_Pack.xlsx     # tests, inspection, import, examples, all 420 assessments
+./run.sh explain EXC-110336                                        # one alert, in plain English
+./run.sh explain EXC-110336 --known-at 2026-01-01T00:00:00+00:00   # the same alert, as it was known in January
+```
+
+`pack` ends with a short summary and the example alerts it chose. `explain` prints what was identified, which procedure and study apply, whether the readings can be trusted, the conflicts, what is missing, what a person must do next, the regulator clock, and the result — always **abstain**. Full reports land in `artifacts/private/` (ignored by git).
+
+Other commands: `./run.sh serve` (local API on `127.0.0.1:8080`), `./run.sh demo`, `./run.sh help`. Every `./run.sh X` not listed is passed to `python -m sentinel X`; the full command reference is in [prototype/README.md](prototype/README.md).
+
+## What you get
+
+```
+docs/PLAIN_ENGLISH.md            the problem, the solution and a glossary, no jargon
+docs/17-step-by-step-working.md  every command with real output; how one alert is processed
+docs/README.md                   evaluator reading guide (four sections, in order)
+docs/00 … 16                     the submission: decision, design (HLD + LLD), data findings,
+                                 cost, operations, validation, working log, review walkthrough
+prototype/                       the code (src/sentinel) and 54 tests
+scripts/                         check, inspect the workbook, choose examples, explain an alert
+artifacts/public/                real outputs from the anonymized workbook (committed)
+data/anonymized-evaluation.xlsx  a structure-preserving, anonymized copy for people without the pack
+```
 
 ## What is implemented
 
@@ -25,15 +62,11 @@ Candidate: Zulfiqar. Prototype and documents were produced with heavy AI assista
 
 No live source connectors, no document OCR or interpretation, no language model, no regulator filing or receipt verification, no calendars or business-day policies, no SSO or qualified signatures, no PostgreSQL/regional deployment, no WORM retention. The application never releases or destroys product and never files with a regulator. These are designed in [docs/02](docs/02-system-architecture.md)–[06](docs/06-versioning-and-deployment.md) and the [LLD](docs/13-detailed-design-lld.md) and are labelled *proposed* throughout.
 
-## Prerequisites
+## Manual commands (what `run.sh` does for you)
 
-Git and Python 3.11+ (3.11, 3.12 and 3.13 are exercised in CI on Linux, macOS and Windows). The only runtime dependency is `defusedxml`. No paid API, key, or secret is required for any command in this README.
-
-## Clone and run
+Python 3.11, 3.12 and 3.13 are exercised in CI on Linux, macOS and Windows. The only runtime dependency is `defusedxml`.
 
 ```sh
-git clone https://github.com/Zulfiqar7862/kccs-adjudication-case-study.git
-cd kccs-adjudication-case-study
 python3 -m venv .venv && source .venv/bin/activate       # Windows: py -3 -m venv .venv; .venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 python scripts/check.py                                   # compile, 54 tests, HTTP lifecycle demo on fictional data
@@ -104,16 +137,6 @@ Contract: [docs/API.md](docs/API.md). Credentials are local development stubs; d
 
 The pack has no raw temperature series, no documents, no batch history, no recorded-time history and no calendars; the prototype models each as an explicit missing input and never synthesizes evidence. The workbook is treated as known at its extract date (2026-09-14) because no better recorded time exists. Entity resolution is exact-match only; alias observations are surfaced, never applied. The notification window is taken from the record as a *provisional* policy input. Hash chains are tamper-evidence, not WORM retention. The anonymized copy is structurally faithful but not outcome-equivalent. Full register: [risks and open questions](docs/09-risks-assumptions-and-open-questions.md).
 
-## Project layout
-
-```
-README.md, SUBMISSION_CHECKLIST.md
-docs/            00–16 numbered submission documents, API and security notes
-diagrams/        Mermaid diagram sources
-prototype/       installable package (src/sentinel), tests, walkthrough
-scripts/         check.py, inspect_workbook.py, select_demo_cases.py, api_example.py, anonymized workbook builder
-data/            anonymized evaluation workbook (the supplied pack is never committed)
-artifacts/       public/ committed (anonymized outputs); private/ ignored (real outputs)
-```
+## Configuration and container
 
 Configuration lives in `.env.example` (Python does not auto-load it). `docker compose run --build --rm prototype` runs the fictional demo in an isolated container.
