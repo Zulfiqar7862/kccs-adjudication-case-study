@@ -4,6 +4,36 @@ A runnable, evidence-first prototype and written submission for the Kestrel Cold
 
 Candidate: Zulfiqar. Prototype and documents were produced with heavy AI assistance; see the [working log](docs/07-working-log.md) and [AI review and corrections](docs/11-ai-review-corrections.md).
 
+## Quick start (3 steps)
+
+1. **Understand it:** read [HLD](docs/interview/HLD.md) (5 min), then [LLD](docs/interview/LLD.md) (15 min).
+2. **Run it on Windows** (needs Python 3.11+ from python.org, with "Add to PATH" ticked):
+   ```powershell
+   git clone https://github.com/Zulfiqar7862/kccs-adjudication-case-study.git
+   cd kccs-adjudication-case-study
+   .\interview.ps1                                   # install + all tests + narrated demo
+   .\interview.ps1 -Workbook C:\path\KCCS_Sentinel_Reference_Data_Pack.xlsx   # plus the real data pack
+   ```
+   The last line printed should be `=== ALL STEPS PASSED ===`. On macOS or Linux, use `make setup check demo`.
+3. **Demo and explain it:** follow [RUN-AND-DEMO](docs/interview/RUN-AND-DEMO.md), which lists what each step proves and what to say.
+
+## Project structure
+
+```
+interview.ps1              One command: setup, tests, demo (Windows)
+docs/interview/            Simple view: HLD, LLD, run and demo guide   <- start here
+docs/00-17*.md             Full written submission (detailed)
+prototype/src/sentinel/
+  ingestion/               1. read the XLSX safely, hash it
+  evidence/                2. find SOP / stability / product / telemetry evidence; abstain on conflicts
+  workflow/service.py      3. cases, review, signatures, audit chain, regulator clock (SQLite)
+  api/http.py, cli.py      4. ways in: JSON API and command line
+  demo.py                  5. end-to-end demo on fictional data
+prototype/tests/           55 tests (unit + integration)
+scripts/check.py           runs all tests + demo
+data/, artifacts/public/   anonymized data and sample outputs (real data stays private)
+```
+
 ## Start here
 
 | You want to… | Go to |
