@@ -41,7 +41,8 @@ def main():
     commands = parser.add_subparsers(dest='command', required=True)
     sample = commands.add_parser('sample', help='Generate a wholly fictional workbook')
     sample.add_argument('--output', default=str(directory / 'sample.xlsx'))
-    commands.add_parser('demo', help='Exercise the full HTTP lifecycle on fictional data in a temporary database')
+    demo = commands.add_parser('demo', help='Exercise the full HTTP lifecycle on fictional data in a temporary database')
+    demo.add_argument('--explain', action='store_true', help='Print a plain-English line for each step before the JSON result')
     imp = commands.add_parser('import', help='Import one authorized workbook snapshot atomically')
     imp.add_argument('workbook')
     report = commands.add_parser('report', help='Summarize imported evidence blockers and notification clocks')
@@ -83,7 +84,7 @@ def main():
             return
         if args.command == 'demo':
             from .demo import run_demo
-            output(run_demo())
+            output(run_demo(print if args.explain else None))
             return
         if args.command == 'credentials':
             identities = {}

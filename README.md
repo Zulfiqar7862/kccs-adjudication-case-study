@@ -4,10 +4,41 @@ A runnable, evidence-first prototype and written submission for the Kestrel Cold
 
 Candidate: Zulfiqar. Prototype and documents were produced with heavy AI assistance; see the [working log](docs/07-working-log.md) and [AI review and corrections](docs/11-ai-review-corrections.md).
 
+## Quick start (3 steps)
+
+1. **Understand it:** read [HLD](docs/interview/HLD.md) (5 min), then [LLD](docs/interview/LLD.md) (15 min).
+2. **Run it on Windows** (needs Python 3.11+ from python.org, with "Add to PATH" ticked):
+   ```powershell
+   git clone https://github.com/Zulfiqar7862/kccs-adjudication-case-study.git
+   cd kccs-adjudication-case-study
+   .\interview.ps1                                   # install + all tests + narrated demo
+   .\interview.ps1 -Workbook C:\path\KCCS_Sentinel_Reference_Data_Pack.xlsx   # plus the real data pack
+   ```
+   The last line printed should be `=== ALL STEPS PASSED ===`. On macOS or Linux, use `make setup check demo`.
+3. **Demo and explain it:** follow [RUN-AND-DEMO](docs/interview/RUN-AND-DEMO.md), which lists what each step proves and what to say.
+
+## Project structure
+
+```
+interview.ps1              One command: setup, tests, demo (Windows)
+docs/interview/            Simple view: HLD, LLD, run and demo guide   <- start here
+docs/00-17*.md             Full written submission (detailed)
+prototype/src/sentinel/
+  ingestion/               1. read the XLSX safely, hash it
+  evidence/                2. find SOP / stability / product / telemetry evidence; abstain on conflicts
+  workflow/service.py      3. cases, review, signatures, audit chain, regulator clock (SQLite)
+  api/http.py, cli.py      4. ways in: JSON API and command line
+  demo.py                  5. end-to-end demo on fictional data
+prototype/tests/           55 tests (unit + integration)
+scripts/check.py           runs all tests + demo
+data/, artifacts/public/   anonymized data and sample outputs (real data stays private)
+```
+
 ## Start here
 
 | You want to… | Go to |
 |---|---|
+| **Prepare for the interview: simplified HLD, LLD, Windows install and one-command demo** | [Interview pack](docs/interview/README.md), then `.\interview.ps1` on Windows |
 | Review the submission in the evaluator's four sections | [Reading guide](docs/README.md) and [submission checklist](SUBMISSION_CHECKLIST.md) |
 | Run the prototype in ten minutes | [Clone and run](#clone-and-run) below, then the [step-by-step working guide](docs/17-step-by-step-working.md) (every command with its real output, and what the kernel does with one alert) |
 | Prepare or follow the 20-minute review | [Review walkthrough, hard questions, change response, email draft](docs/16-review-walkthrough.md) |
@@ -19,7 +50,7 @@ Candidate: Zulfiqar. Prototype and documents were produced with heavy AI assista
 - **Workflow service** (`workflow/service.py`): atomic SQLite import of one workbook snapshot, case revisions, evidence review, independent single/dual signatures, optimistic versions, idempotency keys, reopening with preserved history, hash-chained audit export/verify, alert-derived obligations with a reminder outbox and human-attested receipts.
 - **Interfaces**: CLI (`python -m sentinel`), loopback-only authenticated JSON API, Docker demo.
 - **Reproducible data investigation**: `scripts/inspect_workbook.py` (data-quality report) and `scripts/select_demo_cases.py` (programmatic selection of real cases per failure mode, knowledge-cutoff replay, correction replay).
-- **Tests**: 54 `unittest` tests — unit tests on fictional tables, integration tests on the anonymized workbook, and an opt-in integration test on the supplied pack.
+- **Tests**: 55 `unittest` tests — unit tests on fictional tables, integration tests on the anonymized workbook, and an opt-in integration test on the supplied pack.
 
 ## What is not implemented
 
@@ -36,11 +67,11 @@ git clone https://github.com/Zulfiqar7862/kccs-adjudication-case-study.git
 cd kccs-adjudication-case-study
 python3 -m venv .venv && source .venv/bin/activate       # Windows: py -3 -m venv .venv; .venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
-python scripts/check.py                                   # compile, 54 tests, HTTP lifecycle demo on fictional data
+python scripts/check.py                                   # compile, 55 tests, HTTP lifecycle demo on fictional data
 python -m sentinel demo                                   # the lifecycle demo on its own
 ```
 
-Expected: `Ran 54 tests … OK (skipped=2)`, a JSON lifecycle report ending with `"audit_integrity": "PASS"` and `"regulators_not_notified": true`, then `All requested checks passed.`
+Expected: `Ran 55 tests … OK (skipped=2)`, a JSON lifecycle report ending with `"audit_integrity": "PASS"` and `"regulators_not_notified": true`, then `All requested checks passed.`
 
 ## Execute against the supplied workbook
 
@@ -48,7 +79,7 @@ Place the pack **outside** the checkout or in `data/` (ignored except for the an
 
 ```sh
 export PACK=/absolute/path/to/KCCS_Sentinel_Reference_Data_Pack.xlsx
-SENTINEL_WORKBOOK=$PACK python scripts/check.py                                   # all 54 tests, including the private pack test
+SENTINEL_WORKBOOK=$PACK python scripts/check.py                                   # all 55 tests, including the private pack test
 python scripts/inspect_workbook.py $PACK --output-dir artifacts/private           # data-quality report
 python -m sentinel --db prototype/output/private.db import $PACK                   # 420 cases, atomic, replay-safe
 python scripts/select_demo_cases.py --db prototype/output/private.db --output-dir artifacts/private

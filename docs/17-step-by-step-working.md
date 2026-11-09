@@ -28,7 +28,7 @@ What happens: `requirements.txt` installs the `prototype/` package in editable m
 python scripts/check.py
 ```
 
-What happens, in order: (1) the source and tests are byte-compiled; (2) the 54 `unittest` tests run — 20 of them exercise the assessment kernel on small fictional tables, the rest cover the workbook reader, workflow service, CLI and HTTP API; (3) `python -m sentinel demo` starts a real loopback HTTP server on a temporary database, generates a fictional workbook, imports it, and drives one case through its whole life: evidence rejected before it exists → evidence recorded → review → first signature → second signature → `DISPOSED` → reopen → `WAITING_EVIDENCE` again, then verifies the audit chain and exercises a failed-then-retried reminder.
+What happens, in order: (1) the source and tests are byte-compiled; (2) the 55 `unittest` tests run — 20 of them exercise the assessment kernel on small fictional tables, the rest cover the workbook reader, workflow service, CLI and HTTP API; (3) `python -m sentinel demo` starts a real loopback HTTP server on a temporary database, generates a fictional workbook, imports it, and drives one case through its whole life: evidence rejected before it exists → evidence recorded → review → first signature → second signature → `DISPOSED` → reopen → `WAITING_EVIDENCE` again, then verifies the audit chain and exercises a failed-then-retried reminder.
 
 Expected tail of the output:
 

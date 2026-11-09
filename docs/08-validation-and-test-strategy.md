@@ -74,8 +74,8 @@ Results from the end-to-end pass taken immediately before submission (2026-11-08
 | Check | Command | Result |
 |---|---|---|
 | Fresh install from the README | `python3 -m venv .venv && python -m pip install -r requirements.txt` | Installs `sentinel-adjudication` and `defusedxml==0.7.1` only |
-| Compile, public tests, HTTP lifecycle demo | `python scripts/check.py` | 54 tests, 2 skipped (private pack not configured); demo lifecycle PASS |
-| Full suite against the supplied workbook | `SENTINEL_WORKBOOK=<pack> python scripts/check.py` | 54 tests, all passed |
+| Compile, public tests, HTTP lifecycle demo | `python scripts/check.py` | 55 tests, 2 skipped (private pack not configured); demo lifecycle PASS |
+| Full suite against the supplied workbook | `SENTINEL_WORKBOOK=<pack> python scripts/check.py` | 55 tests, all passed |
 | Workbook inspection | `python scripts/inspect_workbook.py <pack> --output-dir artifacts/private` | 15 sheets, 420 events; findings in `workbook-inspection.json` |
 | Supplied workbook import and report | `python -m sentinel --db … import <pack>` then `report --output …` | 420 cases created, all `WAITING_EVIDENCE` with blockers; exact-file replay created 0 |
 | Demo case selection and replays | `python scripts/select_demo_cases.py --db … --output-dir artifacts/private` | 10 of 11 failure modes found in the pack (carrier parent/subsidiary ambiguity does not occur); knowledge-cutoff replay and correction replay produced distinct hashes; the original package still verifies |
