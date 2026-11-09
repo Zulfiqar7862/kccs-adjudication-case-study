@@ -47,3 +47,13 @@ jobs:
       - name: Run the Windows launcher
         shell: pwsh
         run: ./prototype/run.ps1 demo
+  interview-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: One-command interview script from a fresh clone
+        shell: pwsh
+        run: ./interview.ps1

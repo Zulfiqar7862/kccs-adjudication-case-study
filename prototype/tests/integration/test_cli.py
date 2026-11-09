@@ -82,3 +82,10 @@ class CliTests(unittest.TestCase):
             self.assertTrue(report['prior_revision_preserved'])
             self.assertTrue(report['regulators_not_notified'])
             self.assertEqual(report['reminder_failure_and_retry'], 'PASS')
+
+    def test_explained_demo_narrates_each_step(self):
+        with tempfile.TemporaryDirectory() as directory:
+            text = self.run_cli(directory, 'demo', '--explain').stdout
+            narration, _, summary = text.partition('{')
+            self.assertEqual([line[:6] for line in narration.splitlines()], [f'Step {n}' for n in range(1, 10)])
+            self.assertEqual(json.loads('{' + summary)['result'], 'PASS')

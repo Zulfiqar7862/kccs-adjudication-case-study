@@ -4,6 +4,8 @@ This guide follows the four requested submission sections. Read in the order bel
 
 The project is a **human-controlled evidence and case-workflow prototype**, not a production regulatory platform. Diagrams and captions distinguish implemented behavior from proposed production controls. Source attachments and identifying records are intentionally absent from this public repository.
 
+**Short on time?** The [interview pack](interview/README.md) gives a simplified HLD, LLD and Windows run guide.
+
 ## Step 1 — Where You Land
 
 Read:

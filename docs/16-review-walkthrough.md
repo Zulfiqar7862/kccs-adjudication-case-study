@@ -29,7 +29,7 @@ python -m sentinel --db prototype/output/private.db import <pack>
 python scripts/select_demo_cases.py --db prototype/output/private.db --output-dir artifacts/private
 ```
 
-`check.py` should report 54 tests passing (2 are skipped unless `SENTINEL_WORKBOOK` is set; with it, all 53 run).
+`check.py` should report 55 tests passing (2 are skipped unless `SENTINEL_WORKBOOK` is set; with it, all 55 run).
 
 1. **Whole-pack posture (30 s).** Show `artifacts/private/assessment-summary.json`, produced by
    `python -m sentinel --db prototype/output/private.db assess-all --compare-history --output artifacts/private/assessment-summary.json`.
@@ -186,7 +186,7 @@ What I would ask in the room: effective date semantics (alert time vs detection 
 Zulfiqar must do these personally; none can be delegated to the tooling that wrote the documents.
 
 - [ ] Read docs 00–16 end to end. Be able to explain every number you cite (64%, 2,939, 420/234/186, 118) without opening the file.
-- [ ] Run `python scripts/check.py` from a fresh clone and virtualenv, and `python -m sentinel demo`. Run once with `SENTINEL_WORKBOOK` set and confirm 54 tests pass with none skipped.
+- [ ] Run `python scripts/check.py` from a fresh clone and virtualenv, and `python -m sentinel demo`. Run once with `SENTINEL_WORKBOOK` set and confirm 55 tests pass with none skipped.
 - [ ] Run every command in 1.1 with the real workbook; compare the output with the points listed. Rehearse the demo twice, timed.
 - [ ] Decide the privacy stance for tenant codes (they are pseudonymous codes from the pack, but the pack is confidential): keep, replace with generic labels, or ask in writing. Check `docs/` and `data/anonymized-evaluation.xlsx` for any customer or person name. Confirm `artifacts/private/` and the supplied workbook are not tracked.
 - [ ] Verify the repository is public and readable, the link in the email works in a private window, and the licence/readme state is as you intend.

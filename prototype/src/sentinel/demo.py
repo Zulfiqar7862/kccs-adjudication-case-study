@@ -11,12 +11,15 @@ from sentinel.fixtures.sample import create_workbook
 from sentinel.workflow.service import Engine, verify_export
 
 
-def run_demo():
+def run_demo(narrate=None):
+    say = narrate or (lambda message: None)
     with tempfile.TemporaryDirectory(prefix='sentinel-demo-') as directory:
         root = Path(directory)
         source = create_workbook(root / 'sample.xlsx')
         engine = Engine(root / 'demo.db')
         imported = engine.ingest(source)
+        say(f"Step 1  Import: fictional workbook -> {imported['created']} cases, all WAITING_EVIDENCE "
+            f"(source SHA-256 {imported['import_hash'][:12]}...)")
         constraints = engine.tables()['12_Tenant_Constraints']
         tenant = next(row['tenant_code'] for row in constraints if '(dual)' in row['who_signs_a_disposition'])
         credentials, tokens = {}, {}
@@ -53,6 +56,8 @@ def run_demo():
             base = f'/cases/{case_id}'
             _, case = request('GET', base)
             version = case['version']
+            say(f'Step 2  API: GET /health ok; tenant {tenant} (dual sign-off) sees {len(cases)} cases; '
+                f"working on {case_id}, state {case['state']}, {len(case['packet']['analysis']['blockers'])} blockers")
 
             def command(action, body, role='reviewer', expected_status=200):
                 nonlocal version
@@ -65,6 +70,7 @@ def run_demo():
                 return result
 
             command('sign', {'disposition': 'RELEASE_WITH_NOTE', 'rationale': 'Blocked without evidence'}, 'site_qa', 409)
+            say('Step 3  Guard: signing before evidence review is rejected with HTTP 409')
             refs = []
             for kind in ['SOP', 'STABILITY', 'TELEMETRY', 'IDENTITY', 'BATCH', 'CONTRACT']:
                 command('evidence', {'kind': kind, 'source_ref': f'demo-stub://{kind}',
@@ -72,19 +78,25 @@ def run_demo():
                 refs.append(f'E{len(refs) + 1}')
             command('review', {'resolutions': {blocker: refs for blocker in case['packet']['analysis']['blockers']},
                                'note': 'Fictional walkthrough: structural workflow only.'})
+            say('Step 4  Evidence: reviewer attaches SOP, STABILITY, TELEMETRY, IDENTITY, BATCH, CONTRACT (E1-E6), '
+                'resolves every blocker -> READY_FOR_REVIEW')
             first = command('sign', {'disposition': 'RELEASE_WITH_NOTE', 'rationale': 'Fictional site approval'}, 'site_qa')
             if first['state'] != 'READY_FOR_REVIEW':
                 raise AssertionError('Dual signature gate failed')
+            say('Step 5  Sign: site QA signs; case stays READY_FOR_REVIEW because the tenant needs two signatures')
             final = command('sign', {'disposition': 'RELEASE_WITH_NOTE', 'rationale': 'Fictional corporate approval'}, 'corporate_qa')
             if final['state'] != 'DISPOSED':
                 raise AssertionError('Disposition failed')
+            say('Step 6  Sign: corporate QA signs the same disposition -> DISPOSED (RELEASE_WITH_NOTE)')
             _, before = request('GET', base + '/audit')
             if not verify_export(before):
                 raise AssertionError('Audit verification failed')
+            say(f"Step 7  Audit: {len(before['audit'])} hash-chained audit entries exported and verified")
             command('reopen', {'reason': 'Fictional late evidence requires fresh review'})
             _, after = request('GET', base + '/audit')
             if not verify_export(after) or before['revisions'][0] != after['revisions'][0] or len(after['revisions']) != 2:
                 raise AssertionError('Historical revision preservation failed')
+            say('Step 8  Reopen: late evidence opens revision 2; signed revision 1 is unchanged and still verifies')
 
             def unavailable(key, payload):
                 raise ConnectionError('Fictional outage')
@@ -94,6 +106,8 @@ def run_demo():
                 raise AssertionError('Reminder retry failed')
             if any(row['receipt'] for row in engine.notifications(tenant)):
                 raise AssertionError('Internal reminder fabricated a regulatory receipt')
+            say(f'Step 9  Clock: reminder delivery fails during an outage ({len(failed)} pending), succeeds on retry; '
+                'no regulator receipt is invented')
             return {'result': 'PASS', 'source': 'generated fictional workbook', 'imported_cases': imported['created'],
                     'http_lifecycle': steps, 'audit_integrity': 'PASS', 'prior_revision_preserved': True,
                     'reminder_failure_and_retry': 'PASS', 'regulators_not_notified': True}
