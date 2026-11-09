@@ -9,7 +9,7 @@ Everything below was run end to end on the supplied data pack; the results are i
 3. Open **PowerShell** (Start → type "PowerShell") and run:
 
 ```powershell
-git clone https://github.com/Zulfiqar78634/kccs-adjudication-case-study.git
+git clone https://github.com/Zulfiqar7862/kccs-adjudication-case-study.git
 cd kccs-adjudication-case-study
 python --version          # must print 3.11 or newer
 ```
